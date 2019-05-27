@@ -1,0 +1,130 @@
+{
+	"name": "vscode-azuresearch",
+	"displayName": "Azure Search",
+	"description": "Manage your Azure Search services",
+	"version": "0.0.1",
+	"publisher": "pmc",
+	"aiKey": "AIF-d9b70cd4-b9f9-4d70-929b-a071c400b217",
+	"engines": {
+		"vscode": "^1.34.0"
+	},
+	"categories": [
+		"Azure"
+	],
+	"keywords": [
+		"Azure",
+		"Search"
+	],
+	"preview": true,
+	"activationEvents": [
+		"onView:azureSearch",
+		"onCommand:azureSearch.refresh",
+		"onCommand:azureSearch.openInPortal",
+		"onCommand:azureSearch.selectSubscriptions"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "azure",
+					"title": "Azure",
+					"icon": "resources/azure.svg"
+				}
+			]
+		},
+		"views": {
+			"azure": [
+				{
+					"id": "azureSearch",
+					"name": "Search",
+					"when": "config.azureSearch.showExplorer == true"
+				}
+			]
+		},
+		"commands": [
+			{
+				"command": "azureSearch.refresh",
+				"title": "Refresh",
+				"icon": {
+					"light": "resources/light/refresh.svg",
+					"dark": "resources/dark/refresh.svg"
+				},
+				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.openInPortal",
+				"title": "Open in Portal",
+				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.selectSubscriptions",
+				"title": "Select Subscriptions...",
+				"icon": {
+					"light": "resources/light/filter.svg",
+					"dark": "resources/dark/filter.svg"
+				},
+				"category": "Azure Search"
+			}
+		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "azureSearch.refresh",
+					"when": "view == azureSearch",
+					"group": "navigation@99"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "azureSearch.selectSubscriptions",
+					"when": "view == azureSearch && viewItem == azureextensionui.azureSubscription",
+					"group": "inline"
+				},
+				{
+					"command": "azureSearch.refresh",
+					"when": "view == azureSearch && viewItem == azureextensionui.azureSubscription",
+					"group": "9_refresh"
+				},
+				{
+					"command": "azureSearch.openInPortal",
+					"when": "view == azureSearch && viewItem == azureSearchService",
+					"group": "navigation@2"
+				}
+			]
+		},
+		"configuration": {
+			"title": "Azure Search Services",
+			"properties": {
+				"azureSearch.showExplorer": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show or hide the Azure Search Explorer"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+	},
+	"extensionDependencies": [
+		"ms-vscode.azure-account"
+	],
+	"devDependencies": {
+		"typescript": "^3.3.1",
+		"vscode": "^1.1.28",
+		"tslint": "^5.12.1",
+		"@types/node": "^10.12.21",
+		"@types/mocha": "^2.2.42",
+		"vscode-azureextensiondev": "0.1.8"
+	},
+	"dependencies": {
+		"azure-arm-resource": "^7.3.0",
+		"azure-arm-search": "^1.3.0-preview",
+		"vscode-azureextensionui": "^0.25.0"
+	}
+}
