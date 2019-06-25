@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { ext } from './extensionVariables';
-import { createTelemetryReporter, AzureUserInput, registerUIExtensionVariables, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem } from 'vscode-azureextensionui';
+import { createTelemetryReporter, AzureUserInput, registerUIExtensionVariables, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal } from 'vscode-azureextensionui';
 import { AzureAccountTreeItem } from './AzureAccountTreeItem';
 import { SearchServiceTreeItem } from './SearchServiceTreeItem';
 
@@ -31,7 +31,13 @@ export function activate(context: vscode.ExtensionContext) {
 			treeItem = <SearchServiceTreeItem>await ext.tree.showTreeItemPicker(SearchServiceTreeItem.contextValue, actionContext);
 		}
 
-		await treeItem.openInPortal();
+		// We retrieved the search service ARM object using the generic ARM client, not the Azure Search ARM client, which
+		// somehow messes with the fullId relative to what treeItem.openInPortal() expects, so calling the underlying function
+		// await treeItem.openInPortal();
+		let id = (<SearchServiceTreeItem>treeItem).searchService.id;
+		if (id !== undefined) {
+			openInPortal(treeItem.root, id);
+		}
 	});
 
 	return createApiProvider([]);
