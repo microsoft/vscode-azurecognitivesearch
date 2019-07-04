@@ -10,7 +10,17 @@ export class SimpleSearchClient {
     }
 
     public async listIndexes() : Promise<string[]> {
-        let r = await this.httpGet<IndexList>("indexes", "&$select=name");
+        let r = await this.httpGet<NamedItemList>("indexes", "&$select=name");
+        return r.data.value.map(i => i.name);
+    }
+
+    public async listDataSources(): Promise<string[]> {
+        let r = await this.httpGet<NamedItemList>("datasources", "&$select=name");
+        return r.data.value.map(i => i.name);
+    }
+
+    public async listIndexers(): Promise<string[]> {
+        let r = await this.httpGet<NamedItemList>("indexers", "&$select=name");
         return r.data.value.map(i => i.name);
     }
 
@@ -24,10 +34,10 @@ export class SimpleSearchClient {
     }
 }
 
-interface Index {
+interface NamedItem {
     name: string;
 }
 
-interface IndexList {
-    value: Index[];
+interface NamedItemList {
+    value: NamedItem[];
 }

@@ -4,6 +4,8 @@ import { SearchService } from "azure-arm-search/lib/models";
 import SearchManagementClient from "azure-arm-search";
 import { IndexListTreeItem } from "./IndexListTreeItem";
 import { SimpleSearchClient } from "./SimpleSearchClient";
+import { DataSourceListTreeItem } from "./DataSourceListTreeItem";
+import { IndexerListTreeItem } from "./IndexerListTreeItem";
 
 export class SearchServiceTreeItem extends AzureParentTreeItem {
     public static contextValue: string = "azureSearchService";
@@ -24,14 +26,16 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
         const name = <string>this.searchService.name;
         const keys = await this.searchManagementClient.adminKeys.get(resourceGroup, name);
 
+        const searchClient = new SimpleSearchClient(name, <string>keys.primaryKey);
+
         let items: AzExtTreeItem[] = [];
         items.push(new GenericTreeItem(this, { label: "Service details", contextValue: "azureSearchServiceDetails" }));
-        items.push(new IndexListTreeItem(this, new SimpleSearchClient(name, <string>keys.primaryKey)));
+        items.push(new IndexListTreeItem(this, searchClient));
+        items.push(new DataSourceListTreeItem(this, searchClient));
+        items.push(new IndexerListTreeItem(this, searchClient));
 
         // TODO: Other pending subresources of search services
         // items.push(new GenericTreeItem(this, { label: "Synonym maps", contextValue: "azureSearchSynonymMaps" }));
-        // items.push(new GenericTreeItem(this, { label: "Data Sources", contextValue: "azureSearchDataSources" }));
-        // items.push(new GenericTreeItem(this, { label: "Indexers", contextValue: "azureSearchIndexers" }));
         // items.push(new GenericTreeItem(this, { label: "Skillsets", contextValue: "azureSearchSkillsets" }));
         return items;
     }    
