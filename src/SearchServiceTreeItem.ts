@@ -2,6 +2,8 @@ import { AzureParentTreeItem, IActionContext, AzExtTreeItem, GenericTreeItem } f
 import { isNullOrUndefined } from "util";
 import { SearchService } from "azure-arm-search/lib/models";
 import SearchManagementClient from "azure-arm-search";
+import { IndexListTreeItem } from "./IndexListTreeItem";
+import { SimpleSearchClient } from "./SimpleSearchClient";
 
 export class SearchServiceTreeItem extends AzureParentTreeItem {
     public static contextValue: string = "azureSearchService";
@@ -16,9 +18,15 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
     }
 
     public async loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
+
+        // TODO: straight to dev hell for this, there's probably a way to include resource group name in resource listing
+        const resourceGroup: string = (<string>this.searchService.id).split("/")[4];
+        const name = <string>this.searchService.name;
+        const keys = await this.searchManagementClient.adminKeys.get(resourceGroup, name);
+
         let items: AzExtTreeItem[] = [];
         items.push(new GenericTreeItem(this, { label: "Service details", contextValue: "azureSearchServiceDetails" }));
-        items.push(new GenericTreeItem(this, { label: "Indexes", contextValue: "azureSearchIndexes" }));
+        items.push(new IndexListTreeItem(this, new SimpleSearchClient(name, <string>keys.primaryKey)));
 
         // TODO: Other pending subresources of search services
         // items.push(new GenericTreeItem(this, { label: "Synonym maps", contextValue: "azureSearchSynonymMaps" }));
