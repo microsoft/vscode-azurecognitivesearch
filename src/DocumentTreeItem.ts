@@ -24,4 +24,8 @@ export class DocumentTreeItem extends AzureTreeItem {
     public async readContent() : Promise<any> {
         return await this.searchClient.lookup(this.index.name, this.key);
     }
+
+    public async updateContent(doc: any) : Promise<void> {
+        await this.searchClient.updateDocument(this.index.name, doc);
+    }
 }

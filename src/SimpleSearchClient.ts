@@ -44,6 +44,34 @@ export class SimpleSearchClient {
         return r.data;
     }
 
+    public async updateDocument(indexName: string, doc: any) : Promise<void> {
+        const shallowCopy = { ...doc };
+        shallowCopy["@search.action"] = "merge";
+        const batch = { value: [shallowCopy] };
+
+        let batchResponse: CollectionResponse<BatchResponseEntry>;
+
+        try {
+            const r = await this.httpPost<CollectionResponse<BatchResponseEntry>>(`indexes/${indexName}/docs/index`, batch);
+            batchResponse = r.data;
+        }
+        catch (error) {
+            if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
+                throw new Error(`Failed to upload document: ${error.response.data.error.message}`);
+            }
+
+            throw new Error(`Error: ${error.message || "unknown error"}`);
+        }
+
+        if (batchResponse.value.length !== 1) {
+            throw new Error("Unexpected response from service while attempting to save document");
+        }
+
+        if (!batchResponse.value[0].status) {
+            throw new Error(`Failed to upload document: ${batchResponse.value[0].errorMessage}`);
+        }
+    }
+
     private fixupQueryResponse(response: any) {
         response.nextLink = response["@odata.nextLink"];
         response.nextPageParameteres = response["@search.nextPageParameters"];
@@ -55,6 +83,10 @@ export class SimpleSearchClient {
 
     private httpGetUrl<T = any, R = AxiosResponse<T>>(url: string) : Promise<R> {
         return Axios.get<T, R>(url, { headers: { "api-key": this.apikey } });
+    }
+
+    private httpPost<T = any, R = AxiosResponse<T>>(path: string, data: any) : Promise<R> {
+        return Axios.post<T, R>(this.makeUrl(path), data, { headers: { "api-key": this.apikey } });
     }
 
     private makeUrl(path: string, options: string = "") : string {
@@ -72,6 +104,13 @@ interface CollectionResponse<T> {
 
 interface NamedItem {
     name: string;
+}
+
+interface BatchResponseEntry {
+    key: any;
+    status: boolean;
+    errorMessage: string;
+    statusCode: number;
 }
 
 export interface QueryResponse {

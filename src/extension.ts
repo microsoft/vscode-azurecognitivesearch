@@ -46,6 +46,11 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	registerCommand("azureSearch.openDocument", async (_actionContext: IActionContext, treeItem: DocumentTreeItem) => await documentEditor.showEditor(treeItem));
 
+	registerEvent("azureSearch.searchDocument.onDidSaveTextDocument", 
+				  vscode.workspace.onDidSaveTextDocument, 
+				  async (_actionContext: IActionContext, doc: vscode.TextDocument) => await documentEditor.onDidSaveTextDocument(doc));
+
+
 	return createApiProvider([]);
 }
 
