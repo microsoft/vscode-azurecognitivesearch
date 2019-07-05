@@ -1,6 +1,7 @@
 import { AzureParentTreeItem, IActionContext, AzExtTreeItem, GenericTreeItem } from "vscode-azureextensionui";
 import { SimpleSearchClient, QueryResponse, Index, Field } from "./SimpleSearchClient";
 import { IndexTreeItem } from "./IndexTreeItem";
+import { DocumentTreeItem } from "./DocumentTreeItem";
 
 export class DocumentListTreeItem extends AzureParentTreeItem {
     public static readonly contextValue: string = "azureSearchDocumentList";
@@ -31,7 +32,7 @@ export class DocumentListTreeItem extends AzureParentTreeItem {
         this.nextLink = result.nextLink;
         this.lastCount += result.value.length;
 
-        return result.value.map((doc, i) => new GenericTreeItem(this, { label: doc[key.name] || `#${this.lastCount + i}`, contextValue: "azureSearchDocument" }));
+        return result.value.map((doc, i) => new DocumentTreeItem(this, this.searchClient, this.index, doc[key.name]));
     } 
     
     public hasMoreChildrenImpl(): boolean {

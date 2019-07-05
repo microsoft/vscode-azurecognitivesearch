@@ -1,4 +1,6 @@
 import Axios, { AxiosInstance, AxiosResponse } from "axios";
+import { url } from "inspector";
+import { URL } from "url";
 
 export class SimpleSearchClient {
     private static readonly API_VERSION = "2019-05-06";
@@ -33,6 +35,12 @@ export class SimpleSearchClient {
     public async queryNext(nextLink: string) : Promise<QueryResponse> {
         let r = await this.httpGetUrl(nextLink);
         this.fixupQueryResponse(r.data);
+        return r.data;
+    }
+
+    public async lookup(indexName: string, key: string) : Promise<any> {
+        const encodedKey = encodeURIComponent(key);
+        let r = await this.httpGet(`indexes/${indexName}/docs/${encodedKey}`);
         return r.data;
     }
 
