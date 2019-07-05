@@ -1,6 +1,7 @@
 import { AzureParentTreeItem, IActionContext, AzExtTreeItem, GenericTreeItem } from "vscode-azureextensionui";
 import { SearchServiceTreeItem } from "./SearchServiceTreeItem";
-import { SimpleSearchClient } from "./SimpleSearchClient";
+import { SimpleSearchClient, Index } from "./SimpleSearchClient";
+import { IndexTreeItem } from "./IndexTreeItem";
 
 export class IndexListTreeItem extends AzureParentTreeItem {
     public static contextValue: string = "azureSearchIndexList";
@@ -15,8 +16,8 @@ export class IndexListTreeItem extends AzureParentTreeItem {
 
     public async loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
         // TODO: does the /indexes endpoint ever return a continuation link? I don't think so.
-        let indexes: string[] = await this.searchClient.listIndexes();
-        return indexes.map(i => new GenericTreeItem(this, { label: i, contextValue: "azureSearchIndex" }));
+        let indexes: Index[] = await this.searchClient.listIndexes();
+        return indexes.map(i => new IndexTreeItem(this, this.searchClient, i));
     }    
     
     public hasMoreChildrenImpl(): boolean {
