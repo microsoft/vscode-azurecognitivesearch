@@ -1,6 +1,4 @@
-import Axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from "axios";
-import { url } from "inspector";
-import { URL } from "url";
+import Axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import { appendExtensionUserAgent } from "vscode-azureextensionui";
 
 export class SimpleSearchClient {
@@ -53,6 +51,19 @@ export class SimpleSearchClient {
         shallowCopy["@search.action"] = createNew ? "mergeOrUpload" : "merge";
         const batch = { value: [shallowCopy] };
 
+        await this.indexBatch(indexName, batch);
+    }
+
+    public async deleteDocument(indexName: string, keyName: string, key: any) : Promise<void> {
+        const deletion: any = {};
+        deletion["@search.action"] = "delete";
+        deletion[keyName] = key;
+        const batch = { value: [ deletion ] };
+
+        await this.indexBatch(indexName, batch);
+    }
+
+    private async indexBatch(indexName: string, batch: { value: any }) : Promise<void> {
         let batchResponse: CollectionResponse<BatchResponseEntry>;
 
         try {
@@ -61,18 +72,18 @@ export class SimpleSearchClient {
         }
         catch (error) {
             if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
-                throw new Error(`Failed to upload document: ${error.response.data.error.message}`);
+                throw new Error(`Failed to process document: ${error.response.data.error.message}`);
             }
 
             throw new Error(`Error: ${error.message || "unknown error"}`);
         }
 
         if (batchResponse.value.length !== 1) {
-            throw new Error("Unexpected response from service while attempting to save document");
+            throw new Error("Unexpected response from service while attempting to process document");
         }
 
         if (!batchResponse.value[0].status) {
-            throw new Error(`Failed to upload document: ${batchResponse.value[0].errorMessage}`);
+            throw new Error(`Failed to process document: ${batchResponse.value[0].errorMessage}`);
         }
     }
 

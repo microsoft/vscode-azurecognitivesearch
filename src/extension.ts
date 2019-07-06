@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { ext } from './extensionVariables';
-import { createTelemetryReporter, AzureUserInput, registerUIExtensionVariables, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal, registerEvent } from 'vscode-azureextensionui';
+import { createTelemetryReporter, AzureUserInput, registerUIExtensionVariables, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal, registerEvent, DialogResponses } from 'vscode-azureextensionui';
 import { AzureAccountTreeItem } from './AzureAccountTreeItem';
 import { SearchServiceTreeItem } from './SearchServiceTreeItem';
 import { DocumentTreeItem } from './DocumentTreeItem';
@@ -53,7 +53,17 @@ export function activate(context: vscode.ExtensionContext) {
 
 		const docItem = await treeItem.createChild(actionContext);
         await vscode.commands.executeCommand("azureSearch.openDocument", docItem);
-    });
+	});
+	registerCommand("azureSearch.deleteDocument", async  (actionContext: IActionContext, treeItem: DocumentTreeItem) => {
+		if (!treeItem) {
+			treeItem = <DocumentTreeItem>await ext.tree.showTreeItemPicker(DocumentTreeItem.contextValue, actionContext);
+		}
+
+		const r = await vscode.window.showWarningMessage("Are you sure you want to delete this document?", DialogResponses.deleteResponse, DialogResponses.cancel);
+		if (r === DialogResponses.deleteResponse) {
+			await treeItem.deleteTreeItem(actionContext);
+		}
+	});
 
 	registerEvent("azureSearch.searchDocument.onDidSaveTextDocument", 
 				  vscode.workspace.onDidSaveTextDocument, 

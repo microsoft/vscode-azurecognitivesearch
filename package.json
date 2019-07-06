@@ -21,7 +21,8 @@
 		"onCommand:azureSearch.refresh",
 		"onCommand:azureSearch.openInPortal",
 		"onCommand:azureSearch.selectSubscriptions",
-		"onCommand:azureSearch.createDocument"
+		"onCommand:azureSearch.createDocument",
+		"onCommand:azureSearch.deleteDocument"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -75,6 +76,11 @@
 					"dark": "resources/dark/add.svg"
 				},
 				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.deleteDocument",
+				"title": "Delete document",
+				"category": "Azure Search"
 			}
 		],
 		"menus": {
@@ -87,6 +93,11 @@
 				{
 					"command": "azureSearch.createDocument",
 					"when": "view == azureSearch && viewItem == azureSearchDocumentList",
+					"group": "navigation@98"
+				},
+				{
+					"command": "azureSearch.deleteDocument",
+					"when": "view == azureSearch && viewItem == azureSearchDocument",
 					"group": "navigation@98"
 				}
 			],
@@ -109,12 +120,21 @@
 				{
 					"command": "azureSearch.createDocument",
 					"when": "view == azureSearch && viewItem == azureSearchDocumentList",
-					"group": "2_create@1"
+					"group": "2_edit@1"
+				},
+				{
+					"command": "azureSearch.deleteDocument",
+					"when": "view == azureSearch && viewItem == azureSearchDocument",
+					"group": "2_edit@2"
 				}
 			],
 			"commandPalette": [
 				{
 					"command": "azureSearch.createDocument",
+					"when": "never"
+				},
+				{
+					"command": "azureSearch.deleteDocument",
 					"when": "never"
 				}
 			]

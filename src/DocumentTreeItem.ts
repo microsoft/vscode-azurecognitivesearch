@@ -1,4 +1,4 @@
-import { AzureTreeItem } from "vscode-azureextensionui";
+import { AzureTreeItem, IActionContext } from "vscode-azureextensionui";
 import { SimpleSearchClient, QueryResponse, Index, Field } from "./SimpleSearchClient";
 import { DocumentListTreeItem } from "./DocumentListTreeItem";
 
@@ -38,6 +38,13 @@ export class DocumentTreeItem extends AzureTreeItem {
             this.key = doc[keyField.name];
             this.label = this.key;
             this.refresh();
+        }
+    }
+    
+    public async deleteTreeItemImpl?(context: IActionContext): Promise<void> {
+        if (this.key) {
+            const keyField = <Field>this.index.fields.find(f => f.key);
+            await this.searchClient.deleteDocument(this.index.name, keyField.name, this.key);
         }
     }
 }
