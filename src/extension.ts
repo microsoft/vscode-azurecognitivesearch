@@ -7,6 +7,7 @@ import { AzureAccountTreeItem } from './AzureAccountTreeItem';
 import { SearchServiceTreeItem } from './SearchServiceTreeItem';
 import { DocumentTreeItem } from './DocumentTreeItem';
 import { DocumentEditor } from './DocumentEditor';
+import { DocumentListTreeItem } from './DocumentListTreeItem';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -45,6 +46,14 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 	registerCommand("azureSearch.openDocument", async (_actionContext: IActionContext, treeItem: DocumentTreeItem) => await documentEditor.showEditor(treeItem));
+    registerCommand("azureSearch.createDocument", async (actionContext: IActionContext, treeItem: DocumentListTreeItem) => {
+		if (!treeItem) {
+			treeItem = <DocumentListTreeItem>await ext.tree.showTreeItemPicker(DocumentListTreeItem.contextValue, actionContext);
+		}
+
+		const docItem = await treeItem.createChild(actionContext);
+        await vscode.commands.executeCommand("azureSearch.openDocument", docItem);
+    });
 
 	registerEvent("azureSearch.searchDocument.onDidSaveTextDocument", 
 				  vscode.workspace.onDidSaveTextDocument, 

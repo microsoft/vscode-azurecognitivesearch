@@ -48,9 +48,9 @@ export class SimpleSearchClient {
         return r.data;
     }
 
-    public async updateDocument(indexName: string, doc: any) : Promise<void> {
+    public async uploadDocument(indexName: string, doc: any, createNew: boolean) : Promise<void> {
         const shallowCopy = { ...doc };
-        shallowCopy["@search.action"] = "merge";
+        shallowCopy["@search.action"] = createNew ? "mergeOrUpload" : "merge";
         const batch = { value: [shallowCopy] };
 
         let batchResponse: CollectionResponse<BatchResponseEntry>;

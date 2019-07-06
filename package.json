@@ -20,7 +20,8 @@
 		"onView:azureSearch",
 		"onCommand:azureSearch.refresh",
 		"onCommand:azureSearch.openInPortal",
-		"onCommand:azureSearch.selectSubscriptions"
+		"onCommand:azureSearch.selectSubscriptions",
+		"onCommand:azureSearch.createDocument"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -65,6 +66,15 @@
 					"dark": "resources/dark/filter.svg"
 				},
 				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.createDocument",
+				"title": "Create new document",
+				"icon": {
+					"light": "resources/light/add.svg",
+					"dark": "resources/dark/add.svg"
+				},
+				"category": "Azure Search"
 			}
 		],
 		"menus": {
@@ -73,6 +83,11 @@
 					"command": "azureSearch.refresh",
 					"when": "view == azureSearch",
 					"group": "navigation@99"
+				},
+				{
+					"command": "azureSearch.createDocument",
+					"when": "view == azureSearch && viewItem == azureSearchDocumentList",
+					"group": "navigation@98"
 				}
 			],
 			"view/item/context": [
@@ -90,6 +105,17 @@
 					"command": "azureSearch.openInPortal",
 					"when": "view == azureSearch && viewItem == azureSearchService",
 					"group": "navigation@2"
+				},
+				{
+					"command": "azureSearch.createDocument",
+					"when": "view == azureSearch && viewItem == azureSearchDocumentList",
+					"group": "2_create@1"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "azureSearch.createDocument",
+					"when": "never"
 				}
 			]
 		},
