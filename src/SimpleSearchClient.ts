@@ -1,14 +1,18 @@
-import Axios, { AxiosInstance, AxiosResponse } from "axios";
+import Axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from "axios";
 import { url } from "inspector";
 import { URL } from "url";
+import { appendExtensionUserAgent } from "vscode-azureextensionui";
 
 export class SimpleSearchClient {
     private static readonly API_VERSION = "2019-05-06";
+    private readonly requestConfig: AxiosRequestConfig;
 
     public constructor(
         public readonly serviceName: string,
-        private readonly apikey: string,
+        apikey: string,
         private readonly cloudSuffix?: string | undefined) {
+        const userAgent = appendExtensionUserAgent();
+        this.requestConfig = { headers: { "api-key": apikey, "User-Agent": userAgent } };
     }
 
     public async listIndexes() : Promise<Index[]> {
@@ -82,11 +86,11 @@ export class SimpleSearchClient {
     }
 
     private httpGetUrl<T = any, R = AxiosResponse<T>>(url: string) : Promise<R> {
-        return Axios.get<T, R>(url, { headers: { "api-key": this.apikey } });
+        return Axios.get<T, R>(url, this.requestConfig);
     }
 
     private httpPost<T = any, R = AxiosResponse<T>>(path: string, data: any) : Promise<R> {
-        return Axios.post<T, R>(this.makeUrl(path), data, { headers: { "api-key": this.apikey } });
+        return Axios.post<T, R>(this.makeUrl(path), data, this.requestConfig);
     }
 
     private makeUrl(path: string, options: string = "") : string {
