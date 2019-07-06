@@ -26,5 +26,9 @@ export class IndexTreeItem extends AzureParentTreeItem {
     
     public hasMoreChildrenImpl(): boolean {
         return false;
-    }   
+    }
+
+    public async search(query: string): Promise<any> {
+        return await this.searchClient.query(this.index.name, query, true);
+    }
 }

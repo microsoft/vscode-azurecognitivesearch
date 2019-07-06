@@ -22,7 +22,8 @@
 		"onCommand:azureSearch.openInPortal",
 		"onCommand:azureSearch.selectSubscriptions",
 		"onCommand:azureSearch.createDocument",
-		"onCommand:azureSearch.deleteDocument"
+		"onCommand:azureSearch.deleteDocument",
+		"onCommand:azureSearch.search"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -51,6 +52,15 @@
 				"icon": {
 					"light": "resources/light/refresh.svg",
 					"dark": "resources/dark/refresh.svg"
+				},
+				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.search",
+				"title": "Search",
+				"icon": {
+					"light": "resources/light/search.svg",
+					"dark": "resources/dark/search.svg"
 				},
 				"category": "Azure Search"
 			},
@@ -91,6 +101,11 @@
 					"group": "navigation@99"
 				},
 				{
+					"command": "azureSearch.search",
+					"when": "view == azureSearch",
+					"group": "navigation@97"
+				},
+				{
 					"command": "azureSearch.createDocument",
 					"when": "view == azureSearch && viewItem == azureSearchDocumentList",
 					"group": "navigation@98"
@@ -111,6 +126,11 @@
 					"command": "azureSearch.refresh",
 					"when": "view == azureSearch && viewItem == azureextensionui.azureSubscription",
 					"group": "9_refresh"
+				},
+				{
+					"command": "azureSearch.search",
+					"when": "view == azureSearch && (viewItem == azureSearchDocumentList || viewItem == azureSearchIndex)",
+					"group": "1_navigate"
 				},
 				{
 					"command": "azureSearch.openInPortal",

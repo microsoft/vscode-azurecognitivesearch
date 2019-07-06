@@ -28,9 +28,11 @@ export class SimpleSearchClient {
         return r.data.value.map(i => i.name);
     }
 
-    public async query(indexName: string, query: string) : Promise<QueryResponse> {
+    public async query(indexName: string, query: string, raw: boolean = false) : Promise<QueryResponse> {
         let r = await this.httpGet(`indexes/${indexName}/docs`, query);
-        this.fixupQueryResponse(r.data);
+        if (!raw) {
+            this.fixupQueryResponse(r.data);
+        }
         return r.data;
     }
 

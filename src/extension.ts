@@ -8,6 +8,8 @@ import { SearchServiceTreeItem } from './SearchServiceTreeItem';
 import { DocumentTreeItem } from './DocumentTreeItem';
 import { DocumentEditor } from './DocumentEditor';
 import { DocumentListTreeItem } from './DocumentListTreeItem';
+import { IndexTreeItem } from './IndexTreeItem';
+import { SearchResultDocumentProvider } from './SearchResultDocumentProvider';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -28,6 +30,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const documentEditor = new DocumentEditor();
 	context.subscriptions.push(documentEditor);
+
+	const searchResultDocumentProvider = new SearchResultDocumentProvider();
+	vscode.workspace.registerTextDocumentContentProvider("search", searchResultDocumentProvider);
 
 	registerCommand("azureSearch.refresh", async (_actionContext: IActionContext, treeItem?: AzExtTreeItem) => ext.tree.refresh(treeItem));
 	registerCommand("azureSearch.loadMore", async (actionContext: IActionContext, treeItem: AzExtTreeItem) => await ext.tree.loadMore(treeItem, actionContext));
@@ -64,14 +69,55 @@ export function activate(context: vscode.ExtensionContext) {
 			await treeItem.deleteTreeItem(actionContext);
 		}
 	});
+	registerCommand("azureSearch.search", async (actionContext: IActionContext, treeItem: AzExtTreeItem) => {
+		let indexItem = findSearchTarget(treeItem);
+
+		if (!indexItem) {
+			indexItem = <IndexTreeItem>await ext.tree.showTreeItemPicker(IndexTreeItem.contextValue, actionContext);
+		}
+
+		let query = await ext.ui.showInputBox({ placeHolder: "search=....&$filter=...", prompt: "Enter an Azure Search query string. You can use search, $filter, $top, etc." });
+		const result = await indexItem.search(query);
+		const id = searchResultDocumentProvider.registerContent(JSON.stringify(result, undefined, 4));
+		const doc = await vscode.workspace.openTextDocument(vscode.Uri.parse(`search:${id}`));
+		await vscode.window.showTextDocument(doc);
+	});
 
 	registerEvent("azureSearch.searchDocument.onDidSaveTextDocument", 
 				  vscode.workspace.onDidSaveTextDocument, 
 				  async (_actionContext: IActionContext, doc: vscode.TextDocument) => await documentEditor.onDidSaveTextDocument(doc));
 
+	registerEvent("azureSearch.searchResults.onDidCloseTextDocument",
+				  vscode.workspace.onDidCloseTextDocument,
+				  async (_actionContext: IActionContext, doc: vscode.TextDocument) => { 
+		if (doc.uri.scheme === "search") { 
+			searchResultDocumentProvider.unregisterContent(doc.uri.path); 
+		} 
+	});
 
 	return createApiProvider([]);
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
+
+function findSearchTarget(treeItem: AzExtTreeItem) : IndexTreeItem | undefined {
+	let indexItem: IndexTreeItem | undefined;
+	
+	if (treeItem && treeItem.contextValue === IndexTreeItem.contextValue) {
+		indexItem = <IndexTreeItem>treeItem;
+	}
+	else {
+		let selected = ext.treeView.selection && ext.treeView.selection.length > 0 ? ext.treeView.selection[0] : undefined;
+		if (selected) {
+			if (selected.contextValue === DocumentListTreeItem.contextValue) {
+				indexItem = <IndexTreeItem>selected.parent;
+			}
+			else if (selected.contextValue === IndexTreeItem.contextValue) {
+				indexItem = <IndexTreeItem>selected;
+			}
+		}
+	}
+
+	return indexItem;
+}
