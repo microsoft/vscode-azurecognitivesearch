@@ -42,5 +42,20 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
     
     public hasMoreChildrenImpl(): boolean {
         return false;
-    }   
+    }
+
+    public compareChildrenImpl(item1: AzExtTreeItem, item2: AzExtTreeItem): number {
+        return SearchServiceTreeItem.getTreeItemPosition(item1) - SearchServiceTreeItem.getTreeItemPosition(item2);
+    }
+
+    static getTreeItemPosition(item: AzExtTreeItem) : number {
+        switch (item.contextValue) {
+            case "azureSearchServiceDetails": return 1;
+            case IndexListTreeItem.contextValue: return 2;
+            case DataSourceListTreeItem.contextValue: return 3;
+            case IndexerListTreeItem.contextValue: return 4;
+        }
+
+        return 0;
+    }
 }

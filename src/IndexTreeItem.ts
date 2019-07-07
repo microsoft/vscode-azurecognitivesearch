@@ -31,4 +31,17 @@ export class IndexTreeItem extends AzureParentTreeItem {
     public async search(query: string): Promise<any> {
         return await this.searchClient.query(this.index.name, query, true);
     }
+
+    public compareChildrenImpl(item1: AzExtTreeItem, item2: AzExtTreeItem): number {
+        return SearchServiceTreeItem.getTreeItemPosition(item1) - SearchServiceTreeItem.getTreeItemPosition(item2);
+    }
+
+    static getTreeItemPosition(item: AzExtTreeItem) : number {
+        switch (item.contextValue) {
+            case "azureSearchIndexDetails": return 1;
+            case DocumentListTreeItem.contextValue: return 2;
+        }
+
+        return 0;
+    }
 }
