@@ -3,12 +3,12 @@ import * as os from "os";
 import * as path from "path";
 import * as crypto from "crypto";
 import * as fse from "fs-extra";
-import { DocumentTreeItem } from "./DocumentTreeItem";
 import { ext } from "./extensionVariables";
 import { DialogResponses, UserCancelledError } from "vscode-azureextensionui";
+import { IDocumentRepository } from "./IDocumentRepository";
 
 export class DocumentEditor implements vscode.Disposable {
-    private fileMap: { [key: string]: DocumentTreeItem } = {};
+    private fileMap: { [key: string]: IDocumentRepository } = {};
 
     public async dispose(): Promise<void> {
         for (const f of Object.keys(this.fileMap)) {
@@ -21,15 +21,15 @@ export class DocumentEditor implements vscode.Disposable {
         }
     }
 
-    public async showEditor(docItem: DocumentTreeItem): Promise<void> {
+    public async showEditor(item: IDocumentRepository): Promise<void> {
         const suffix = DocumentEditor.getRandomSuffix();
-        const filename = `${docItem.searchServiceName}-${docItem.index.name}-${suffix}.json`;
+        const filename = `${item.namePrefix}-${suffix}.json`;
         const localPath = path.join(os.tmpdir(), "vscode-azuresearch-editor", filename);
         await fse.ensureFile(localPath);
-        this.fileMap[localPath] = docItem;
+        this.fileMap[localPath] = item;
 
-        const content: any = await docItem.readContent();
-        await fse.writeJson(localPath, content, { spaces: 4 });
+        const result = await item.readContent();
+        await fse.writeJson(localPath, result ? result.content : {}, { spaces: 4 });
 
         const doc = await vscode.workspace.openTextDocument(localPath);
         await vscode.window.showTextDocument(doc);
@@ -38,8 +38,8 @@ export class DocumentEditor implements vscode.Disposable {
     public async onDidSaveTextDocument(doc: vscode.TextDocument) : Promise<void> {
         const filename = Object.keys(this.fileMap).find(f => path.relative(doc.fileName, f) === "");
         if (filename) {
-            const docItem = this.fileMap[filename];
-            const r: vscode.MessageItem | undefined = await vscode.window.showWarningMessage(`Saving these changes will update the document in index '${docItem.index.name}' of Azure Search service '${docItem.searchServiceName}`,
+            const item = this.fileMap[filename];
+            const r: vscode.MessageItem | undefined = await vscode.window.showWarningMessage(`Saving these changes will update ${item.itemKind} '${item.itemName}'`,
                                                                                              DialogResponses.upload,
                                                                                              DialogResponses.cancel);
 
@@ -48,7 +48,7 @@ export class DocumentEditor implements vscode.Disposable {
             }
 
             const content: any = await fse.readJson(doc.fileName);
-            await docItem.updateContent(content);
+            await item.updateContent(content);
         }
     }
 
