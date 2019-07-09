@@ -3,6 +3,7 @@ import { SearchServiceTreeItem } from "./SearchServiceTreeItem";
 import { SimpleSearchClient, Index } from "./SimpleSearchClient";
 import { DocumentListTreeItem } from "./DocumentListTreeItem";
 import { IndexListTreeItem } from "./IndexListTreeItem";
+import { EditableResourceTreeItem } from "./EditableResourceTreeItem";
 
 export class IndexTreeItem extends AzureParentTreeItem {
     public static readonly contextValue: string = "azureSearchIndex";
@@ -18,10 +19,12 @@ export class IndexTreeItem extends AzureParentTreeItem {
     }
 
     public async loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
-        let items: AzExtTreeItem[] = [];
-        items.push(new GenericTreeItem(this, { label: "Index details", contextValue: "azureSearchIndexDetails" }));
-        items.push(new DocumentListTreeItem(this, this.searchClient, this.index));
-        return items;
+        return [
+            new EditableResourceTreeItem(this, "azureSearchIndexDetails", "Index details", `${this.index.name}--details`, this.index.name, "index", 
+                                         () => this.searchClient.getResource("indexes", this.index.name),
+                                         (content: any, etag?: string) => this.searchClient.updateResource("indexes", this.index.name, content, etag)),
+            new DocumentListTreeItem(this, this.searchClient, this.index)
+        ];
     }    
     
     public hasMoreChildrenImpl(): boolean {

@@ -3,14 +3,13 @@ import { appendExtensionUserAgent } from "vscode-azureextensionui";
 
 export class SimpleSearchClient {
     private static readonly API_VERSION = "2019-05-06";
-    private readonly requestConfig: AxiosRequestConfig;
+    private readonly userAgent: string;
 
     public constructor(
         public readonly serviceName: string,
-        apikey: string,
+        private readonly apikey: string,
         private readonly cloudSuffix?: string | undefined) {
-        const userAgent = appendExtensionUserAgent();
-        this.requestConfig = { headers: { "api-key": apikey, "User-Agent": userAgent } };
+        this.userAgent = appendExtensionUserAgent();
     }
 
     public async listIndexes() : Promise<Index[]> {
@@ -26,6 +25,15 @@ export class SimpleSearchClient {
     public async listIndexers(): Promise<string[]> {
         let r = await this.httpGet<CollectionResponse<NamedItem>>("indexers", "$select=name");
         return r.data.value.map(i => i.name);
+    }
+
+    public async getResource(resource: string, name: string): Promise<{ content: any, etag: string }> {
+        let r = await this.httpGet<any>(`${resource}/${name}`);
+        return { content: r.data, etag: r.headers["etag"] };
+    }
+
+    public updateResource(resource: string, name: string, content: any, etag?: string): Promise<void> {
+        return this.httpPut(`${resource}/${name}`, content, etag);
     }
 
     public async query(indexName: string, query: string, raw: boolean = false) : Promise<QueryResponse> {
@@ -73,11 +81,7 @@ export class SimpleSearchClient {
             batchResponse = r.data;
         }
         catch (error) {
-            if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
-                throw new Error(`Failed to process document: ${error.response.data.error.message}`);
-            }
-
-            throw new Error(`Error: ${error.message || "unknown error"}`);
+            throw new Error(`Failed to process document: ${this.extractErrorMessage(error)}`);
         }
 
         if (batchResponse.value.length !== 1) {
@@ -89,6 +93,14 @@ export class SimpleSearchClient {
         }
     }
 
+    private extractErrorMessage(error: any): string | undefined {
+        if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
+            return error.response.data.error.message;
+        }
+
+        return `Error: ${error.message || error}`;
+    }
+
     private fixupQueryResponse(response: any) {
         response.nextLink = response["@odata.nextLink"];
         response.nextPageParameteres = response["@search.nextPageParameters"];
@@ -98,12 +110,35 @@ export class SimpleSearchClient {
         return this.httpGetUrl(this.makeUrl(path, queryString));
     }
 
-    private httpGetUrl<T = any, R = AxiosResponse<T>>(url: string) : Promise<R> {
-        return Axios.get<T, R>(url, this.requestConfig);
+    private async httpGetUrl<T = any, R = AxiosResponse<T>>(url: string) : Promise<R> {
+        try {
+            return await Axios.get<T, R>(url, this.makeRequestConfig());
+        }
+        catch (error) {
+            throw new Error(this.extractErrorMessage(error));
+        }
     }
 
-    private httpPost<T = any, R = AxiosResponse<T>>(path: string, data: any) : Promise<R> {
-        return Axios.post<T, R>(this.makeUrl(path), data, this.requestConfig);
+    private async httpPost<T = any, R = AxiosResponse<T>>(path: string, data: any) : Promise<R> {
+        try {
+            return await Axios.post<T, R>(this.makeUrl(path), data, this.makeRequestConfig());
+        }
+        catch (error) {
+            throw new Error(this.extractErrorMessage(error));
+        }
+    }
+
+    private async httpPut<T = any, R = AxiosResponse<T>>(path: string, data: any, etag?: string) : Promise<R> {
+        try {
+            const config = this.makeRequestConfig();
+            if (etag) {
+                config.headers["if-match"] = etag;
+            }
+            return await Axios.put<T, R>(this.makeUrl(path), data, config);
+        }
+        catch (error) {
+            throw new Error(this.extractErrorMessage(error));
+        }
     }
 
     private makeUrl(path: string, options: string = "") : string {
@@ -112,6 +147,10 @@ export class SimpleSearchClient {
             options = "&" + options;
         }
         return `https://${this.serviceName}.${suffix}/${path}?api-version=${SimpleSearchClient.API_VERSION}${options}`;
+    }
+
+    private makeRequestConfig(): AxiosRequestConfig {
+        return { headers: { "api-key": this.apikey, "User-Agent": this.userAgent } };
     }
 }
 
