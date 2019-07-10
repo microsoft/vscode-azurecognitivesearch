@@ -27,6 +27,16 @@ export class SimpleSearchClient {
         return r.data.value.map(i => i.name);
     }
 
+    public async listSynonymMaps(): Promise<string[]> {
+        let r = await this.httpGet<CollectionResponse<NamedItem>>("synonymmaps", "$select=name");
+        return r.data.value.map(i => i.name);
+    }
+
+    public async listSkillsets(): Promise<string[]> {
+        let r = await this.httpGet<CollectionResponse<NamedItem>>("skillsets", "$select=name");
+        return r.data.value.map(i => i.name);
+    }
+
     public async getResource(resource: string, name: string): Promise<{ content: any, etag: string }> {
         let r = await this.httpGet<any>(`${resource}/${name}`);
         return { content: r.data, etag: r.headers["etag"] };

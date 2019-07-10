@@ -20,9 +20,10 @@ export class IndexTreeItem extends AzureParentTreeItem {
 
     public async loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
         return [
-            new EditableResourceTreeItem(this, "azureSearchIndexDetails", "Index details", `${this.index.name}--details`, this.index.name, "index", "azsindex",
+            new EditableResourceTreeItem(this, "azureSearchIndexDetails", `${this.index.name}--details`, this.index.name, "index", "azsindex",
                                          () => this.searchClient.getResource("indexes", this.index.name),
-                                         (content: any, etag?: string) => this.searchClient.updateResource("indexes", this.index.name, content, etag)),
+                                         (content: any, etag?: string) => this.searchClient.updateResource("indexes", this.index.name, content, etag),
+                                         "Index details"),
             new DocumentListTreeItem(this, this.searchClient, this.index)
         ];
     }    

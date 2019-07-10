@@ -6,6 +6,8 @@ import { IndexListTreeItem } from "./IndexListTreeItem";
 import { SimpleSearchClient } from "./SimpleSearchClient";
 import { DataSourceListTreeItem } from "./DataSourceListTreeItem";
 import { IndexerListTreeItem } from "./IndexerListTreeItem";
+import { SynonymMapTreeItem } from "./SynonymMapListTreeItem";
+import { SkillsetTreeItem } from "./SkillSetListTreeItem";
 
 export class SearchServiceTreeItem extends AzureParentTreeItem {
     public static contextValue: string = "azureSearchService";
@@ -28,16 +30,14 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
 
         const searchClient = new SimpleSearchClient(name, <string>keys.primaryKey);
 
-        let items: AzExtTreeItem[] = [];
-        items.push(new GenericTreeItem(this, { label: "Service details", contextValue: "azureSearchServiceDetails" }));
-        items.push(new IndexListTreeItem(this, searchClient));
-        items.push(new DataSourceListTreeItem(this, searchClient));
-        items.push(new IndexerListTreeItem(this, searchClient));
-
-        // TODO: Other pending subresources of search services
-        // items.push(new GenericTreeItem(this, { label: "Synonym maps", contextValue: "azureSearchSynonymMaps" }));
-        // items.push(new GenericTreeItem(this, { label: "Skillsets", contextValue: "azureSearchSkillsets" }));
-        return items;
+        return [
+            new GenericTreeItem(this, { label: "Service details", contextValue: "azureSearchServiceDetails" }),
+            new IndexListTreeItem(this, searchClient),
+            new DataSourceListTreeItem(this, searchClient),
+            new IndexerListTreeItem(this, searchClient),
+            new SkillsetTreeItem(this, searchClient),
+            new SynonymMapTreeItem(this, searchClient)
+        ];
     }    
     
     public hasMoreChildrenImpl(): boolean {
@@ -54,8 +54,10 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
             case IndexListTreeItem.contextValue: return 2;
             case DataSourceListTreeItem.contextValue: return 3;
             case IndexerListTreeItem.contextValue: return 4;
+            case SkillsetTreeItem.contextValue: return 5;
+            case SynonymMapTreeItem.contextValue: return 6;
         }
 
-        return 0;
+        return 100;
     }
 }

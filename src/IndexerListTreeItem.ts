@@ -1,4 +1,4 @@
-import { AzureParentTreeItem, IActionContext, AzExtTreeItem, GenericTreeItem } from "vscode-azureextensionui";
+import { AzureParentTreeItem, IActionContext, AzExtTreeItem } from "vscode-azureextensionui";
 import { SearchServiceTreeItem } from "./SearchServiceTreeItem";
 import { SimpleSearchClient } from "./SimpleSearchClient";
 import { EditableResourceTreeItem } from "./EditableResourceTreeItem";
@@ -17,7 +17,7 @@ export class IndexerListTreeItem extends AzureParentTreeItem {
     public async loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
         // TODO: does the /indexers endpoint ever return a continuation link? I don't think so.
         let indexers: string[] = await this.searchClient.listIndexers();
-        return indexers.map(i => new EditableResourceTreeItem(this, "azureSearchIndexer", "Indexer", `indexer-${i}--details`, i, "indexer", "azsindexer",
+        return indexers.map(i => new EditableResourceTreeItem(this, "azureSearchIndexer", `indexer-${i}--details`, i, "indexer", "azsindexer",
                                                               () => this.searchClient.getResource("indexers", i),
                                                               (content: any, etag?: string) => this.searchClient.updateResource("indexers", i, content, etag)));
     }    
