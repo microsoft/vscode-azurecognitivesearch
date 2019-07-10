@@ -1,0 +1,57 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Azure Search Synonym Map",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Name of the synonym map. Required for new synonym maps, optional for updates."
+        },
+        "format": {
+            "type": "string",
+            "description": "Format of the synonym map.",
+            "enum": [
+                "solr"
+            ]
+        },
+        "synonyms": {
+            "type": "string",
+            "description": "Actual synonym map in the format specified by 'format'."
+        },
+        "encryptionKey": {
+            "type": "object",
+            "description": "Configuration information for using customer-managed encryption keys.",
+            "properties": {
+                "keyVaultKeyName": {
+                    "type": "string"
+                },
+                "keyVaultKeyVersion": {
+                    "type": "string"
+                },
+                "keyVaultUri": {
+                    "type": "string"
+                },
+                "accessCredentials": {
+                    "type": "object",
+                    "properties": {
+                        "applicationId": {
+                            "type": "string"
+                        },
+                        "applicationSecret": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "keyVaultKeyName",
+                "keyVaultKeyVersion",
+                "keyVaultUri"
+            ]
+        }
+    },
+    "required": [
+        "format",
+        "synonyms"
+    ]
+}
