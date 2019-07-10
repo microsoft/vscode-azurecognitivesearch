@@ -1,0 +1,460 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Azure Search Index",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Name of the index. Required during creation, optional for updates."
+        },
+        "fields": {
+            "type": "array",
+            "description": "List of fields for this index.",
+            "items": {
+                "$ref": "#/definitions/field"
+            }
+        },
+        "suggesters": {
+            "type": "array",
+            "description": "List of suggesters associated with this index.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of this suggester."
+                    },
+                    "searchMode": {
+                        "type": "string",
+                        "description": "Specifies the strategy used to search for suggestions.",
+                        "enum": [
+                            "analyzingInfixMatching"
+                        ]
+                    },
+                    "sourceFields": {
+                        "type": "array",
+                        "description": "List of fields used to populate candidates for this suggester.",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "name",
+                    "searchMode",
+                    "sourceFields"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "scoringProfiles": {
+            "type": "array",
+            "description": "List of scoring profiles, each defining details that control how results are scored.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Type of the scoring profile."
+                    },
+                    "text": {
+                        "type": "object",
+                        "description": "Adjust text-related aspects of scoring, such as field weights.",
+                        "properties": {
+                            "weights": {
+                                "type": "object",
+                                "description": "Name/value pairs representing field names and field weights."
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "functions": {
+                        "type": "array",
+                        "description": "Scoring functions that adjust document score based on document/query values.",
+                        "items": {
+                            "type": "object",
+                            "description": "Scoring function that adjusts scores based on magnitudes, freshness, distance, or tags.",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "description": "Type of scoring function.",
+                                    "enum": [
+                                        "magnitude",
+                                        "freshness",
+                                        "distance",
+                                        "tag"
+                                    ]
+                                },
+                                "boost": {
+                                    "type": "number",
+                                    "description": "Boost to apply over the base score."
+                                },
+                                "fieldName": {
+                                    "type": "string",
+                                    "description": "Name of the field that's input to this function."
+                                },
+                                "interpolation": {
+                                    "type": "string",
+                                    "description": "Interpolation function for values in the range.",
+                                    "enum": [
+                                        "constant",
+                                        "linear",
+                                        "quadratic",
+                                        "logarithmic"
+                                    ]
+                                },
+                                "magnitude": {
+                                    "type": ["object", "null"],
+                                    "description": "Boost based on a numeric field in each document.",
+                                    "properties": {
+                                        "boostingRangeStart": {
+                                            "type": "number"
+                                        },
+                                        "boostingRangeEnd": {
+                                            "type": "number"
+                                        },
+                                        "constantBoostBeyondRange": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": [
+                                        "boostingRangeStart",
+                                        "boostingRangeEnd"
+                                    ]
+                                },
+                                "freshness": {
+                                    "type": ["object", "null"],
+                                    "description": "Boost based on the difference in time between 'now' and a date field in each document.",
+                                    "properties": {
+                                        "boostingDuration": {
+                                            "type": "string",
+                                            "description": "Timespan to consider as range for boosting, in ISO 8601 format.  The pattern for this is: 'P[nD][T[nH][nM][nS]]'."
+                                        }
+                                    },
+                                    "required": [
+                                        "boostingDuration"
+                                    ]
+                                },
+                                "distance": {
+                                    "type": ["object", "null"],
+                                    "description": "Boost based on geographic distance.",
+                                    "properties": {
+                                        "referencePointParameter": {
+                                            "type": "string",
+                                            "description": "Name of the parameter passed in queries to indicate reference location."
+                                        },
+                                        "boostingDistance": {
+                                            "type": "number",
+                                            "description": "The distance in kilometers from the reference location where the boosting range ends."
+                                        }
+                                    },
+                                    "required": [
+                                        "referencePointParameter",
+                                        "boostingDistance"
+                                    ]
+                                },
+                                "tag": {
+                                    "type": ["object", "null"],
+                                    "description": "Boost based on matches of tags bewteen documents and queries.",
+                                    "properties": {
+                                        "tagsParameter": {
+                                            "type": "string",
+                                            "description": "Parameter to be passed in queries to specify a list of tags to compare against target fields."
+                                        }
+                                    }
+                                }
+                            },
+                            "required": [
+                                "type",
+                                "boost",
+                                "fieldName"
+                            ],
+                            "anyOf": [
+                                {
+                                    "properties": {
+                                        "type": {
+                                            "const": "magnitude"
+                                        }
+                                    },
+                                    "required": [
+                                        "magnitude"
+                                    ]
+                                },
+                                {
+                                    "properties": {
+                                        "type": {
+                                            "const": "freshness"
+                                        }
+                                    },
+                                    "required": [
+                                        "freshness"
+                                    ]
+                                },
+                                {
+                                    "properties": {
+                                        "type": {
+                                            "const": "distance"
+                                        }
+                                    },
+                                    "required": [
+                                        "distance"
+                                    ]
+                                },
+                                {
+                                    "properties": {
+                                        "type": {
+                                            "const": "tag"
+                                        }
+                                    },
+                                    "required": [
+                                        "tag"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "functionAggregation": {
+                        "type": "string",
+                        "description": "Function used to aggregate the output from multiple scoring functions.",
+                        "enum": [
+                            "sum",
+                            "average",
+                            "minimum",
+                            "maximum",
+                            "firstMatching"
+                        ]
+                    }
+                },
+                "required": [
+                    "name"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "defaultScoringProfile": {
+            "type": ["string", "null"],
+            "description": "Name of the scoring profile used when no scoring profile is explicitly specified in a query."
+        },
+        "corsOptions": {
+            "type": "object",
+            "description": "Options to manage CORS(cross-origin requests) support in this index.",
+            "properties": {
+                "allowedOrigins": {
+                    "type": "array",
+                    "description": "List of allowed origins, or * to allow all origins.",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "maxAgeInSeconds": {
+                    "type": ["number", "null"],
+                    "minimum": 0
+                }
+            },
+            "required": [
+                "allowedOrigins"
+            ]
+        },
+        "encryptionKey": {
+            "type": "object",
+            "description": "Configuration information for using customer-managed encryption keys.",
+            "properties": {
+                "keyVaultKeyName": {
+                    "type": "string"
+                },
+                "keyVaultKeyVersion": {
+                    "type": "string"
+                },
+                "keyVaultUri": {
+                    "type": "string"
+                },
+                "accessCredentials": {
+                    "type": "object",
+                    "properties": {
+                        "applicationId": {
+                            "type": "string"
+                        },
+                        "applicationSecret": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "keyVaultKeyName",
+                "keyVaultKeyVersion",
+                "keyVaultUri"
+            ]
+        },
+        "analyzers": {
+            "type": "array",
+            "description": "Definitions of custom analyzers for this index.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name to be used to reference this analyzer."
+                    },
+                    "@odata.type": {
+                        "type": "string",
+                        "description": "Type of analyzer",
+                        "default": "#Microsoft.Azure.Search.CustomAnalyzer"
+                    },
+                    "charFilters": {
+                        "type": "array",
+                        "description": "List of character filters in order of application.",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "tokenizer": {
+                        "type": "string",
+                        "description": "Pre-built or custom tokenizer to use in this analyzer."
+                    },
+                    "tokenFilters": {
+                        "type": "array",
+                        "description": "List of token filters in order of application.",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "name",
+                    "@odata.type"
+                ]
+            }
+        },
+        "charFilters": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "@odata.type": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "tokenizers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "@odata.type": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "tokenFilters": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "@odata.type": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "field": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the field."
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Data type for this field",
+                    "enum": [
+                        "Edm.String",
+                        "Edm.Int32",
+                        "Edm.Int64",
+                        "Edm.Double",
+                        "Edm.Boolean",
+                        "Edm.DateTimeOffset",
+                        "Edm.GeographyPoint",
+                        "Edm.ComplexType",
+                        "Collection(Edm.String)",
+                        "Collection(Edm.Int32)",
+                        "Collection(Edm.Int64)",
+                        "Collection(Edm.Double)",
+                        "Collection(Edm.Boolean)",
+                        "Collection(Edm.DateTimeOffset)",
+                        "Collection(Edm.GeographyPoint)",
+                        "Collection(Edm.ComplexType)"
+                    ]
+                },
+                "searchable": {
+                    "type": "boolean",
+                    "description": "Index the contents of this field for full-text search."
+                },
+                "filterable": {
+                    "type": "boolean",
+                    "description": "Index the value of this field for fast filtering."
+                },
+                "sortable": {
+                    "type": "boolean",
+                    "description": "Enable sorting on this field."
+                },
+                "facetable": {
+                    "type": "boolean",
+                    "description": "Enable facets on this field."
+                },
+                "key": {
+                    "type": "boolean",
+                    "description": "Indicates whether this field is the key field for the index."
+                },
+                "retrievable": {
+                    "type": "boolean",
+                    "description": "Enable retrieving this field during queries and lookups."
+                },
+                "synonymMaps": {
+                    "type": "array",
+                    "description": "Associate a synonym map with this field.",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "analyzer": {
+                    "type": ["string", "null"],
+                    "description": "Name of the pre-built or custom analyzer to use both for indexing and search."
+                },
+                "indexAnalyzer": {
+                    "type": ["string", "null"],
+                    "description": "Name of the pre-built or custom analyzer to use both for indexing."
+                },
+                "searchAnalyzer": {
+                    "type": ["string", "null"],
+                    "description": "Name of the pre-built or custom analyzer to use both for search."
+                },
+                "fields": {
+                    "type": "array",
+                    "description": "Nested fields for fields of type Edm.ComplexType or Collection(Edm.ComplexType)",
+                    "items": {
+                        "$ref": "#/definitions/field"
+                    }
+                }
+            },
+            "required": [
+                "name",
+                "type"
+            ],
+            "additionalProperties": false
+        }
+    }
+}

@@ -23,7 +23,7 @@ export class DocumentEditor implements vscode.Disposable {
 
     public async showEditor(item: IDocumentRepository): Promise<void> {
         const suffix = DocumentEditor.getRandomSuffix();
-        const filename = `${item.namePrefix}-${suffix}.json`;
+        const filename = `${item.namePrefix}-${suffix}.${item.extension}`;
         const localPath = path.join(os.tmpdir(), "vscode-azuresearch-editor", filename);
         await fse.ensureFile(localPath);
         this.fileMap[localPath] = item;
@@ -32,6 +32,7 @@ export class DocumentEditor implements vscode.Disposable {
         await fse.writeJson(localPath, result ? result.content : {}, { spaces: 4 });
 
         const doc = await vscode.workspace.openTextDocument(localPath);
+        vscode.languages.setTextDocumentLanguage(doc, "json");
         await vscode.window.showTextDocument(doc);
     }
 

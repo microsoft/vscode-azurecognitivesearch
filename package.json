@@ -169,7 +169,13 @@
 					"description": "Show or hide the Azure Search Explorer"
 				}
 			}
-		}
+		},
+		"jsonValidation": [
+			{
+				"fileMatch": "*.azsindex",
+				"url": "./schema/index.json"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

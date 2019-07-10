@@ -11,6 +11,7 @@ export class EditableResourceTreeItem extends AzureTreeItem implements IDocument
         public readonly namePrefix: string,
         public readonly itemName: string,
         public readonly itemKind: string,
+        public readonly extension: string,
         private readonly readImpl: () => Promise<{ content: any; etag?: string | undefined; } | undefined>,
         private readonly updateImpl: (content: any, etag?: string | undefined) => Promise<void>) {
         super(parent);

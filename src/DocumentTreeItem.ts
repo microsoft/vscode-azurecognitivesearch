@@ -11,6 +11,7 @@ export class DocumentTreeItem extends AzureTreeItem implements IDocumentReposito
     readonly namePrefix: string;
     readonly itemName: string;
     readonly itemKind: string = "document";
+    readonly extension: string = "json";
 
     public constructor(
         parent: DocumentListTreeItem,
