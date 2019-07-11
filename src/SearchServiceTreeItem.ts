@@ -8,6 +8,7 @@ import { DataSourceListTreeItem } from "./DataSourceListTreeItem";
 import { IndexerListTreeItem } from "./IndexerListTreeItem";
 import { SynonymMapListTreeItem } from "./SynonymMapListTreeItem";
 import { SkillsetListTreeItem } from "./SkillsetListTreeItem";
+import { ServiceDetailsTreeItem } from "./ServiceDetailsTreeItem";
 
 export class SearchServiceTreeItem extends AzureParentTreeItem {
     public static contextValue: string = "azureSearchService";
@@ -31,7 +32,7 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
         const searchClient = new SimpleSearchClient(name, <string>keys.primaryKey);
 
         return [
-            new GenericTreeItem(this, { label: "Service details", contextValue: "azureSearchServiceDetails" }),
+            new ServiceDetailsTreeItem(this, this.searchService),
             new IndexListTreeItem(this, searchClient),
             new DataSourceListTreeItem(this, searchClient),
             new IndexerListTreeItem(this, searchClient),
