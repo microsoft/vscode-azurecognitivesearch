@@ -34,7 +34,7 @@ export class DocumentTreeItem extends AzureTreeItem implements IDocumentReposito
             return undefined;
         }
 
-        const c = await this.searchClient.lookup(this.index.name, this.key);
+        const c = await this.searchClient.lookupDocument(this.index.name, this.key);
 
         return { content: c, etag: undefined };
     }

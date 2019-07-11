@@ -5,6 +5,11 @@ export class SimpleSearchClient {
     private static readonly API_VERSION = "2019-05-06";
     private readonly userAgent: string;
 
+    public static readonly DataSources: string = "datasources";
+    public static readonly Indexers: string = "indexers";
+    public static readonly Skillsets: string = "skillsets";
+    public static readonly SynonymMaps: string = "synonymmaps";
+
     public constructor(
         public readonly serviceName: string,
         private readonly apikey: string,
@@ -17,23 +22,8 @@ export class SimpleSearchClient {
         return r.data.value;
     }
 
-    public async listDataSources(): Promise<string[]> {
-        let r = await this.httpGet<CollectionResponse<NamedItem>>("datasources", "$select=name");
-        return r.data.value.map(i => i.name);
-    }
-
-    public async listIndexers(): Promise<string[]> {
-        let r = await this.httpGet<CollectionResponse<NamedItem>>("indexers", "$select=name");
-        return r.data.value.map(i => i.name);
-    }
-
-    public async listSynonymMaps(): Promise<string[]> {
-        let r = await this.httpGet<CollectionResponse<NamedItem>>("synonymmaps", "$select=name");
-        return r.data.value.map(i => i.name);
-    }
-
-    public async listSkillsets(): Promise<string[]> {
-        let r = await this.httpGet<CollectionResponse<NamedItem>>("skillsets", "$select=name");
+    public async listResources(resource: string): Promise<string[]> {
+        let r = await this.httpGet<CollectionResponse<NamedItem>>(resource, "$select=name");
         return r.data.value.map(i => i.name);
     }
 
@@ -60,7 +50,7 @@ export class SimpleSearchClient {
         return r.data;
     }
 
-    public async lookup(indexName: string, key: string) : Promise<any> {
+    public async lookupDocument(indexName: string, key: string) : Promise<any> {
         const encodedKey = encodeURIComponent(key);
         let r = await this.httpGet(`indexes/${indexName}/docs/${encodedKey}`);
         return r.data;

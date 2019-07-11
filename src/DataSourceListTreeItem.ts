@@ -1,28 +1,18 @@
-import { AzureParentTreeItem, IActionContext, AzExtTreeItem } from "vscode-azureextensionui";
 import { SearchServiceTreeItem } from "./SearchServiceTreeItem";
 import { SimpleSearchClient } from "./SimpleSearchClient";
-import { EditableResourceTreeItem } from "./EditableResourceTreeItem";
+import { SearchResourceListTreeItem } from "./SearchResourceListTreeItem";
 
-export class DataSourceListTreeItem extends AzureParentTreeItem {
-    public static contextValue: string = "azureSearchDataSourceList";
-    public readonly contextValue: string = DataSourceListTreeItem.contextValue;
-    public label: string = "Data Sources";
+export class DataSourceListTreeItem extends SearchResourceListTreeItem {
+    public static readonly contextValue: string = "azureSearchDataSourceList";
 
-    public constructor(
-        parent: SearchServiceTreeItem,
-        private readonly searchClient: SimpleSearchClient) {
-        super(parent);
+    public constructor(parent: SearchServiceTreeItem, searchClient: SimpleSearchClient) {
+        super(parent, 
+              DataSourceListTreeItem.contextValue,
+              "azureSearchDataSource",
+              "Data Sources",
+              SimpleSearchClient.DataSources,
+              "data source",
+              "azsds",
+              searchClient);
     }
-
-    public async loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
-        // TODO: does the /datasources endpoint ever return a continuation link? I don't think so.
-        let datasources: string[] = await this.searchClient.listDataSources();
-        return datasources.map(i => new EditableResourceTreeItem(this, "azureSearchDataSource", `datasource-${i}--details`, i, "data source", "azsds",
-                                                                 () => this.searchClient.getResource("datasources", i),
-                                                                 (content: any, etag?: string) => this.searchClient.updateResource("datasources", i, content, etag)));
-    }    
-    
-    public hasMoreChildrenImpl(): boolean {
-        return false;
-    }   
 }

@@ -1,28 +1,18 @@
-import { AzureParentTreeItem, IActionContext, AzExtTreeItem } from "vscode-azureextensionui";
 import { SearchServiceTreeItem } from "./SearchServiceTreeItem";
 import { SimpleSearchClient } from "./SimpleSearchClient";
-import { EditableResourceTreeItem } from "./EditableResourceTreeItem";
+import { SearchResourceListTreeItem } from "./SearchResourceListTreeItem";
 
-export class SynonymMapTreeItem extends AzureParentTreeItem {
-    public static contextValue: string = "azureSearchSynonymMapList";
-    public readonly contextValue: string = SynonymMapTreeItem.contextValue;
-    public label: string = "Synonym Maps";
+export class SynonymMapTreeItem extends SearchResourceListTreeItem {
+    public static readonly contextValue: string = "azureSearchSynonymMapList";
 
-    public constructor(
-        parent: SearchServiceTreeItem,
-        private readonly searchClient: SimpleSearchClient) {
-        super(parent);
+    public constructor(parent: SearchServiceTreeItem, searchClient: SimpleSearchClient) {
+        super(parent,
+              SynonymMapTreeItem.contextValue,
+              "azureSearchSynonymMap",
+              "Synonym Maps",
+              SimpleSearchClient.SynonymMaps,
+              "synonym map",
+              "azssymmap",
+              searchClient);
     }
-
-    public async loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
-        // TODO: does the /synoymmaps endpoint ever return a continuation link? I don't think so.
-        let synonymMaps: string[] = await this.searchClient.listSynonymMaps();
-        return synonymMaps.map(i => new EditableResourceTreeItem(this, "azureSearchSynonymMap", `synonymmap-${i}--details`, i, "synoynm map", "azssymmap",
-                                                                 () => this.searchClient.getResource("synonymmaps", i),
-                                                                 (content: any, etag?: string) => this.searchClient.updateResource("synonymmaps", i, content, etag)));
-    }    
-    
-    public hasMoreChildrenImpl(): boolean {
-        return false;
-    }   
 }
