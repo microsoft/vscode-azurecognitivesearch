@@ -1,4 +1,4 @@
-import { AzureParentTreeItem, IActionContext, AzExtTreeItem } from "vscode-azureextensionui";
+import { AzureParentTreeItem, IActionContext, AzExtTreeItem, ICreateChildImplContext } from "vscode-azureextensionui";
 import { SearchServiceTreeItem } from "./SearchServiceTreeItem";
 import { SimpleSearchClient } from "./SimpleSearchClient";
 import { EditableResourceTreeItem } from "./EditableResourceTreeItem";
@@ -10,7 +10,7 @@ export class SearchResourceListTreeItem extends AzureParentTreeItem {
         public readonly contextValue: string,
         public readonly itemContextValue: string,
         public readonly label: string,
-        private readonly resource: string,
+        private readonly itemSet: string,
         private readonly itemKind: string,
         private readonly extension: string,
         private readonly searchClient: SimpleSearchClient) {
@@ -19,13 +19,23 @@ export class SearchResourceListTreeItem extends AzureParentTreeItem {
 
     public async loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
         // TODO: do the non-search collections endpoints ever return a continuation link? I don't think so.
-        let resources: string[] = await this.searchClient.listResources(this.resource);
-        return resources.map(r => new EditableResourceTreeItem(this, this.itemContextValue, `${this.resource}-${r}`, r, this.itemKind, this.extension,
-                                                               () => this.searchClient.getResource(this.resource, r),
-                                                               (content: any, etag?: string) => this.searchClient.updateResource(this.resource, r, content, etag)));
+        let resources: string[] = await this.searchClient.listResources(this.itemSet);
+        return resources.map(r => this.makeItem(r));
     }    
     
     public hasMoreChildrenImpl(): boolean {
         return false;
-    }   
+    }
+
+    public async createChildImpl(context: ICreateChildImplContext): Promise<EditableResourceTreeItem> {
+        return this.makeItem();
+    }
+
+    private makeItem(itemName?: string): EditableResourceTreeItem {
+        const name = itemName || "new";
+        const label = itemName ? undefined : "<new>";
+        const creating = !itemName;
+
+        return new EditableResourceTreeItem(this, this.itemContextValue, this.itemSet, name, this.itemKind, this.extension, creating, this.searchClient, label);
+    }
 }

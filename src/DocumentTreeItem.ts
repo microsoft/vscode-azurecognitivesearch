@@ -1,5 +1,5 @@
 import { AzureTreeItem, IActionContext } from "vscode-azureextensionui";
-import { SimpleSearchClient, QueryResponse, Index, Field } from "./SimpleSearchClient";
+import { SimpleSearchClient, Index, Field } from "./SimpleSearchClient";
 import { DocumentListTreeItem } from "./DocumentListTreeItem";
 import { IDocumentRepository } from "./IDocumentRepository";
 
@@ -21,7 +21,7 @@ export class DocumentTreeItem extends AzureTreeItem implements IDocumentReposito
         super(parent);
         this.label = key || "<new document>";
         this.namePrefix = `${this.searchServiceName}-${this.index.name}`;
-        this.itemName = this.index.name;
+        this.itemName = key;
     }
 
     public get searchServiceName(): string {

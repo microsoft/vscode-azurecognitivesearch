@@ -6,8 +6,8 @@ import { IndexListTreeItem } from "./IndexListTreeItem";
 import { SimpleSearchClient } from "./SimpleSearchClient";
 import { DataSourceListTreeItem } from "./DataSourceListTreeItem";
 import { IndexerListTreeItem } from "./IndexerListTreeItem";
-import { SynonymMapTreeItem } from "./SynonymMapListTreeItem";
-import { SkillsetTreeItem } from "./SkillSetListTreeItem";
+import { SynonymMapListTreeItem } from "./SynonymMapListTreeItem";
+import { SkillsetListTreeItem } from "./SkillsetListTreeItem";
 
 export class SearchServiceTreeItem extends AzureParentTreeItem {
     public static contextValue: string = "azureSearchService";
@@ -35,8 +35,8 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
             new IndexListTreeItem(this, searchClient),
             new DataSourceListTreeItem(this, searchClient),
             new IndexerListTreeItem(this, searchClient),
-            new SkillsetTreeItem(this, searchClient),
-            new SynonymMapTreeItem(this, searchClient)
+            new SkillsetListTreeItem(this, searchClient),
+            new SynonymMapListTreeItem(this, searchClient)
         ];
     }    
     
@@ -54,8 +54,8 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
             case IndexListTreeItem.contextValue: return 2;
             case DataSourceListTreeItem.contextValue: return 3;
             case IndexerListTreeItem.contextValue: return 4;
-            case SkillsetTreeItem.contextValue: return 5;
-            case SynonymMapTreeItem.contextValue: return 6;
+            case SkillsetListTreeItem.contextValue: return 5;
+            case SynonymMapListTreeItem.contextValue: return 6;
         }
 
         return 100;

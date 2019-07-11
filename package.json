@@ -23,7 +23,15 @@
 		"onCommand:azureSearch.openInPortal",
 		"onCommand:azureSearch.selectSubscriptions",
 		"onCommand:azureSearch.createDocument",
+		"onCommand:azureSearch.createDataSource",
+		"onCommand:azureSearch.createIndexer",
+		"onCommand:azureSearch.createSkillset",
+		"onCommand:azureSearch.createSynonymMap",
 		"onCommand:azureSearch.deleteDocument",
+		"onCommand:azureSearch.deleteDataSource",
+		"onCommand:azureSearch.deleteIndexer",
+		"onCommand:azureSearch.deleteSkillset",
+		"onCommand:azureSearch.deleteSynonymMap",
 		"onCommand:azureSearch.search"
 	],
 	"main": "./out/extension.js",
@@ -92,6 +100,46 @@
 				"command": "azureSearch.deleteDocument",
 				"title": "Delete document",
 				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.createDataSource",
+				"title": "Create new data source",
+				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.deleteDataSource",
+				"title": "Delete data source",
+				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.createIndexer",
+				"title": "Create new indexer",
+				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.deleteIndexer",
+				"title": "Delete indexer",
+				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.createSkillset",
+				"title": "Create new skillset",
+				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.deleteSkillset",
+				"title": "Delete skillset",
+				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.createSynonymMap",
+				"title": "Create new synonym map",
+				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.deleteSynonymMap",
+				"title": "Delete synonym map",
+				"category": "Azure Search"
 			}
 		],
 		"menus": {
@@ -147,6 +195,46 @@
 					"command": "azureSearch.deleteDocument",
 					"when": "view == azureSearch && viewItem == azureSearchDocument",
 					"group": "2_edit@2"
+				},
+				{
+					"command": "azureSearch.createDataSource",
+					"when": "view == azureSearch && viewItem == azureSearchDataSourceList",
+					"group": "navigation@98"
+				},
+				{
+					"command": "azureSearch.deleteDataSource",
+					"when": "view == azureSearch && viewItem == azureSearchDataSource",
+					"group": "navigation@98"
+				},
+				{
+					"command": "azureSearch.createIndexer",
+					"when": "view == azureSearch && viewItem == azureSearchIndexerList",
+					"group": "navigation@98"
+				},
+				{
+					"command": "azureSearch.deleteIndexer",
+					"when": "view == azureSearch && viewItem == azureSearchIndexer",
+					"group": "navigation@98"
+				},
+				{
+					"command": "azureSearch.createSkillset",
+					"when": "view == azureSearch && viewItem == azureSearchSkillsetList",
+					"group": "navigation@98"
+				},
+				{
+					"command": "azureSearch.deleteSkillset",
+					"when": "view == azureSearch && viewItem == azureSearchSkillset",
+					"group": "navigation@98"
+				},
+				{
+					"command": "azureSearch.createSynonymMap",
+					"when": "view == azureSearch && viewItem == azureSearchSynonymMapList",
+					"group": "navigation@98"
+				},
+				{
+					"command": "azureSearch.deleteSynonymMap",
+					"when": "view == azureSearch && viewItem == azureSearchSynonymMap",
+					"group": "navigation@98"
 				}
 			],
 			"commandPalette": [

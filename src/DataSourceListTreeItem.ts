@@ -4,11 +4,12 @@ import { SearchResourceListTreeItem } from "./SearchResourceListTreeItem";
 
 export class DataSourceListTreeItem extends SearchResourceListTreeItem {
     public static readonly contextValue: string = "azureSearchDataSourceList";
+    public static readonly itemContextValue: string = "azureSearchDataSource";
 
     public constructor(parent: SearchServiceTreeItem, searchClient: SimpleSearchClient) {
         super(parent, 
               DataSourceListTreeItem.contextValue,
-              "azureSearchDataSource",
+              DataSourceListTreeItem.itemContextValue,
               "Data Sources",
               SimpleSearchClient.DataSources,
               "data source",

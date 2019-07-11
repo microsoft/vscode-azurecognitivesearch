@@ -1,29 +1,49 @@
-import { AzureTreeItem, AzureParentTreeItem } from "vscode-azureextensionui";
+import { AzureTreeItem, AzureParentTreeItem, IActionContext } from "vscode-azureextensionui";
 import { IDocumentRepository } from "./IDocumentRepository";
+import { SimpleSearchClient } from "./SimpleSearchClient";
 
 export class EditableResourceTreeItem extends AzureTreeItem implements IDocumentRepository {
     public readonly commandId: string = "azureSearch.openDocument";
-    public readonly label: string;
+    public readonly namePrefix: string;
+    public label: string;
 
     public constructor(
         parent: AzureParentTreeItem,
         public readonly contextValue: string,
-        public readonly namePrefix: string,
-        public readonly itemName: string,
+        public readonly itemSet: string,
+        public itemName: string,
         public readonly itemKind: string,
         public readonly extension: string,
-        private readonly readImpl: () => Promise<{ content: any; etag?: string | undefined; } | undefined>,
-        private readonly updateImpl: (content: any, etag?: string | undefined) => Promise<void>,
+        private creating: boolean,
+        private readonly searchClient: SimpleSearchClient,
         label?: string) {
         super(parent);
+        this.namePrefix = `${itemSet}-${itemName}`;
         this.label = label || this.itemName;
     }
 
-    readContent(): Promise<{ content: any; etag?: string | undefined; } | undefined> {
-        return this.readImpl();
+    public deleteTreeItemImpl?(_context: IActionContext): Promise<void> {
+        return this.searchClient.deleteResource(this.itemSet, this.itemName);
     }
 
-    updateContent(content: any, etag?: string | undefined): Promise<void> {
-        return this.updateImpl(content, etag);
+    async readContent(): Promise<{ content: any; etag?: string | undefined; } | undefined> {
+        if (this.creating) {
+            return undefined;
+        }
+
+        return await this.searchClient.getResource(this.itemSet, this.itemName);
+    }
+
+    async updateContent(content: any, etag?: string | undefined): Promise<void> {
+        if (this.creating) {
+            const created = await this.searchClient.createResource(this.itemSet, content);
+            this.creating = false;
+            this.itemName = created.content.name;
+            this.label = created.content.name;
+            this.refresh();
+        }
+        else {
+            await this.searchClient.updateResource(this.itemSet, this.itemName, content, etag);
+        }
     }
 }

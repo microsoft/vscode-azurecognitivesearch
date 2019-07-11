@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { ext } from './extensionVariables';
-import { createTelemetryReporter, AzureUserInput, registerUIExtensionVariables, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal, registerEvent, DialogResponses } from 'vscode-azureextensionui';
+import { createTelemetryReporter, AzureUserInput, registerUIExtensionVariables, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal, registerEvent, DialogResponses, AzureParentTreeItem } from 'vscode-azureextensionui';
 import { AzureAccountTreeItem } from './AzureAccountTreeItem';
 import { SearchServiceTreeItem } from './SearchServiceTreeItem';
 import { DocumentTreeItem } from './DocumentTreeItem';
@@ -11,6 +11,11 @@ import { DocumentListTreeItem } from './DocumentListTreeItem';
 import { IndexTreeItem } from './IndexTreeItem';
 import { SearchResultDocumentProvider } from './SearchResultDocumentProvider';
 import { IDocumentRepository } from './IDocumentRepository';
+import { DataSourceListTreeItem } from './DataSourceListTreeItem';
+import { EditableResourceTreeItem } from './EditableResourceTreeItem';
+import { IndexerListTreeItem } from './IndexerListTreeItem';
+import { SkillsetListTreeItem } from './SkillSetListTreeItem';
+import { SynonymMapListTreeItem } from './SynonymMapListTreeItem';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -52,24 +57,16 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 	registerCommand("azureSearch.openDocument", async (_actionContext: IActionContext, treeItem: IDocumentRepository) => await documentEditor.showEditor(treeItem));
-    registerCommand("azureSearch.createDocument", async (actionContext: IActionContext, treeItem: DocumentListTreeItem) => {
-		if (!treeItem) {
-			treeItem = <DocumentListTreeItem>await ext.tree.showTreeItemPicker(DocumentListTreeItem.contextValue, actionContext);
-		}
-
-		const docItem = await treeItem.createChild(actionContext);
-        await vscode.commands.executeCommand("azureSearch.openDocument", docItem);
-	});
-	registerCommand("azureSearch.deleteDocument", async  (actionContext: IActionContext, treeItem: DocumentTreeItem) => {
-		if (!treeItem) {
-			treeItem = <DocumentTreeItem>await ext.tree.showTreeItemPicker(DocumentTreeItem.contextValue, actionContext);
-		}
-
-		const r = await vscode.window.showWarningMessage("Are you sure you want to delete this document?", DialogResponses.deleteResponse, DialogResponses.cancel);
-		if (r === DialogResponses.deleteResponse) {
-			await treeItem.deleteTreeItem(actionContext);
-		}
-	});
+    registerCommand("azureSearch.createDocument", async (actionContext: IActionContext, treeItem: DocumentListTreeItem) => createResource(treeItem, actionContext, DocumentListTreeItem.contextValue));
+	registerCommand("azureSearch.deleteDocument", async  (actionContext: IActionContext, treeItem: DocumentTreeItem) => deleteResource(treeItem, actionContext, DocumentTreeItem.contextValue));
+    registerCommand("azureSearch.createDataSource", async (actionContext: IActionContext, treeItem: DataSourceListTreeItem) => createResource(treeItem, actionContext, DataSourceListTreeItem.contextValue));
+	registerCommand("azureSearch.deleteDataSource", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, DataSourceListTreeItem.itemContextValue));
+    registerCommand("azureSearch.createIndexer", async (actionContext: IActionContext, treeItem: IndexerListTreeItem) => createResource(treeItem, actionContext, IndexerListTreeItem.contextValue));
+	registerCommand("azureSearch.deleteIndexer", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, IndexerListTreeItem.itemContextValue));
+    registerCommand("azureSearch.createSkillset", async (actionContext: IActionContext, treeItem: SkillsetListTreeItem) => createResource(treeItem, actionContext, SkillsetListTreeItem.contextValue));
+	registerCommand("azureSearch.deleteSkillset", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, SkillsetListTreeItem.itemContextValue));
+    registerCommand("azureSearch.createSynonymMap", async (actionContext: IActionContext, treeItem: SynonymMapListTreeItem) => createResource(treeItem, actionContext, SynonymMapListTreeItem.contextValue));
+	registerCommand("azureSearch.deleteSynonymMap", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, SynonymMapListTreeItem.itemContextValue));
 	registerCommand("azureSearch.search", async (actionContext: IActionContext, treeItem: AzExtTreeItem) => {
 		let indexItem = findSearchTarget(treeItem);
 
@@ -101,6 +98,26 @@ export function activate(context: vscode.ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
+
+async function createResource(treeItem: AzureParentTreeItem, actionContext: IActionContext, contextValue: string): Promise<void> {
+	if (!treeItem) {
+		treeItem = await ext.tree.showTreeItemPicker(contextValue, actionContext);
+	}
+
+	const item = await treeItem.createChild(actionContext);
+	await vscode.commands.executeCommand("azureSearch.openDocument", item);
+}
+
+async function deleteResource(treeItem: AzExtTreeItem & IDocumentRepository, actionContext: IActionContext, contextValue: string): Promise<void> {
+	if (!treeItem) {
+		treeItem = await ext.tree.showTreeItemPicker(contextValue, actionContext);
+	}
+
+	const r = await vscode.window.showWarningMessage(`Are you sure you want to delete this ${treeItem.itemKind}?`, DialogResponses.deleteResponse, DialogResponses.cancel);
+	if (r === DialogResponses.deleteResponse) {
+		await treeItem.deleteTreeItem(actionContext);
+	}
+}
 
 function findSearchTarget(treeItem: AzExtTreeItem) : IndexTreeItem | undefined {
 	let indexItem: IndexTreeItem | undefined;

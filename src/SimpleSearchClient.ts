@@ -32,8 +32,17 @@ export class SimpleSearchClient {
         return { content: r.data, etag: r.headers["etag"] };
     }
 
+    public async createResource(resource: string, content: any): Promise<{ content: any, etag: any }> {
+        let r = await this.httpPost(resource, content);
+        return { content: r.data, etag: r.headers["etag"] }
+    }
+
     public updateResource(resource: string, name: string, content: any, etag?: string): Promise<void> {
         return this.httpPut(`${resource}/${name}`, content, etag);
+    }
+
+    public deleteResource(resource: string, name: string): Promise<void> {
+        return this.httpDelete(`${resource}/${name}`);
     }
 
     public async query(indexName: string, query: string, raw: boolean = false) : Promise<QueryResponse> {
@@ -135,6 +144,15 @@ export class SimpleSearchClient {
                 config.headers["if-match"] = etag;
             }
             return await Axios.put<T, R>(this.makeUrl(path), data, config);
+        }
+        catch (error) {
+            throw new Error(this.extractErrorMessage(error));
+        }
+    }
+
+    private async httpDelete(path: string): Promise<void> {
+        try {
+            return await Axios.delete(this.makeUrl(path), this.makeRequestConfig());
         }
         catch (error) {
             throw new Error(this.extractErrorMessage(error));
