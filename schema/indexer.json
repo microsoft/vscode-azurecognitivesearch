@@ -147,12 +147,6 @@
         "disabled": {
             "type": "boolean",
             "description": "Enable or disable execution of this indexer."
-        },
-        "@odata.context": {
-            "type": "string"
-        },
-        "@odata.etag": {
-            "type": "string"
         }
     },
     "required": [

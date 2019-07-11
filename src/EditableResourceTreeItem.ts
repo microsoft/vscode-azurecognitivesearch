@@ -31,7 +31,11 @@ export class EditableResourceTreeItem extends AzureTreeItem implements IDocument
             return undefined;
         }
 
-        return await this.searchClient.getResource(this.itemSet, this.itemName);
+        const r = await this.searchClient.getResource(this.itemSet, this.itemName);
+        delete r.content["@odata.context"];
+        delete r.content["@odata.etag"];
+        
+        return r;
     }
 
     async updateContent(content: any, etag?: string | undefined): Promise<void> {

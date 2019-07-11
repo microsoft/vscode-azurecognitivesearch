@@ -104,7 +104,10 @@
                                     ]
                                 },
                                 "magnitude": {
-                                    "type": ["object", "null"],
+                                    "type": [
+                                        "object",
+                                        "null"
+                                    ],
                                     "description": "Boost based on a numeric field in each document.",
                                     "properties": {
                                         "boostingRangeStart": {
@@ -123,7 +126,10 @@
                                     ]
                                 },
                                 "freshness": {
-                                    "type": ["object", "null"],
+                                    "type": [
+                                        "object",
+                                        "null"
+                                    ],
                                     "description": "Boost based on the difference in time between 'now' and a date field in each document.",
                                     "properties": {
                                         "boostingDuration": {
@@ -136,7 +142,10 @@
                                     ]
                                 },
                                 "distance": {
-                                    "type": ["object", "null"],
+                                    "type": [
+                                        "object",
+                                        "null"
+                                    ],
                                     "description": "Boost based on geographic distance.",
                                     "properties": {
                                         "referencePointParameter": {
@@ -154,7 +163,10 @@
                                     ]
                                 },
                                 "tag": {
-                                    "type": ["object", "null"],
+                                    "type": [
+                                        "object",
+                                        "null"
+                                    ],
                                     "description": "Boost based on matches of tags bewteen documents and queries.",
                                     "properties": {
                                         "tagsParameter": {
@@ -232,7 +244,10 @@
             }
         },
         "defaultScoringProfile": {
-            "type": ["string", "null"],
+            "type": [
+                "string",
+                "null"
+            ],
             "description": "Name of the scoring profile used when no scoring profile is explicitly specified in a query."
         },
         "corsOptions": {
@@ -247,7 +262,10 @@
                     }
                 },
                 "maxAgeInSeconds": {
-                    "type": ["number", "null"],
+                    "type": [
+                        "number",
+                        "null"
+                    ],
                     "minimum": 0
                 }
             },
@@ -431,15 +449,24 @@
                     }
                 },
                 "analyzer": {
-                    "type": ["string", "null"],
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "description": "Name of the pre-built or custom analyzer to use both for indexing and search."
                 },
                 "indexAnalyzer": {
-                    "type": ["string", "null"],
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "description": "Name of the pre-built or custom analyzer to use both for indexing."
                 },
                 "searchAnalyzer": {
-                    "type": ["string", "null"],
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "description": "Name of the pre-built or custom analyzer to use both for search."
                 },
                 "fields": {
@@ -448,12 +475,6 @@
                     "items": {
                         "$ref": "#/definitions/field"
                     }
-                },
-                "@odata.context": {
-                    "type": "string"
-                },
-                "@odata.etag": {
-                    "type": "string"
                 }
             },
             "required": [

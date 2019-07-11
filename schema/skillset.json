@@ -172,7 +172,10 @@
             }
         },
         "cognitiveServices": {
-            "type": ["object", "null"],
+            "type": [
+                "object",
+                "null"
+            ],
             "description": "A billable Cognitive Services resource under the same subscription and region as tihs Azure Search service.",
             "properties": {
                 "@odata.type": {
@@ -248,12 +251,6 @@
                     }
                 }
             }
-        },
-        "@odata.context": {
-            "type": "string"
-        },
-        "@odata.etag": {
-            "type": "string"
         }
     },
     "required": [

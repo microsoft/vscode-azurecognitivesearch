@@ -25,14 +25,20 @@
             ]
         },
         "subtype": {
-            "type": ["string", "null"]
+            "type": [
+                "string",
+                "null"
+            ]
         },
         "credentials": {
             "type": "object",
             "description": "Credentials used to authenticated with the data source.",
             "properties": {
                 "connectionString": {
-                    "type": ["string", "null"]
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 }
             },
             "required": [
@@ -96,12 +102,6 @@
             "required": [
                 "@odata.type"
             ]
-        },
-        "@odata.context": {
-            "type": "string"
-        },
-        "@odata.etag": {
-            "type": "string"
         }
     },
     "required": [
