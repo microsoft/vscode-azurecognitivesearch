@@ -1,0 +1,264 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Azure Search Skillset",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Name of this skillset."
+        },
+        "description": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "An optional description for the skillset."
+        },
+        "skills": {
+            "type": "array",
+            "description": "List of skills used to augment data being indexer.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "@odata.type": {
+                        "type": "string",
+                        "enum": [
+                            "#Microsoft.Skills.Text.KeyPhraseExtractionSkill",
+                            "#Microsoft.Skills.Text.LanguageDetectionSkill",
+                            "#Microsoft.Skills.Text.MergeSkill",
+                            "#Microsoft.Skills.Text.EntityRecognitionSkill",
+                            "#Microsoft.Skills.Text.SentimentSkill",
+                            "#Microsoft.Skills.Text.SplitSkill",
+                            "#Microsoft.Skills.Vision.ImageAnalysisSkill",
+                            "#Microsoft.Skills.Vision.OcrSkill",
+                            "#Microsoft.Skills.Util.ShaperSkill",
+                            "#Microsoft.Skills.Custom.WebApiSkill"
+                        ]
+                    },
+                    "context": {
+                        "type": "string"
+                    },
+                    "inputs": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "source": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "outputs": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "targetName": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "defaultLanguageCode": {
+                        "type": "string"
+                    },
+                    "maxKeyPhraseCount": {
+                        "type": "integer"
+                    },
+                    "insertPreTag": {
+                        "type": "string"
+                    },
+                    "insertPostTag": {
+                        "type": "string"
+                    },
+                    "includeTypelessEntities": {
+                        "type": "boolean"
+                    },
+                    "textSplitMode": {
+                        "type": "string",
+                        "enum": [
+                            "pages",
+                            "sentences"
+                        ]
+                    },
+                    "maximumPageLength": {
+                        "type": "integer"
+                    },
+                    "visualFeatures": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "categories",
+                                "tags",
+                                "description",
+                                "faces",
+                                "imageType",
+                                "color",
+                                "adult"
+                            ]
+                        }
+                    },
+                    "detais": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "celebrities",
+                                "landmarks"
+                            ]
+                        }
+                    },
+                    "detectOrientation": {
+                        "type": "boolean"
+                    },
+                    "textExtractionAlgorithm": {
+                        "type": "string",
+                        "enum": [
+                            "printed",
+                            "handwritten"
+                        ]
+                    },
+                    "lineEnding": {
+                        "type": "string",
+                        "enum": [
+                            "Space",
+                            "CarriageReturn",
+                            "LineFeed"
+                        ]
+                    },
+                    "uri": {
+                        "type": "string"
+                    },
+                    "httpMethod": {
+                        "type": "string",
+                        "enum": [
+                            "PUT",
+                            "POST"
+                        ]
+                    },
+                    "httpHeaders": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "timeout": {
+                        "type": "string"
+                    },
+                    "batchSize": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "@odata.type",
+                    "context",
+                    "inputs",
+                    "outputs"
+                ]
+            }
+        },
+        "cognitiveServices": {
+            "type": ["object", "null"],
+            "description": "A billable Cognitive Services resource under the same subscription and region as tihs Azure Search service.",
+            "properties": {
+                "@odata.type": {
+                    "type": "string",
+                    "enum": [
+                        "#Microsoft.Azure.Search.CognitiveServicesByKey"
+                    ]
+                },
+                "description": {
+                    "type": "string"
+                },
+                "key": {
+                    "type": "string"
+                }
+            }
+        },
+        "knowledgeStore": {
+            "type": "object",
+            "description": "A storage account where you can optionally save your enriched documents.",
+            "properties": {
+                "storageConnectionString": {
+                    "type": "string"
+                },
+                "projections": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "tables": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "tableName": {
+                                            "type": "string"
+                                        },
+                                        "generatedKeyName": {
+                                            "type": "string"
+                                        },
+                                        "source": {
+                                            "type": "string"
+                                        },
+                                        "sourceContext": {
+                                            "type": "string"
+                                        },
+                                        "inputs": {
+                                            "type": "array"
+                                        }
+                                    }
+                                }
+                            },
+                            "objects": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "storageContainer": {
+                                            "type": "string"
+                                        },
+                                        "format": {
+                                            "type": "string"
+                                        },
+                                        "source": {
+                                            "type": "string"
+                                        },
+                                        "key": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "@odata.context": {
+            "type": "string"
+        },
+        "@odata.etag": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "name",
+        "skills"
+    ],
+    "additionalProperties": false
+}

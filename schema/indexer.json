@@ -1,0 +1,215 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Azure Search Indexer",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Name for this indexer."
+        },
+        "description": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "Description for this indexer."
+        },
+        "dataSourceName": {
+            "type": "string",
+            "description": "Name of a data source that this indexer will use to pull data."
+        },
+        "targetIndexName": {
+            "type": "string",
+            "description": "Name of the index the indexer should push data into."
+        },
+        "skillsetName": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "A Cognitive Search skillset used to augment content during indexing by using Cognitive Services or custom AI components."
+        },
+        "schedule": {
+            "type": [
+                "object",
+                "null"
+            ],
+            "description": "Optional schedule for running the indexer. If not specified, the indexer will run immediately when the create request is sent.",
+            "properties": {
+                "interval": {
+                    "type": "string",
+                    "description": "How often to run the indexer, in ISO 8601 format. The pattern for this is: 'P[nD][T[nH][nM]]'."
+                },
+                "startTime": {
+                    "type": "string",
+                    "description": "Optional initial time to start running the indexer."
+                }
+            },
+            "required": [
+                "interval"
+            ]
+        },
+        "parameters": {
+            "type": [
+                "object",
+                "null"
+            ],
+            "description": "Indexer specific parameters.",
+            "properties": {
+                "batchSize": {
+                    "type": "integer"
+                },
+                "maxFailedItems": {
+                    "type": "integer"
+                },
+                "maxFailedItemsPerBatch": {
+                    "type": "integer"
+                },
+                "parsingMode": {
+                    "type": "string",
+                    "enum": [
+                        "text",
+                        "delimitedText",
+                        "json",
+                        "jsonArray",
+                        "jsonLines"
+                    ]
+                },
+                "excludedFileNameExtensions": {
+                    "type": "string"
+                },
+                "indexedFileNameExtensions": {
+                    "type": "string"
+                },
+                "failOnUnsupportedContentType": {
+                    "type": "boolean"
+                },
+                "failOnUnprocessableDocument": {
+                    "type": "boolean"
+                },
+                "indexStorageMetadataOnlyForOversizedDocuments": {
+                    "type": "boolean"
+                },
+                "delimitedTextHeaders": {
+                    "type": "string"
+                },
+                "delimitedTextDelimiter": {
+                    "type": "string"
+                },
+                "firstLineContainsHeaders": {
+                    "type": "boolean"
+                },
+                "documentRoot": {
+                    "type": "string"
+                },
+                "dataToExtract": {
+                    "type": "string",
+                    "enum": [
+                        "storageMetadata",
+                        "allMetadata",
+                        "contentAndMetadata"
+                    ]
+                },
+                "imageAction": {
+                    "type": "string",
+                    "enum": [
+                        "none",
+                        "generateNormalizedImages",
+                        "generateNormalizedImagePerPage"
+                    ]
+                },
+                "queryTimeout": {
+                    "type": "string",
+                    "description": "Format is 'hh:mm:ss'"
+                }
+            }
+        },
+        "fieldMappings": {
+            "type": [
+                "array",
+                "null"
+            ],
+            "description": "Mapping of source fields to target fields in the Azure Search index.",
+            "items": {
+                "$ref": "#/definitions/fieldMapping"
+            }
+        },
+        "outputFieldMappings": {
+            "type": [
+                "array",
+                "null"
+            ],
+            "description": "Mapping of source fields to target fields in the Azure Search index.",
+            "items": {
+                "$ref": "#/definitions/fieldMapping"
+            }
+        },
+        "disabled": {
+            "type": "boolean",
+            "description": "Enable or disable execution of this indexer."
+        },
+        "@odata.context": {
+            "type": "string"
+        },
+        "@odata.etag": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "name",
+        "dataSourceName",
+        "targetIndexName"
+    ],
+    "additionalProperties": false,
+    "definitions": {
+        "fieldMapping": {
+            "type": "object",
+            "properties": {
+                "sourceFieldName": {
+                    "type": "string"
+                },
+                "targetFieldName": {
+                    "type": "string"
+                },
+                "mappingFunction": {
+                    "type": [
+                        "object",
+                        "null"
+                    ],
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "enum": [
+                                "base64Encode",
+                                "base64Decode",
+                                "extractTokenAtPosition",
+                                "jsonArrayToStringCollection"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "useHttpServerUtilityUrlTokenEncode": {
+                                    "type": "boolean"
+                                },
+                                "useHttpServerUtilityUrlTokenDecode": {
+                                    "type": "boolean"
+                                },
+                                "delimiter": {
+                                    "type": "string"
+                                },
+                                "position": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "required": [
+                "sourceFieldName",
+                "targetFieldName"
+            ]
+        }
+    }
+}

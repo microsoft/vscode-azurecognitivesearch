@@ -48,10 +48,17 @@
                 "keyVaultKeyVersion",
                 "keyVaultUri"
             ]
+        },
+        "@odata.context": {
+            "type": "string"
+        },
+        "@odata.etag": {
+            "type": "string"
         }
     },
     "required": [
         "format",
         "synonyms"
-    ]
+    ],
+    "additionalProperties": false
 }

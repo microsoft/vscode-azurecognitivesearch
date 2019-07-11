@@ -1,0 +1,114 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Azure Search Data Source",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Name of this data source."
+        },
+        "description": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "An optional description for the data source."
+        },
+        "type": {
+            "type": "string",
+            "description": "Type of data source (e.g. azuresql, azureblob, etc.)",
+            "enum": [
+                "azuresql",
+                "documentdb",
+                "azureblob",
+                "azuretable"
+            ]
+        },
+        "subtype": {
+            "type": ["string", "null"]
+        },
+        "credentials": {
+            "type": "object",
+            "description": "Credentials used to authenticated with the data source.",
+            "properties": {
+                "connectionString": {
+                    "type": ["string", "null"]
+                }
+            },
+            "required": [
+                "connectionString"
+            ]
+        },
+        "container": {
+            "type": "object",
+            "description": "Pointer to a the table, collection, or blob container to index.",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "dataChangeDetectionPolicy": {
+            "type": [
+                "object",
+                "null"
+            ],
+            "description": "Specifies how change detection should be done.",
+            "properties": {
+                "@odata.type": {
+                    "type": "string",
+                    "enum": [
+                        "#Microsoft.Azure.Search.HighWaterMarkChangeDetectionPolicy",
+                        "#Microsoft.Azure.Search.SqlIntegratedChangeTrackingPolicy"
+                    ]
+                },
+                "highWaterMarkColumnName": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "@odata.type"
+            ]
+        },
+        "dataDeletionDetectionPolicy": {
+            "type": [
+                "object",
+                "null"
+            ],
+            "description": "Specifies how delete detection should be done.",
+            "properties": {
+                "@data.type": {
+                    "type": "string",
+                    "enum": [
+                        "#Microsoft.Azure.Search.SoftDeleteColumnDeletionDetectionPolicy"
+                    ]
+                },
+                "softDeleteColumnName": {
+                    "type": "string"
+                },
+                "softDeleteMarkerValue": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "@odata.type"
+            ]
+        },
+        "@odata.context": {
+            "type": "string"
+        },
+        "@odata.etag": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "name",
+        "type",
+        "credentials",
+        "container"
+    ],
+    "additionalProperties": false
+}
