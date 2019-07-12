@@ -32,7 +32,8 @@
 		"onCommand:azureSearch.deleteIndexer",
 		"onCommand:azureSearch.deleteSkillset",
 		"onCommand:azureSearch.deleteSynonymMap",
-		"onCommand:azureSearch.search"
+		"onCommand:azureSearch.search",
+		"onCommand:azureSearch.searchDoc"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -140,6 +141,11 @@
 				"command": "azureSearch.deleteSynonymMap",
 				"title": "Delete synonym map",
 				"category": "Azure Search"
+			},
+			{
+				"command": "azureSearch.searchDoc",
+				"title": "Search",
+				"category": "Azure Search"
 			}
 		],
 		"menus": {
@@ -246,6 +252,18 @@
 					"command": "azureSearch.deleteDocument",
 					"when": "never"
 				}
+			],
+			"editor/context": [
+				{
+					"command": "azureSearch.searchDoc",
+					"when": "editorLangId == azuresearch"
+				}
+			],
+			"editor/title": [
+				{
+					"command": "azureSearch.searchDoc",
+					"when": "editorLangId == azuresearch"
+				}
 			]
 		},
 		"configuration": {
@@ -278,6 +296,25 @@
 			{
 				"fileMatch": "*.azsskset",
 				"url": "./schema/skillset.json"
+			}
+		],
+		"languages": [
+			{
+				"id": "azuresearch",
+				"extensions": [
+					".azuresearch"
+				],
+				"aliases": [
+					"AzureSearch"
+				]
+			}
+		],
+		"keybindings": [
+			{
+				"command": "azureSearch.searchDoc",
+				"key": "ctrl+alt+r",
+				"mac": "cmd+alt+r",
+				"when": "editorLangId == azuresearch"
 			}
 		]
 	},
