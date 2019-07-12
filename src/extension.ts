@@ -162,9 +162,15 @@ async function searchToDocument(editor: vscode.TextEditor, root: AzExtTreeItem, 
 		}
 		else {
 			const indexItem = <IndexTreeItem>ext.treeView.selection[0];
-			const result = await indexItem.search(text);
+			let result: any;
+			try {
+				result = await indexItem.search(text);
+			}
+			catch (error) {
+				ext.ui.showWarningMessage(error.message);
+			}
 			const id = documentProvider.registerContent(JSON.stringify(result, undefined, 4));
 			const doc = await vscode.workspace.openTextDocument(vscode.Uri.parse(`search:${id}`));
-			await vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);				
+			await vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);
 		}
 	}
