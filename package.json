@@ -15,6 +15,10 @@
 		"Azure",
 		"Search"
 	],
+	"galleryBanner": {
+		"color": "#0072c6",
+		"theme": "dark"
+	},
 	"icon": "media/AzureSearch.png",
 	"preview": true,
 	"activationEvents": [
