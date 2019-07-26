@@ -19,6 +19,10 @@
 		"color": "#0072c6",
 		"theme": "dark"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/pablocastro/vscode-azuresearch"
+	},
 	"icon": "media/AzureSearch.png",
 	"preview": true,
 	"activationEvents": [
