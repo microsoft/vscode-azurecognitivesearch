@@ -2,7 +2,8 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { ext } from './extensionVariables';
-import { createTelemetryReporter, AzureUserInput, registerUIExtensionVariables, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal, registerEvent, DialogResponses, AzureParentTreeItem } from 'vscode-azureextensionui';
+import { AzureUserInput, registerUIExtensionVariables, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal, registerEvent, DialogResponses, AzureParentTreeItem, createAzExtOutputChannel } from 'vscode-azureextensionui';
+//import { createTelemetryReporter } from 'vscode-extension-telemetry';
 import { AzureAccountTreeItem } from './AzureAccountTreeItem';
 import { SearchServiceTreeItem } from './SearchServiceTreeItem';
 import { DocumentTreeItem } from './DocumentTreeItem';
@@ -22,9 +23,9 @@ import { SynonymMapListTreeItem } from './SynonymMapListTreeItem';
 export function activate(context: vscode.ExtensionContext) {
 
 	ext.context = context;
-	ext.reporter = createTelemetryReporter(context);
+	//ext.reporter = createTelemetryReporter(context);
 	ext.ui = new AzureUserInput(context.globalState);
-	ext.outputChannel = vscode.window.createOutputChannel("Azure Search");
+	ext.outputChannel = createAzExtOutputChannel("Azure Search", ext.prefix);
 	context.subscriptions.push(ext.outputChannel);
 	registerUIExtensionVariables(ext);
 
