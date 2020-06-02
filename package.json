@@ -5,6 +5,7 @@
 	"version": "0.0.2",
 	"publisher": "pmc",
 	"aiKey": "AIF-d9b70cd4-b9f9-4d70-929b-a071c400b217",
+	"license": "SEE LICENSE IN LICENSE.md",
 	"engines": {
 		"vscode": "^1.35.1"
 	},
@@ -14,7 +15,10 @@
 	],
 	"keywords": [
 		"Azure",
-		"Search"
+		"Cognitive",
+		"Search",
+		"Knowledge",
+		"Mining"
 	],
 	"galleryBanner": {
 		"color": "#0072c6",
@@ -328,12 +332,18 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"lint": "eslint src --ext ts",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run lint",
-		"test": "node ./out/test/runTest.js"
+        "vscode:prepublish": "npm run webpack-prod",
+        "build": "tsc",
+        "compile": "tsc -watch",
+        "package": "vsce package",
+        "lint": "tslint --project tsconfig.json -t verbose",
+        "lint-fix": "tslint --project tsconfig.json -t verbose --fix",
+        "pretest": "npm run webpack-prod && gulp preTest",
+        "test": "node ./out/test/runTest.js",
+        "webpack": "npm run build && gulp webpack-dev",
+        "webpack-prod": "npm run build && gulp webpack-prod",
+        "webpack-profile": "webpack --profile --json --mode production > webpack-stats.json && echo Use http://webpack.github.io/analyse to analyze the stats",
+        "all": "npm i && npm run lint && npm test"
 	},
 	"extensionDependencies": [
 		"ms-vscode.azure-account"
