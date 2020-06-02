@@ -26,7 +26,7 @@ function readJson(path: string) {
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export async function activate(context: vscode.ExtensionContext) {
+export async function activateInternal(context: vscode.ExtensionContext, perfStats: { loadStartTime: number; loadEndTime: number }) {
 
 	ext.context = context;
 
@@ -44,8 +44,9 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(ext.outputChannel);
 	registerUIExtensionVariables(ext);
 
-	await callWithTelemetryAndErrorHandling('activate', async (activateContext: IActionContext) => {
+	await callWithTelemetryAndErrorHandling('azureSearch.activate', async (activateContext: IActionContext) => {
 		activateContext.telemetry.properties.isActivationEvent = 'true';
+		activateContext.telemetry.measurements.mainFileLoad = (perfStats.loadEndTime - perfStats.loadStartTime) / 1000;
 
 		const azureAccountTreeItem = new AzureAccountTreeItem();
 		context.subscriptions.push(azureAccountTreeItem);
@@ -108,7 +109,7 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivateInternal() {}
 
 async function createResource(treeItem: AzureParentTreeItem, actionContext: IActionContext, contextValue: string): Promise<void> {
 	if (!treeItem) {
