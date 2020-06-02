@@ -1,9 +1,9 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 import { ext } from './extensionVariables';
-import { AzureUserInput, registerUIExtensionVariables, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal, registerEvent, DialogResponses, AzureParentTreeItem, createAzExtOutputChannel } from 'vscode-azureextensionui';
-//import { createTelemetryReporter } from 'vscode-extension-telemetry';
+import { AzureUserInput, registerUIExtensionVariables, callWithTelemetryAndErrorHandling, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal, registerEvent, DialogResponses, AzureParentTreeItem, createAzExtOutputChannel } from 'vscode-azureextensionui';
 import { AzureAccountTreeItem } from './AzureAccountTreeItem';
 import { SearchServiceTreeItem } from './SearchServiceTreeItem';
 import { DocumentTreeItem } from './DocumentTreeItem';
@@ -17,71 +17,91 @@ import { EditableResourceTreeItem } from './EditableResourceTreeItem';
 import { IndexerListTreeItem } from './IndexerListTreeItem';
 import { SkillsetListTreeItem } from './SkillSetListTreeItem';
 import { SynonymMapListTreeItem } from './SynonymMapListTreeItem';
+import TelemetryReporter from 'vscode-extension-telemetry';
+
+function readJson(path: string) {
+    const json = fs.readFileSync(path, "utf8");
+    return JSON.parse(json);
+}
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 
 	ext.context = context;
-	//ext.reporter = createTelemetryReporter(context);
+
+	let reporter: TelemetryReporter | undefined;
+    try {
+        const { aiKey, name, version } = readJson(context.asAbsolutePath("./package.json"));
+        reporter = new TelemetryReporter(name, version, aiKey);
+        ext.reporter = reporter;
+        context.subscriptions.push(reporter);
+    } catch (error) {
+	}
+	
 	ext.ui = new AzureUserInput(context.globalState);
 	ext.outputChannel = createAzExtOutputChannel("Azure Search", ext.prefix);
 	context.subscriptions.push(ext.outputChannel);
 	registerUIExtensionVariables(ext);
 
-	const azureAccountTreeItem = new AzureAccountTreeItem();
-	context.subscriptions.push(azureAccountTreeItem);
-	ext.tree = new AzExtTreeDataProvider(azureAccountTreeItem, "azureSearch.loadMore");
-	ext.treeView = vscode.window.createTreeView("azureSearch", { treeDataProvider: ext.tree });
-	context.subscriptions.push(ext.treeView);
+	await callWithTelemetryAndErrorHandling('activate', async (activateContext: IActionContext) => {
+		activateContext.telemetry.properties.isActivationEvent = 'true';
 
-	const documentEditor = new DocumentEditor();
-	context.subscriptions.push(documentEditor);
+		const azureAccountTreeItem = new AzureAccountTreeItem();
+		context.subscriptions.push(azureAccountTreeItem);
+		ext.tree = new AzExtTreeDataProvider(azureAccountTreeItem, "azureSearch.loadMore");
+		ext.treeView = vscode.window.createTreeView("azureSearch", { treeDataProvider: ext.tree });
+		context.subscriptions.push(ext.treeView);
+	
+		const documentEditor = new DocumentEditor();
+		context.subscriptions.push(documentEditor);
 
-	const searchResultDocumentProvider = new SearchResultDocumentProvider();
-	vscode.workspace.registerTextDocumentContentProvider("search", searchResultDocumentProvider);
+		const searchResultDocumentProvider = new SearchResultDocumentProvider();
+		vscode.workspace.registerTextDocumentContentProvider("search", searchResultDocumentProvider);
 
-	registerCommand("azureSearch.refresh", async (_actionContext: IActionContext, treeItem?: AzExtTreeItem) => ext.tree.refresh(treeItem));
-	registerCommand("azureSearch.loadMore", async (actionContext: IActionContext, treeItem: AzExtTreeItem) => await ext.tree.loadMore(treeItem, actionContext));
-	registerCommand("azureSearch.selectSubscriptions", () => vscode.commands.executeCommand("azure-account.selectSubscriptions"));
-	registerCommand("azureSearch.openDocument", async (_actionContext: IActionContext, treeItem: IDocumentRepository) => await documentEditor.showEditor(treeItem));
-    registerCommand("azureSearch.createDocument", async (actionContext: IActionContext, treeItem: DocumentListTreeItem) => createResource(treeItem, actionContext, DocumentListTreeItem.contextValue));
-	registerCommand("azureSearch.deleteDocument", async  (actionContext: IActionContext, treeItem: DocumentTreeItem) => deleteResource(treeItem, actionContext, DocumentTreeItem.contextValue));
-    registerCommand("azureSearch.createDataSource", async (actionContext: IActionContext, treeItem: DataSourceListTreeItem) => createResource(treeItem, actionContext, DataSourceListTreeItem.contextValue));
-	registerCommand("azureSearch.deleteDataSource", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, DataSourceListTreeItem.itemContextValue));
-    registerCommand("azureSearch.createIndexer", async (actionContext: IActionContext, treeItem: IndexerListTreeItem) => createResource(treeItem, actionContext, IndexerListTreeItem.contextValue));
-	registerCommand("azureSearch.deleteIndexer", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, IndexerListTreeItem.itemContextValue));
-    registerCommand("azureSearch.createSkillset", async (actionContext: IActionContext, treeItem: SkillsetListTreeItem) => createResource(treeItem, actionContext, SkillsetListTreeItem.contextValue));
-	registerCommand("azureSearch.deleteSkillset", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, SkillsetListTreeItem.itemContextValue));
-    registerCommand("azureSearch.createSynonymMap", async (actionContext: IActionContext, treeItem: SynonymMapListTreeItem) => createResource(treeItem, actionContext, SynonymMapListTreeItem.contextValue));
-	registerCommand("azureSearch.deleteSynonymMap", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, SynonymMapListTreeItem.itemContextValue));
-	registerCommand("azureSearch.search", async (actionContext: IActionContext, treeItem: AzExtTreeItem) => search(treeItem, actionContext, searchResultDocumentProvider));
-	registerCommand("azureSearch.openInPortal", async (actionContext: IActionContext, treeItem?: AzureTreeItem) => {
-		if (!treeItem) {
-			treeItem = <SearchServiceTreeItem>await ext.tree.showTreeItemPicker(SearchServiceTreeItem.contextValue, actionContext);
-		}
+		registerCommand("azureSearch.refresh", async (_actionContext: IActionContext, treeItem?: AzExtTreeItem) => ext.tree.refresh(treeItem));
+		registerCommand("azureSearch.loadMore", async (actionContext: IActionContext, treeItem: AzExtTreeItem) => await ext.tree.loadMore(treeItem, actionContext));
+		registerCommand("azureSearch.selectSubscriptions", () => vscode.commands.executeCommand("azure-account.selectSubscriptions"));
+		registerCommand("azureSearch.openDocument", async (_actionContext: IActionContext, treeItem: IDocumentRepository) => await documentEditor.showEditor(treeItem));
+		registerCommand("azureSearch.createDocument", async (actionContext: IActionContext, treeItem: DocumentListTreeItem) => createResource(treeItem, actionContext, DocumentListTreeItem.contextValue));
+		registerCommand("azureSearch.deleteDocument", async  (actionContext: IActionContext, treeItem: DocumentTreeItem) => deleteResource(treeItem, actionContext, DocumentTreeItem.contextValue));
+		registerCommand("azureSearch.createDataSource", async (actionContext: IActionContext, treeItem: DataSourceListTreeItem) => createResource(treeItem, actionContext, DataSourceListTreeItem.contextValue));
+		registerCommand("azureSearch.deleteDataSource", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, DataSourceListTreeItem.itemContextValue));
+		registerCommand("azureSearch.createIndexer", async (actionContext: IActionContext, treeItem: IndexerListTreeItem) => createResource(treeItem, actionContext, IndexerListTreeItem.contextValue));
+		registerCommand("azureSearch.deleteIndexer", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, IndexerListTreeItem.itemContextValue));
+		registerCommand("azureSearch.createSkillset", async (actionContext: IActionContext, treeItem: SkillsetListTreeItem) => createResource(treeItem, actionContext, SkillsetListTreeItem.contextValue));
+		registerCommand("azureSearch.deleteSkillset", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, SkillsetListTreeItem.itemContextValue));
+		registerCommand("azureSearch.createSynonymMap", async (actionContext: IActionContext, treeItem: SynonymMapListTreeItem) => createResource(treeItem, actionContext, SynonymMapListTreeItem.contextValue));
+		registerCommand("azureSearch.deleteSynonymMap", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, SynonymMapListTreeItem.itemContextValue));
+		registerCommand("azureSearch.search", async (actionContext: IActionContext, treeItem: AzExtTreeItem) => search(treeItem, actionContext, searchResultDocumentProvider));
+		registerCommand("azureSearch.openInPortal", async (actionContext: IActionContext, treeItem?: AzureTreeItem) => {
+			if (!treeItem) {
+				treeItem = <SearchServiceTreeItem>await ext.tree.showTreeItemPicker(SearchServiceTreeItem.contextValue, actionContext);
+			}
 
-		// We retrieved the search service ARM object using the generic ARM client, not the Azure Search ARM client, which
-		// somehow messes with the fullId relative to what treeItem.openInPortal() expects, so calling the underlying function
-		// await treeItem.openInPortal();
-		let id = (<SearchServiceTreeItem>treeItem).searchService.id;
-		if (id !== undefined) {
-			openInPortal(treeItem.root, id);
-		}
-	});
+			// We retrieved the search service ARM object using the generic ARM client, not the Azure Search ARM client, which
+			// somehow messes with the fullId relative to what treeItem.openInPortal() expects, so calling the underlying function
+			// await treeItem.openInPortal();
+			let id = (<SearchServiceTreeItem>treeItem).searchService.id;
+			if (id !== undefined) {
+				openInPortal(treeItem.root, id);
+			}
+		});
 
-	vscode.commands.registerTextEditorCommand("azureSearch.searchDoc", editor => searchToDocument(editor, azureAccountTreeItem, searchResultDocumentProvider));
+		vscode.commands.registerTextEditorCommand("azureSearch.searchDoc", editor => searchToDocument(editor, azureAccountTreeItem, searchResultDocumentProvider));
 
-	registerEvent("azureSearch.searchDocument.onDidSaveTextDocument", 
-				  vscode.workspace.onDidSaveTextDocument, 
-				  async (_actionContext: IActionContext, doc: vscode.TextDocument) => await documentEditor.onDidSaveTextDocument(doc));
+		registerEvent("azureSearch.searchDocument.onDidSaveTextDocument", 
+					vscode.workspace.onDidSaveTextDocument, 
+					async (_actionContext: IActionContext, doc: vscode.TextDocument) => await documentEditor.onDidSaveTextDocument(doc));
 
-	registerEvent("azureSearch.searchResults.onDidCloseTextDocument",
-				  vscode.workspace.onDidCloseTextDocument,
-				  async (_actionContext: IActionContext, doc: vscode.TextDocument) => { 
-		if (doc.uri.scheme === "search") { 
-			searchResultDocumentProvider.unregisterContent(doc.uri.path); 
-		} 
+		registerEvent("azureSearch.searchResults.onDidCloseTextDocument",
+					vscode.workspace.onDidCloseTextDocument,
+					async (_actionContext: IActionContext, doc: vscode.TextDocument) => { 
+			if (doc.uri.scheme === "search") { 
+				searchResultDocumentProvider.unregisterContent(doc.uri.path); 
+			} 
+		});
+	
 	});
 
 	return createApiProvider([]);
