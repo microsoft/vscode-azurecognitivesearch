@@ -2,6 +2,9 @@ import { AzureParentTreeItem, IActionContext, AzExtTreeItem, ICreateChildImplCon
 import { SimpleSearchClient, QueryResponse, Index, Field } from "./SimpleSearchClient";
 import { IndexTreeItem } from "./IndexTreeItem";
 import { DocumentTreeItem } from "./DocumentTreeItem";
+import { getResourcesPath } from "./constants";
+import { Uri } from "vscode";
+import * as path from 'path';
 
 export class DocumentListTreeItem extends AzureParentTreeItem {
     public static readonly contextValue: string = "azureSearchDocumentList";
@@ -15,6 +18,12 @@ export class DocumentListTreeItem extends AzureParentTreeItem {
         public readonly index: Index) {
         super(parent);
     }
+
+    public iconPath: { light: string | Uri; dark: string | Uri } = {
+        light: path.join(getResourcesPath(), 'light', 'docset.svg'),
+        dark: path.join(getResourcesPath(), 'dark', 'docset.svg')
+    };
+
 
     public async loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
         let result: QueryResponse;

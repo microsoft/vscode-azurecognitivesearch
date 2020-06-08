@@ -9,6 +9,7 @@ export class SimpleSearchClient {
     public static readonly Indexers: string = "indexers";
     public static readonly Skillsets: string = "skillsets";
     public static readonly SynonymMaps: string = "synonymmaps";
+    public static readonly Indexes: string = "indexes";
 
     public constructor(
         public readonly serviceName: string,

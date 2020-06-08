@@ -1,6 +1,9 @@
 import { AzureTreeItem, AzureParentTreeItem, IActionContext } from "vscode-azureextensionui";
 import { IDocumentRepository } from "./IDocumentRepository";
 import { SimpleSearchClient } from "./SimpleSearchClient";
+import { getResourcesPath } from "./constants";
+import { Uri } from "vscode";
+import * as path from 'path';
 
 export class EditableResourceTreeItem extends AzureTreeItem implements IDocumentRepository {
     public readonly commandId: string = "azureSearch.openDocument";
@@ -20,6 +23,34 @@ export class EditableResourceTreeItem extends AzureTreeItem implements IDocument
         super(parent);
         this.namePrefix = `${itemSet}-${itemName}`;
         this.label = label || this.itemName;
+
+        if (itemKind === "indexer") {
+            this.iconPath = {
+                light: path.join(getResourcesPath(), 'light', 'indexer.svg'),
+                dark: path.join(getResourcesPath(), 'dark', 'indexer.svg')
+            };
+        } else if (itemKind === "data source") {
+            this.iconPath = {
+                light: path.join(getResourcesPath(), 'light', 'datasource.svg'),
+                dark: path.join(getResourcesPath(), 'dark', 'datasource.svg')
+            };
+        } else if (itemKind === "skillset") {
+            this.iconPath = {
+                light: path.join(getResourcesPath(), 'light', 'skillset.svg'),
+                dark: path.join(getResourcesPath(), 'dark', 'skillset.svg')
+            };
+        } else if (itemKind === "synonym map") {
+            this.iconPath = {
+                light: path.join(getResourcesPath(), 'light', 'synonyms.svg'),
+                dark: path.join(getResourcesPath(), 'dark', 'synonyms.svg')
+            };
+        } 
+        else if (itemKind === "index") {
+            this.iconPath = {
+                light: path.join(getResourcesPath(), 'light', 'info.svg'),
+                dark: path.join(getResourcesPath(), 'dark', 'info.svg')
+            };
+        } 
     }
 
     public deleteTreeItemImpl?(_context: IActionContext): Promise<void> {

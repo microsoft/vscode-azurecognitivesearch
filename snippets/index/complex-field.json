@@ -1,0 +1,30 @@
+{
+    "name": "Address",
+    "type": "Edm.ComplexType",
+    "fields": [
+        {
+            "name": "StreetAddress",
+            "type": "Edm.String",
+            "filterable": false,
+            "sortable": false,
+            "facetable": false,
+            "searchable": true
+        },
+        {
+            "name": "City",
+            "type": "Edm.String",
+            "searchable": true,
+            "filterable": true,
+            "sortable": true,
+            "facetable": true
+        },
+        {
+            "name": "StateProvince",
+            "type": "Edm.String",
+            "searchable": true,
+            "filterable": true,
+            "sortable": true,
+            "facetable": true
+        }
+    ]
+}

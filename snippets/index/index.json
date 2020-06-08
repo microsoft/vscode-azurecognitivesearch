@@ -1,0 +1,22 @@
+{
+    "name": "myIndex",
+    "fields": [
+      {
+        "name": "id",
+        "type": "Edm.String",
+        "key": true,
+        "searchable": true,
+        "filterable": false,
+        "facetable": false,
+        "sortable": true
+      },
+      {
+        "name": "text",
+        "type": "Edm.String",
+        "sortable": false,
+        "searchable": true,
+        "filterable": false,
+        "facetable": false
+      }
+    ]
+}
