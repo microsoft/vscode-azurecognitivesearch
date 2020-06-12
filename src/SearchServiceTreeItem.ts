@@ -9,6 +9,9 @@ import { IndexerListTreeItem } from "./IndexerListTreeItem";
 import { SynonymMapListTreeItem } from "./SynonymMapListTreeItem";
 import { SkillsetListTreeItem } from "./SkillsetListTreeItem";
 import { ServiceDetailsTreeItem } from "./ServiceDetailsTreeItem";
+import { getResourcesPath } from "./constants";
+import { Uri } from "vscode";
+import * as path from 'path';
 
 export class SearchServiceTreeItem extends AzureParentTreeItem {
     public static contextValue: string = "azureSearchService";
@@ -21,6 +24,11 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
         public readonly searchManagementClient: SearchManagementClient) {
         super(parent);
     }
+
+    public iconPath: { light: string | Uri; dark: string | Uri } = {
+        light: path.join(getResourcesPath(), 'Azure-Search.svg'),
+        dark: path.join(getResourcesPath(), 'Azure-Search.svg')
+    };
 
     public async loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
 

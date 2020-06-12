@@ -15,6 +15,7 @@ import { IDocumentRepository } from './IDocumentRepository';
 import { DataSourceListTreeItem } from './DataSourceListTreeItem';
 import { EditableResourceTreeItem } from './EditableResourceTreeItem';
 import { IndexerListTreeItem } from './IndexerListTreeItem';
+import { IndexListTreeItem } from './IndexListTreeItem';
 import { SkillsetListTreeItem } from './SkillSetListTreeItem';
 import { SynonymMapListTreeItem } from './SynonymMapListTreeItem';
 import TelemetryReporter from 'vscode-extension-telemetry';
@@ -70,6 +71,8 @@ export async function activateInternal(context: vscode.ExtensionContext, perfSta
 		registerCommand("azureSearch.deleteDataSource", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, DataSourceListTreeItem.itemContextValue));
 		registerCommand("azureSearch.createIndexer", async (actionContext: IActionContext, treeItem: IndexerListTreeItem) => createResource(treeItem, actionContext, IndexerListTreeItem.contextValue));
 		registerCommand("azureSearch.deleteIndexer", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, IndexerListTreeItem.itemContextValue));
+		registerCommand("azureSearch.createIndex", async (actionContext: IActionContext, treeItem: IndexListTreeItem) => createResource(treeItem, actionContext, IndexListTreeItem.contextValue));
+		registerCommand("azureSearch.deleteIndex", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, IndexListTreeItem.itemContextValue));
 		registerCommand("azureSearch.createSkillset", async (actionContext: IActionContext, treeItem: SkillsetListTreeItem) => createResource(treeItem, actionContext, SkillsetListTreeItem.contextValue));
 		registerCommand("azureSearch.deleteSkillset", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, SkillsetListTreeItem.itemContextValue));
 		registerCommand("azureSearch.createSynonymMap", async (actionContext: IActionContext, treeItem: SynonymMapListTreeItem) => createResource(treeItem, actionContext, SynonymMapListTreeItem.contextValue));

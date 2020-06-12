@@ -2,6 +2,9 @@ import { AzureTreeItem, IActionContext } from "vscode-azureextensionui";
 import { SimpleSearchClient, Index, Field } from "./SimpleSearchClient";
 import { DocumentListTreeItem } from "./DocumentListTreeItem";
 import { IDocumentRepository } from "./IDocumentRepository";
+import { getResourcesPath } from "./constants";
+import { Uri } from "vscode";
+import * as path from 'path';
 
 export class DocumentTreeItem extends AzureTreeItem implements IDocumentRepository {
     public static readonly contextValue: string = "azureSearchDocument";
@@ -23,6 +26,11 @@ export class DocumentTreeItem extends AzureTreeItem implements IDocumentReposito
         this.namePrefix = `${this.searchServiceName}-${this.index.name}`;
         this.itemName = key;
     }
+
+    public iconPath: { light: string | Uri; dark: string | Uri } = {
+        light: path.join(getResourcesPath(), 'light', 'document.svg'),
+        dark: path.join(getResourcesPath(), 'dark', 'document.svg')
+    };
 
     public get searchServiceName(): string {
         return this.searchClient.serviceName;

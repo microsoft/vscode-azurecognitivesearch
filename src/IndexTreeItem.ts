@@ -4,11 +4,15 @@ import { SimpleSearchClient, Index } from "./SimpleSearchClient";
 import { DocumentListTreeItem } from "./DocumentListTreeItem";
 import { IndexListTreeItem } from "./IndexListTreeItem";
 import { EditableResourceTreeItem } from "./EditableResourceTreeItem";
+import * as path from 'path';
+import { Uri } from "vscode";
+import { getResourcesPath } from "./constants";
 
 export class IndexTreeItem extends AzureParentTreeItem {
     public static readonly contextValue: string = "azureSearchIndex";
     public readonly contextValue: string = IndexTreeItem.contextValue;
     public readonly label: string;
+    public readonly itemKind: string = "index";
 
     public constructor(
         parent: IndexListTreeItem,
@@ -17,6 +21,11 @@ export class IndexTreeItem extends AzureParentTreeItem {
         super(parent);
         this.label = index.name;
     }
+
+    public iconPath: { light: string | Uri; dark: string | Uri } = {
+        light: path.join(getResourcesPath(), 'light', 'index.svg'),
+        dark: path.join(getResourcesPath(), 'dark', 'index.svg')
+    };
 
     public async loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
         return [
@@ -35,6 +44,10 @@ export class IndexTreeItem extends AzureParentTreeItem {
 
     public compareChildrenImpl(item1: AzExtTreeItem, item2: AzExtTreeItem): number {
         return SearchServiceTreeItem.getTreeItemPosition(item1) - SearchServiceTreeItem.getTreeItemPosition(item2);
+    }
+
+    public deleteTreeItemImpl?(_context: IActionContext): Promise<void> {
+        return this.searchClient.deleteResource('indexes', this.label);
     }
 
     static getTreeItemPosition(item: AzExtTreeItem) : number {

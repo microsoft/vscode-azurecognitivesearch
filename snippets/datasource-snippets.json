@@ -1,0 +1,74 @@
+{
+	"Azure Blob datasource": {
+		"prefix": "azs-datasource-blob",
+		"body": [
+            "{",
+            "\t\"name\": \"blob-datasource\",",
+            "\t\"type\": \"azureblob\",",
+            "\t\"credentials\": {",
+            "\t\t\"connectionString\": \"DefaultEndpointsProtocol=https;AccountName=<account name>;AccountKey=<account key>;\"",
+            "\t},",
+            "\t\"container\": {",
+            "\t\t\"name\": \"my-container\",",
+            "\t\t\"query\": \"<optional-virtual-directory-name>\"",
+            "\t}",
+            "}"
+		],
+		"description": "Create a Azure Blob Storage data source for Azure Cognitive Search"
+    },
+    "Cosmos DB datasource": {
+		"prefix": "azs-datasource-cosmos",
+		"body": [
+            "{",
+            "\t\"name\": \"mycosmosdbdatasource\",",
+            "\t\"type\": \"cosmosdb\",",
+            "\t\"credentials\": {",
+            "\t\t\"connectionString\": \"AccountEndpoint=https://myCosmosDbEndpoint.documents.azure.com;AccountKey=myCosmosDbAuthKey;Database=myCosmosDbDatabaseId\"",
+            "\t},",
+            "\t\"container\": {",
+            "\t\t\"name\": \"myCollection\",",
+            "\t\t\"query\": null",
+            "\t},",
+            "\t\"dataChangeDetectionPolicy\": {",
+            "\t\t\"@odata.type\": \"#Microsoft.Azure.Search.HighWaterMarkChangeDetectionPolicy\",",
+            "\t\t\"highWaterMarkColumnName\": \"_ts\"",
+            "\t}",
+            "}"
+		],
+		"description": "Create a Cosmos DB data source for Azure Cognitive Search"
+    },
+    "Azure SQL datasource": {
+		"prefix": "azs-datasource-sql",
+		"body": [
+            "{",
+            "\t\"name\": \"myazuresqldatasource\",",
+            "\t\"type\": \"azuresql\",",
+            "\t\"credentials\": {",
+            "\t\t\"connectionString\": \"Server=tcp:<your server>.database.windows.net,1433;Database=<your database>;User ID=<your user name>;Password=<your password>;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;\"",
+            "\t},",
+            "\t\"container\": {",
+            "\t\t\"name\": \"name of the table or view that you want to index\"",
+            "\t}",
+            "}"
+		],
+		"description": "Create an Azure SQL data source for Azure Cognitive Search"
+    },
+    "Azure table datasource": {
+		"prefix": "azs-datasource-table",
+		"body": [
+            "{",
+            "\t\"name\": \"table-datasource\",",
+            "\t\"type\": \"azuretable\",",
+            "\t\"credentials\": {",
+            "\t\t\"connectionString\": \"DefaultEndpointsProtocol=https;AccountName=<account name>;AccountKey=<account key>;\"",
+            "\t},",
+            "\t\"container\": {",
+            "\t\t\"name\": \"my-table\",",
+            "\t\t\"query\": \"PartitionKey eq '123'\"",
+            "\t}",
+            "}"
+
+		],
+		"description": "Create an Azure table data source for Azure Cognitive Search"
+	}
+}

@@ -1,0 +1,23 @@
+{
+	"Indexer": {
+		"prefix": "azs-indexer",
+		"body": [
+            "{",
+            "\t\"name\": \"myIndexer\",",
+            "\t\"dataSourceName\": \"myDataSource\",",
+            "\t\"targetIndexName\": \"myIndex\",",
+            "\t\"skillsetName\": \"mySkillSet\",",
+            "\t\"fieldMappings\": [",
+            "\t\t{",
+            "\t\t\t\"sourceFieldName\": \"metadata_storage_path\",",
+            "\t\t\t\"targetFieldName\": \"id\",",
+            "\t\t\t\"mappingFunction\": {",
+            "\t\t\t\t\"name\": \"base64Encode\"",
+            "\t\t\t}",
+            "\t\t}",
+            "\t]",
+            "}"
+		],
+		"description": "Creates an indexer"
+    }
+}

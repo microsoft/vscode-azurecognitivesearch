@@ -3,10 +3,17 @@ import { ResourceManagementClient } from 'azure-arm-resource';
 import { SearchService } from 'azure-arm-search/lib/models';
 import { AzExtTreeItem, createAzureClient, SubscriptionTreeItemBase, addExtensionUserAgent } from 'vscode-azureextensionui';
 import { SearchServiceTreeItem } from './SearchServiceTreeItem';
+import { getResourcesPath } from "./constants";
+import { Uri } from "vscode";
+import * as path from 'path';
 
 export class SubscriptionTreeItem extends SubscriptionTreeItemBase {
     private _nextLink: string | undefined;
     public childTypeLabel: string = "Search Service";
+    public iconPath: { light: string | Uri; dark: string | Uri } = {
+        light: path.join(getResourcesPath(), 'Subscriptions.svg'),
+        dark: path.join(getResourcesPath(), 'Subscriptions.svg')
+    };
 
     async loadMoreChildrenImpl(_clearCache: boolean): Promise<AzExtTreeItem[]> {
         if (_clearCache) {

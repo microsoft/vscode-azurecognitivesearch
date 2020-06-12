@@ -1,11 +1,19 @@
-import { AzureParentTreeItem, IActionContext, AzExtTreeItem, GenericTreeItem } from "vscode-azureextensionui";
+import { AzureParentTreeItem, IActionContext, AzExtTreeItem, GenericTreeItem, ICreateChildImplContext } from "vscode-azureextensionui";
 import { SearchServiceTreeItem } from "./SearchServiceTreeItem";
 import { SimpleSearchClient, Index } from "./SimpleSearchClient";
 import { IndexTreeItem } from "./IndexTreeItem";
+import { getResourcesPath } from "./constants";
+import { Uri } from "vscode";
+import * as path from 'path';
+import { EditableResourceTreeItem } from "./EditableResourceTreeItem";
 
 export class IndexListTreeItem extends AzureParentTreeItem {
     public static contextValue: string = "azureSearchIndexList";
     public readonly contextValue: string = IndexListTreeItem.contextValue;
+    public static readonly itemContextValue: string = "azureSearchIndex";
+    public static readonly itemSet: string = "indexes";
+    public static readonly itemKind: string = "indexes";
+    public static readonly extension: string = "azsindex";
     public label: string = "Indexes";
 
     public constructor(
@@ -23,4 +31,21 @@ export class IndexListTreeItem extends AzureParentTreeItem {
     public hasMoreChildrenImpl(): boolean {
         return false;
     }   
+
+    public async createChildImpl(context: ICreateChildImplContext): Promise<EditableResourceTreeItem> {
+        return this.makeItem();
+    }
+
+    private makeItem(itemName?: string): EditableResourceTreeItem {
+        const name = itemName || "new";
+        const label = itemName ? undefined : "<new>";
+        const creating = !itemName;
+
+        return new EditableResourceTreeItem(this, IndexListTreeItem.itemContextValue, IndexListTreeItem.itemSet, name, IndexListTreeItem.itemKind, IndexListTreeItem.extension, creating, this.searchClient, label);
+    }
+
+    public iconPath: { light: string | Uri; dark: string | Uri } = {
+        light: path.join(getResourcesPath(), 'light', 'index.svg'),
+        dark: path.join(getResourcesPath(), 'dark', 'index.svg')
+    };
 }
