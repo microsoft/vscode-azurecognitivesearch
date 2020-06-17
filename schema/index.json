@@ -875,7 +875,19 @@
             "discriminator": "@odata.type",
             "properties": {
               "@odata.type": {
-                "type": "string"
+                "type": "string",
+                "enum": [
+                  "#Microsoft.Azure.Search.ClassicTokenizer",
+                  "#Microsoft.Azure.Search.EdgeNGramTokenizer",
+                  "#Microsoft.Azure.Search.KeywordTokenizerV2",
+                  "#Microsoft.Azure.Search.MicrosoftLanguageTokenizer",
+                  "#Microsoft.Azure.Search.MicrosoftLanguageStemmingTokenizer",
+                  "#Microsoft.Azure.Search.NGramTokenizer",
+                  "#Microsoft.Azure.Search.PathHierarchyTokenizerV2",
+                  "#Microsoft.Azure.Search.PatternTokenizer",
+                  "#Microsoft.Azure.Search.StandardTokenizerV2",
+                  "#Microsoft.Azure.Search.UaxUrlEmailTokenizer"
+                ]
               },
               "name": {
                 "type": "string",
@@ -1393,7 +1405,33 @@
             "discriminator": "@odata.type",
             "properties": {
               "@odata.type": {
-                "type": "string"
+                "type": "string",
+                "enum": [
+                  "#Microsoft.Azure.Search.AsciiFoldingTokenFilter",
+                  "#Microsoft.Azure.Search.CjkBigramTokenFilter",
+                  "#Microsoft.Azure.Search.CommonGramTokenFilter",
+                  "#Microsoft.Azure.Search.DictionaryDecompounderTokenFilter",
+                  "#Microsoft.Azure.Search.EdgeNGramTokenFilterV2",
+                  "#Microsoft.Azure.Search.ElisionTokenFilter",
+                  "#Microsoft.Azure.Search.IndicNormalizationTokenFilter",
+                  "#Microsoft.Azure.Search.KeepTokenFilter",
+                  "#Microsoft.Azure.Search.KeywordMarkerTokenFilter",
+                  "#Microsoft.Azure.Search.LengthTokenFilter",
+                  "#Microsoft.Azure.Search.LimitTokenFilter",
+                  "#Microsoft.Azure.Search.NGramTokenFilterV2",
+                  "#Microsoft.Azure.Search.PatternCaptureTokenFilter",
+                  "#Microsoft.Azure.Search.PatternReplaceTokenFilter",
+                  "#Microsoft.Azure.Search.PhoneticTokenFilter",
+                  "#Microsoft.Azure.Search.ShingleTokenFilter",
+                  "#Microsoft.Azure.Search.SnowballTokenFilter",
+                  "#Microsoft.Azure.Search.SoraniNormalizationTokenFilter",
+                  "#Microsoft.Azure.Search.StemmerTokenFilter",
+                  "#Microsoft.Azure.Search.StemmerOverrideTokenFilter",
+                  "#Microsoft.Azure.Search.StopwordsTokenFilter",
+                  "#Microsoft.Azure.Search.TruncateTokenFilter",
+                  "#Microsoft.Azure.Search.UniqueTokenFilter",
+                  "#Microsoft.Azure.Search.WordDelimiterTokenFilter"
+                ]
               },
               "name": {
                 "type": "string",
@@ -2355,7 +2393,11 @@
             "discriminator": "@odata.type",
             "properties": {
               "@odata.type": {
-                "type": "string"
+                "type": "string",
+                "enum": [
+                  "Microsoft.Azure.Search.MappingCharFilter",
+                  "Microsoft.Azure.Search.PatternReplaceCharFilter"
+                ]
               },
               "name": {
                 "type": "string",
