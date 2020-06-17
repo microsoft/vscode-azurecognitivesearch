@@ -5,7 +5,7 @@
 			"{",
 			"\t\"name\": \"my-synonyms\",",
 			"\t\"format\":\"solr\",",
-			"\t\"synonyms\": \"USA, United States, United States of America\\nWashington, Wash., WA => WA\\n",
+			"\t\"synonyms\": \"USA, United States, United States of America\\nWashington, Wash., WA => WA\\n\"",
 			" }"
 		],
 		"description": "Creates a synonym map"

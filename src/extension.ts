@@ -123,6 +123,7 @@ async function createResource(treeItem: AzureParentTreeItem, actionContext: IAct
 	await vscode.commands.executeCommand("azureSearch.openDocument", item);
 }
 
+
 async function deleteResource(treeItem: AzExtTreeItem & IDocumentRepository, actionContext: IActionContext, contextValue: string): Promise<void> {
 	if (!treeItem) {
 		treeItem = await ext.tree.showTreeItemPicker(contextValue, actionContext);
