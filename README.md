@@ -14,6 +14,12 @@ This extension contributes the following settings:
 
 * `azureSearch.showExplorer`: enable/disable showing Azure Search in the Azure explorer window
 
+## Quickstart
+1. `git clone https://github.com/dereklegenzoff/vscode-azuresearch.git`
+2. `code vscode-azuresearch`
+3. `npm install`
+4. `F5` to run the extension
+
 ## Release Notes
 
 ### 0.0.1
