@@ -4,20 +4,42 @@
     "type": "object",
     "properties": {
         "name": {
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Naming-rules"
+            },
             "type": "string",
-            "description": "Name of the synonym map. Required for new synonym maps, optional for updates."
-        },
-        "format": {
+            "description": "The name of the synonym map."
+          },
+          "format": {
             "type": "string",
-            "description": "Format of the synonym map.",
             "enum": [
-                "solr"
-            ]
-        },
-        "synonyms": {
+              "solr"
+            ],
+            "x-ms-enum": {
+              "name": "SynonymMapFormat",
+              "modelAsString": false
+            },
+            "description": "The format of the synonym map. Only the 'solr' format is currently supported."
+          },
+          "synonyms": {
             "type": "string",
-            "description": "Actual synonym map in the format specified by 'format'."
+            "description": "A series of synonym rules in the specified synonym map format. The rules must be separated by newlines.",
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Create-Synonym-Map#SynonymMapFormat"
+            }
         },
+        "encryptionKey": {
+            "$ref": "#/definitions/encryptionKey",
+            "description": "Configuration information for using customer-managed encryption keys."
+        }
+    },
+    "required": [
+        "name",
+        "format",
+        "synonyms"
+    ],
+    "additionalProperties": false,
+    "definitions": {
         "encryptionKey": {
             "type": "object",
             "description": "Configuration information for using customer-managed encryption keys.",
@@ -49,10 +71,5 @@
                 "keyVaultUri"
             ]
         }
-    },
-    "required": [
-        "format",
-        "synonyms"
-    ],
-    "additionalProperties": false
+    }
 }

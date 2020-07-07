@@ -4,104 +4,35 @@
     "type": "object",
     "properties": {
         "name": {
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Naming-rules"
+            },
             "type": "string",
-            "description": "Name of this data source."
+            "description": "The name of the datasource."
         },
         "description": {
-            "type": [
-                "string",
-                "null"
-            ],
-            "description": "An optional description for the data source."
+            "type": "string",
+            "description": "The description of the datasource."
         },
         "type": {
-            "type": "string",
-            "description": "Type of data source (e.g. azuresql, azureblob, etc.)",
-            "enum": [
-                "azuresql",
-                "documentdb",
-                "azureblob",
-                "azuretable"
-            ]
-        },
-        "subtype": {
-            "type": [
-                "string",
-                "null"
-            ]
+            "$ref": "#/definitions/DataSourceType",
+            "description": "The type of the datasource."
         },
         "credentials": {
-            "type": "object",
-            "description": "Credentials used to authenticated with the data source.",
-            "properties": {
-                "connectionString": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                }
-            },
-            "required": [
-                "connectionString"
-            ]
+          "$ref": "#/definitions/DataSourceCredentials",
+          "description": "Credentials for the datasource."
         },
         "container": {
-            "type": "object",
-            "description": "Pointer to a the table, collection, or blob container to index.",
-            "properties": {
-                "name": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "name"
-            ]
+          "$ref": "#/definitions/DataContainer",
+          "description": "The data container for the datasource."
         },
         "dataChangeDetectionPolicy": {
-            "type": [
-                "object",
-                "null"
-            ],
-            "description": "Specifies how change detection should be done.",
-            "properties": {
-                "@odata.type": {
-                    "type": "string",
-                    "enum": [
-                        "#Microsoft.Azure.Search.HighWaterMarkChangeDetectionPolicy",
-                        "#Microsoft.Azure.Search.SqlIntegratedChangeTrackingPolicy"
-                    ]
-                },
-                "highWaterMarkColumnName": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "@odata.type"
-            ]
+            "$ref": "#/definitions/DataChangeDetectionPolicy",
+            "description": "The data change detection policy for the datasource."
         },
         "dataDeletionDetectionPolicy": {
-            "type": [
-                "object",
-                "null"
-            ],
-            "description": "Specifies how delete detection should be done.",
-            "properties": {
-                "@data.type": {
-                    "type": "string",
-                    "enum": [
-                        "#Microsoft.Azure.Search.SoftDeleteColumnDeletionDetectionPolicy"
-                    ]
-                },
-                "softDeleteColumnName": {
-                    "type": "string"
-                },
-                "softDeleteMarkerValue": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "@odata.type"
-            ]
+            "$ref": "#/definitions/DataDeletionDetectionPolicy",
+            "description": "The data deletion detection policy for the datasource."
         }
     },
     "required": [
@@ -110,5 +41,126 @@
         "credentials",
         "container"
     ],
-    "additionalProperties": false
+    "additionalProperties": false,
+    "definitions": {
+        "DataSourceCredentials": {
+            "properties": {
+              "connectionString": {
+                "externalDocs": {
+                  "url": "https://docs.microsoft.com/rest/api/searchservice/Create-Data-Source"
+                },
+                "type": "string",
+                "description": "The connection string for the datasource."
+              }
+            },
+            "description": "Represents credentials that can be used to connect to a datasource."
+          },
+          "DataContainer": {
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the table or view (for Azure SQL data source) or collection (for DocumentDB data source) that will be indexed."
+              },
+              "query": {
+                "type": "string",
+                "description": "A query that is applied to this data container. The syntax and meaning of this parameter is datasource-specific. Not supported by Azure SQL datasources."
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "description": "Represents information about the entity (such as Azure SQL table or DocumentDb collection) that will be indexed."
+          },
+          "DataChangeDetectionPolicy": {
+            "discriminator": "@odata.type",
+            "properties": {
+              "@odata.type": {
+                "type": "string",
+                "enum": [
+                    "#Microsoft.Azure.Search.HighWaterMarkChangeDetectionPolicy",
+                    "#Microsoft.Azure.Search.SqlIntegratedChangeTrackingPolicy"
+                ]
+              }
+            },
+            "required": [
+              "@odata.type"
+            ],
+            "description": "Abstract base class for data change detection policies."
+          },
+          "HighWaterMarkChangeDetectionPolicy": {
+            "description": "Defines a data change detection policy that captures changes based on the value of a high water mark column.",
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.HighWaterMarkChangeDetectionPolicy",
+            "allOf": [
+              {
+                "$ref": "#/definitions/DataChangeDetectionPolicy"
+              }
+            ],
+            "properties": {
+              "highWaterMarkColumnName": {
+                "type": "string",
+                "description": "The name of the high water mark column."
+              }
+            },
+            "required": [
+              "highWaterMarkColumnName"
+            ]
+          },
+          "SqlIntegratedChangeTrackingPolicy": {
+            "description": "Defines a data change detection policy that captures changes using the Integrated Change Tracking feature of Azure SQL Database.",
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.SqlIntegratedChangeTrackingPolicy",
+            "allOf": [
+              {
+                "$ref": "#/definitions/DataChangeDetectionPolicy"
+              }
+            ]
+          },
+          "DataDeletionDetectionPolicy": {
+            "discriminator": "@odata.type",
+            "properties": {
+              "@odata.type": {
+                "type": "string",
+                "enum": [
+                    "#Microsoft.Azure.Search.SoftDeleteColumnDeletionDetectionPolicy"
+                ]
+              }
+            },
+            "required": [
+              "@odata.type"
+            ],
+            "description": "Abstract base class for data deletion detection policies."
+          },
+          "SoftDeleteColumnDeletionDetectionPolicy": {
+            "description": "Defines a data deletion detection policy that implements a soft-deletion strategy. It determines whether an item should be deleted based on the value of a designated 'soft delete' column.",
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.SoftDeleteColumnDeletionDetectionPolicy",
+            "allOf": [
+              {
+                "$ref": "#/definitions/DataDeletionDetectionPolicy"
+              }
+            ],
+            "properties": {
+              "softDeleteColumnName": {
+                "type": "string",
+                "description": "The name of the column to use for soft-deletion detection."
+              },
+              "softDeleteMarkerValue": {
+                "type": "string",
+                "description": "The marker value that identifies an item as deleted."
+              }
+            }
+          },
+          "DataSourceType": {
+            "type": "string",
+            "enum": [
+              "azuresql",
+              "cosmosdb",
+              "azureblob",
+              "azuretable"
+            ],
+            "x-ms-enum": {
+              "name": "DataSourceType",
+              "modelAsString": false
+            },
+            "description": "Defines the type of a datasource."
+          }
+    }
 }

@@ -4,149 +4,61 @@
     "type": "object",
     "properties": {
         "name": {
-            "type": "string",
-            "description": "Name for this indexer."
+          "externalDocs": {
+            "url": "https://docs.microsoft.com/rest/api/searchservice/Naming-rules"
+          },
+          "type": "string",
+          "description": "The name of the indexer."
         },
         "description": {
-            "type": [
-                "string",
-                "null"
-            ],
-            "description": "Description for this indexer."
+          "type": "string",
+          "description": "The description of the indexer."
         },
         "dataSourceName": {
-            "type": "string",
-            "description": "Name of a data source that this indexer will use to pull data."
-        },
-        "targetIndexName": {
-            "type": "string",
-            "description": "Name of the index the indexer should push data into."
+          "type": "string",
+          "description": "The name of the datasource from which this indexer reads data."
         },
         "skillsetName": {
-            "type": [
-                "string",
-                "null"
-            ],
-            "description": "A Cognitive Search skillset used to augment content during indexing by using Cognitive Services or custom AI components."
+          "type": "string",
+          "description": "The name of the skillset executing with this indexer."
+        },
+        "targetIndexName": {
+          "type": "string",
+          "description": "The name of the index to which this indexer writes data."
         },
         "schedule": {
-            "type": [
-                "object",
-                "null"
-            ],
-            "description": "Optional schedule for running the indexer. If not specified, the indexer will run immediately when the create request is sent.",
-            "properties": {
-                "interval": {
-                    "type": "string",
-                    "description": "How often to run the indexer, in ISO 8601 format. The pattern for this is: 'P[nD][T[nH][nM]]'."
-                },
-                "startTime": {
-                    "type": "string",
-                    "description": "Optional initial time to start running the indexer."
-                }
-            },
-            "required": [
-                "interval"
-            ]
+          "$ref": "#/definitions/IndexingSchedule",
+          "description": "The schedule for this indexer."
         },
         "parameters": {
-            "type": [
-                "object",
-                "null"
-            ],
-            "description": "Indexer specific parameters.",
-            "properties": {
-                "batchSize": {
-                    "type": "integer"
-                },
-                "maxFailedItems": {
-                    "type": "integer"
-                },
-                "maxFailedItemsPerBatch": {
-                    "type": "integer"
-                },
-                "parsingMode": {
-                    "type": "string",
-                    "enum": [
-                        "text",
-                        "delimitedText",
-                        "json",
-                        "jsonArray",
-                        "jsonLines"
-                    ]
-                },
-                "excludedFileNameExtensions": {
-                    "type": "string"
-                },
-                "indexedFileNameExtensions": {
-                    "type": "string"
-                },
-                "failOnUnsupportedContentType": {
-                    "type": "boolean"
-                },
-                "failOnUnprocessableDocument": {
-                    "type": "boolean"
-                },
-                "indexStorageMetadataOnlyForOversizedDocuments": {
-                    "type": "boolean"
-                },
-                "delimitedTextHeaders": {
-                    "type": "string"
-                },
-                "delimitedTextDelimiter": {
-                    "type": "string"
-                },
-                "firstLineContainsHeaders": {
-                    "type": "boolean"
-                },
-                "documentRoot": {
-                    "type": "string"
-                },
-                "dataToExtract": {
-                    "type": "string",
-                    "enum": [
-                        "storageMetadata",
-                        "allMetadata",
-                        "contentAndMetadata"
-                    ]
-                },
-                "imageAction": {
-                    "type": "string",
-                    "enum": [
-                        "none",
-                        "generateNormalizedImages",
-                        "generateNormalizedImagePerPage"
-                    ]
-                },
-                "queryTimeout": {
-                    "type": "string",
-                    "description": "Format is 'hh:mm:ss'"
-                }
-            }
+          "$ref": "#/definitions/IndexingParameters",
+          "description": "Parameters for indexer execution."
         },
         "fieldMappings": {
-            "type": [
-                "array",
-                "null"
-            ],
-            "description": "Mapping of source fields to target fields in the Azure Search index.",
-            "items": {
-                "$ref": "#/definitions/fieldMapping"
-            }
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldMapping"
+          },
+          "description": "Defines mappings between fields in the data source and corresponding target fields in the index.",
+          "externalDocs": {
+            "url": "https://docs.microsoft.com/azure/search/search-indexer-field-mappings"
+          }
         },
         "outputFieldMappings": {
-            "type": [
-                "array",
-                "null"
-            ],
-            "description": "Mapping of source fields to target fields in the Azure Search index.",
-            "items": {
-                "$ref": "#/definitions/fieldMapping"
-            }
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldMapping"
+          },
+          "description": "Output field mappings are applied after enrichment and immediately before indexing.",
+          "externalDocs": {
+            "url": "https://docs.microsoft.com/azure/search/search-indexer-field-mappings"
+          }
         },
         "disabled": {
-            "type": "boolean",
-            "description": "Enable or disable execution of this indexer."
+          "x-ms-client-name": "IsDisabled",
+          "type": "boolean",
+          "default": false,
+          "description": "A value indicating whether the indexer is disabled. Default is false."
         }
     },
     "required": [
@@ -156,14 +68,145 @@
     ],
     "additionalProperties": false,
     "definitions": {
-        "fieldMapping": {
+        "IndexingSchedule": {
+            "properties": {
+              "interval": {
+                "type": "string",
+                "format": "duration",
+                "description": "The interval of time between indexer executions."
+              },
+              "startTime": {
+                "type": "string",
+                "format": "date-time",
+                "description": "The time when an indexer should start running."
+              }
+            },
+            "required": [
+              "interval"
+            ],
+            "description": "Represents a schedule for indexer execution."
+        },
+        "IndexingParameters": {
+            "properties": {
+              "batchSize": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The number of items that are read from the data source and indexed as a single batch in order to improve performance. The default depends on the data source type."
+              },
+              "maxFailedItems": {
+                "type": "integer",
+                "format": "int32",
+                "default": 0,
+                "description": "The maximum number of items that can fail indexing for indexer execution to still be considered successful. -1 means no limit. Default is 0."
+              },
+              "maxFailedItemsPerBatch": {
+                "type": "integer",
+                "format": "int32",
+                "default": 0,
+                "description": "The maximum number of items in a single batch that can fail indexing for the batch to still be considered successful. -1 means no limit. Default is 0."
+              },
+              "base64EncodeKeys": {
+                "type": "boolean",
+                "default": false,
+                "description": "Whether indexer will base64-encode all values that are inserted into key field of the target index. This is needed if keys can contain characters that are invalid in keys (such as dot '.'). Default is false."
+              },
+              "configuration": {
+                "type": "object",
+                "properties": {
+                    "parsingMode": {
+                        "type": "string",
+                        "enum": [
+                            "text",
+                            "delimitedText",
+                            "json",
+                            "jsonArray",
+                            "jsonLines"
+                        ]
+                    },
+                    "excludedFileNameExtensions": {
+                        "type": "string"
+                    },
+                    "indexedFileNameExtensions": {
+                        "type": "string"
+                    },
+                    "failOnUnsupportedContentType": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "failOnUnprocessableDocument": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "indexStorageMetadataOnlyForOversizedDocuments": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "delimitedTextHeaders": {
+                        "type": "string"
+                    },
+                    "delimitedTextDelimiter": {
+                        "type": "string"
+                    },
+                    "firstLineContainsHeaders": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "documentRoot": {
+                        "type": "string"
+                    },
+                    "dataToExtract": {
+                        "type": "string",
+                        "enum": [
+                            "storageMetadata",
+                            "allMetadata",
+                            "contentAndMetadata"
+                        ],
+                        "default": "contentAndMetadata"
+                    },
+                    "imageAction": {
+                        "type": "string",
+                        "enum": [
+                            "none",
+                            "generateNormalizedImages",
+                            "generateNormalizedImagePerPage"
+                        ]
+                    },
+                    "allowSkillsetToReadFileData": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "pdfTextRotationAlgorithm": {
+                      "type": "string",
+                      "enum": [
+                          "none",
+                          "detectAngles"
+                      ],
+                      "default": "none"
+                  },
+                    "queryTimeout": {
+                        "type": "string",
+                        "description": "Format is 'hh:mm:ss'"
+                    }
+                },
+                "additionalProperties": {
+                  "type": "object"
+                },
+                "description": "A dictionary of indexer-specific configuration properties. Each name is the name of a specific property. Each value must be of a primitive type."
+              }
+            },
+            "description": "Represents parameters for indexer execution.",
+            "x-ms-external": true
+          },
+        "FieldMapping": {
             "type": "object",
             "properties": {
                 "sourceFieldName": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The name of the field in the data source."
                 },
                 "targetFieldName": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The name of the target field in the index. Same as the source field name by default."
                 },
                 "mappingFunction": {
                     "type": [
@@ -204,6 +247,47 @@
                 "sourceFieldName",
                 "targetFieldName"
             ]
-        }
+        },
+        "FieldMappingFunction": {
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the field mapping function.",
+                "enum": [
+                    "base64Encode",
+                    "base64Decode",
+                    "extractTokenAtPosition",
+                    "jsonArrayToStringCollection",
+                    "urlEncode",
+                    "urlDecode"
+                ]
+              },
+              "parameters": {
+                "type": "object",
+                "properties": {
+                    "useHttpServerUtilityUrlTokenEncode": {
+                        "type": "boolean"
+                    },
+                    "useHttpServerUtilityUrlTokenDecode": {
+                        "type": "boolean"
+                    },
+                    "delimiter": {
+                        "type": "string"
+                    },
+                    "position": {
+                        "type": "integer"
+                    }
+                },
+                "description": "A dictionary of parameter name/value pairs to pass to the function. Each value must be of a primitive type."
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "description": "Represents a function that transforms a value from a data source before indexing.",
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/azure/search/search-indexer-field-mappings"
+            }
+          }
     }
 }

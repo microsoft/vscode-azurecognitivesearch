@@ -4,484 +4,2467 @@
     "type": "object",
     "properties": {
         "name": {
-            "type": "string",
-            "description": "Name of the index. Required during creation, optional for updates."
+          "externalDocs": {
+            "url": "https://docs.microsoft.com/rest/api/searchservice/Naming-rules"
+          },
+          "type": "string",
+          "description": "The name of the index."
         },
         "fields": {
-            "type": "array",
-            "description": "List of fields for this index.",
-            "items": {
-                "$ref": "#/definitions/field"
-            }
-        },
-        "suggesters": {
-            "type": "array",
-            "description": "List of suggesters associated with this index.",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "Name of this suggester."
-                    },
-                    "searchMode": {
-                        "type": "string",
-                        "description": "Specifies the strategy used to search for suggestions.",
-                        "enum": [
-                            "analyzingInfixMatching"
-                        ]
-                    },
-                    "sourceFields": {
-                        "type": "array",
-                        "description": "List of fields used to populate candidates for this suggester.",
-                        "items": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "required": [
-                    "name",
-                    "searchMode",
-                    "sourceFields"
-                ],
-                "additionalProperties": false
-            }
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Field"
+          },
+          "description": "The fields of the index."
         },
         "scoringProfiles": {
-            "type": "array",
-            "description": "List of scoring profiles, each defining details that control how results are scored.",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "Type of the scoring profile."
-                    },
-                    "text": {
-                        "type": "object",
-                        "description": "Adjust text-related aspects of scoring, such as field weights.",
-                        "properties": {
-                            "weights": {
-                                "type": "object",
-                                "description": "Name/value pairs representing field names and field weights."
-                            }
-                        },
-                        "additionalProperties": false
-                    },
-                    "functions": {
-                        "type": "array",
-                        "description": "Scoring functions that adjust document score based on document/query values.",
-                        "items": {
-                            "type": "object",
-                            "description": "Scoring function that adjusts scores based on magnitudes, freshness, distance, or tags.",
-                            "properties": {
-                                "type": {
-                                    "type": "string",
-                                    "description": "Type of scoring function.",
-                                    "enum": [
-                                        "magnitude",
-                                        "freshness",
-                                        "distance",
-                                        "tag"
-                                    ]
-                                },
-                                "boost": {
-                                    "type": "number",
-                                    "description": "Boost to apply over the base score."
-                                },
-                                "fieldName": {
-                                    "type": "string",
-                                    "description": "Name of the field that's input to this function."
-                                },
-                                "interpolation": {
-                                    "type": "string",
-                                    "description": "Interpolation function for values in the range.",
-                                    "enum": [
-                                        "constant",
-                                        "linear",
-                                        "quadratic",
-                                        "logarithmic"
-                                    ]
-                                },
-                                "magnitude": {
-                                    "type": [
-                                        "object",
-                                        "null"
-                                    ],
-                                    "description": "Boost based on a numeric field in each document.",
-                                    "properties": {
-                                        "boostingRangeStart": {
-                                            "type": "number"
-                                        },
-                                        "boostingRangeEnd": {
-                                            "type": "number"
-                                        },
-                                        "constantBoostBeyondRange": {
-                                            "type": "boolean"
-                                        }
-                                    },
-                                    "required": [
-                                        "boostingRangeStart",
-                                        "boostingRangeEnd"
-                                    ]
-                                },
-                                "freshness": {
-                                    "type": [
-                                        "object",
-                                        "null"
-                                    ],
-                                    "description": "Boost based on the difference in time between 'now' and a date field in each document.",
-                                    "properties": {
-                                        "boostingDuration": {
-                                            "type": "string",
-                                            "description": "Timespan to consider as range for boosting, in ISO 8601 format.  The pattern for this is: 'P[nD][T[nH][nM][nS]]'."
-                                        }
-                                    },
-                                    "required": [
-                                        "boostingDuration"
-                                    ]
-                                },
-                                "distance": {
-                                    "type": [
-                                        "object",
-                                        "null"
-                                    ],
-                                    "description": "Boost based on geographic distance.",
-                                    "properties": {
-                                        "referencePointParameter": {
-                                            "type": "string",
-                                            "description": "Name of the parameter passed in queries to indicate reference location."
-                                        },
-                                        "boostingDistance": {
-                                            "type": "number",
-                                            "description": "The distance in kilometers from the reference location where the boosting range ends."
-                                        }
-                                    },
-                                    "required": [
-                                        "referencePointParameter",
-                                        "boostingDistance"
-                                    ]
-                                },
-                                "tag": {
-                                    "type": [
-                                        "object",
-                                        "null"
-                                    ],
-                                    "description": "Boost based on matches of tags bewteen documents and queries.",
-                                    "properties": {
-                                        "tagsParameter": {
-                                            "type": "string",
-                                            "description": "Parameter to be passed in queries to specify a list of tags to compare against target fields."
-                                        }
-                                    }
-                                }
-                            },
-                            "required": [
-                                "type",
-                                "boost",
-                                "fieldName"
-                            ],
-                            "anyOf": [
-                                {
-                                    "properties": {
-                                        "type": {
-                                            "const": "magnitude"
-                                        }
-                                    },
-                                    "required": [
-                                        "magnitude"
-                                    ]
-                                },
-                                {
-                                    "properties": {
-                                        "type": {
-                                            "const": "freshness"
-                                        }
-                                    },
-                                    "required": [
-                                        "freshness"
-                                    ]
-                                },
-                                {
-                                    "properties": {
-                                        "type": {
-                                            "const": "distance"
-                                        }
-                                    },
-                                    "required": [
-                                        "distance"
-                                    ]
-                                },
-                                {
-                                    "properties": {
-                                        "type": {
-                                            "const": "tag"
-                                        }
-                                    },
-                                    "required": [
-                                        "tag"
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "functionAggregation": {
-                        "type": "string",
-                        "description": "Function used to aggregate the output from multiple scoring functions.",
-                        "enum": [
-                            "sum",
-                            "average",
-                            "minimum",
-                            "maximum",
-                            "firstMatching"
-                        ]
-                    }
-                },
-                "required": [
-                    "name"
-                ],
-                "additionalProperties": false
-            }
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ScoringProfile"
+          },
+          "description": "The scoring profiles for the index."
         },
         "defaultScoringProfile": {
-            "type": [
-                "string",
-                "null"
-            ],
-            "description": "Name of the scoring profile used when no scoring profile is explicitly specified in a query."
+          "type": "string",
+          "description": "The name of the scoring profile to use if none is specified in the query. If this property is not set and no scoring profile is specified in the query, then default scoring (tf-idf) will be used."
         },
         "corsOptions": {
-            "type": "object",
-            "description": "Options to manage CORS(cross-origin requests) support in this index.",
-            "properties": {
-                "allowedOrigins": {
-                    "type": "array",
-                    "description": "List of allowed origins, or * to allow all origins.",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "maxAgeInSeconds": {
-                    "type": [
-                        "number",
-                        "null"
-                    ],
-                    "minimum": 0
-                }
-            },
-            "required": [
-                "allowedOrigins"
-            ]
+          "$ref": "#/definitions/CorsOptions",
+          "description": "Options to control Cross-Origin Resource Sharing (CORS) for the index."
         },
-        "encryptionKey": {
-            "type": "object",
-            "description": "Configuration information for using customer-managed encryption keys.",
-            "properties": {
-                "keyVaultKeyName": {
-                    "type": "string"
-                },
-                "keyVaultKeyVersion": {
-                    "type": "string"
-                },
-                "keyVaultUri": {
-                    "type": "string"
-                },
-                "accessCredentials": {
-                    "type": "object",
-                    "properties": {
-                        "applicationId": {
-                            "type": "string"
-                        },
-                        "applicationSecret": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "required": [
-                "keyVaultKeyName",
-                "keyVaultKeyVersion",
-                "keyVaultUri"
-            ]
+        "suggesters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Suggester"
+          },
+          "description": "The suggesters for the index."
         },
         "analyzers": {
-            "type": "array",
-            "description": "Definitions of custom analyzers for this index.",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "Name to be used to reference this analyzer."
-                    },
-                    "@odata.type": {
-                        "type": "string",
-                        "description": "Type of analyzer",
-                        "default": "#Microsoft.Azure.Search.CustomAnalyzer"
-                    },
-                    "charFilters": {
-                        "type": "array",
-                        "description": "List of character filters in order of application.",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "tokenizer": {
-                        "type": "string",
-                        "description": "Pre-built or custom tokenizer to use in this analyzer."
-                    },
-                    "tokenFilters": {
-                        "type": "array",
-                        "description": "List of token filters in order of application.",
-                        "items": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "required": [
-                    "name",
-                    "@odata.type"
-                ]
-            }
-        },
-        "charFilters": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "@odata.type": {
-                        "type": "string"
-                    }
-                }
-            }
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Analyzer"
+          },
+          "description": "The analyzers for the index.",
+          "externalDocs": {
+            "url": "https://docs.microsoft.com/rest/api/searchservice/Custom-analyzers-in-Azure-Search"
+          }
         },
         "tokenizers": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "@odata.type": {
-                        "type": "string"
-                    }
-                }
-            }
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tokenizer"
+          },
+          "description": "The tokenizers for the index.",
+          "externalDocs": {
+            "url": "https://docs.microsoft.com/rest/api/searchservice/Custom-analyzers-in-Azure-Search"
+          }
         },
         "tokenFilters": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "@odata.type": {
-                        "type": "string"
-                    }
-                }
-            }
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TokenFilter"
+          },
+          "description": "The token filters for the index.",
+          "externalDocs": {
+            "url": "https://docs.microsoft.com/rest/api/searchservice/Custom-analyzers-in-Azure-Search"
+          }
+        },
+        "charFilters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CharFilter"
+          },
+          "description": "The character filters for the index.",
+          "externalDocs": {
+            "url": "https://docs.microsoft.com/rest/api/searchservice/Custom-analyzers-in-Azure-Search"
+          }
         }
-    },
-    "definitions": {
-        "field": {
-            "type": "object",
+      },
+    "required": [
+        "name",
+        "fields"
+      ],
+    "description": "Represents a search index definition, which describes the fields and search behavior of an index.",
+    "definitions":  {
+        "Field": {
             "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Name of the field."
-                },
-                "type": {
-                    "type": "string",
-                    "description": "Data type for this field",
-                    "enum": [
-                        "Edm.String",
-                        "Edm.Int32",
-                        "Edm.Int64",
-                        "Edm.Double",
-                        "Edm.Boolean",
-                        "Edm.DateTimeOffset",
-                        "Edm.GeographyPoint",
-                        "Edm.ComplexType",
-                        "Collection(Edm.String)",
-                        "Collection(Edm.Int32)",
-                        "Collection(Edm.Int64)",
-                        "Collection(Edm.Double)",
-                        "Collection(Edm.Boolean)",
-                        "Collection(Edm.DateTimeOffset)",
-                        "Collection(Edm.GeographyPoint)",
-                        "Collection(Edm.ComplexType)"
-                    ]
-                },
-                "searchable": {
-                    "type": "boolean",
-                    "description": "Index the contents of this field for full-text search."
-                },
-                "filterable": {
-                    "type": "boolean",
-                    "description": "Index the value of this field for fast filtering."
-                },
-                "sortable": {
-                    "type": "boolean",
-                    "description": "Enable sorting on this field."
-                },
-                "facetable": {
-                    "type": "boolean",
-                    "description": "Enable facets on this field."
-                },
-                "key": {
-                    "type": "boolean",
-                    "description": "Indicates whether this field is the key field for the index."
-                },
-                "retrievable": {
-                    "type": "boolean",
-                    "description": "Enable retrieving this field during queries and lookups."
-                },
-                "synonymMaps": {
-                    "type": "array",
-                    "description": "Associate a synonym map with this field.",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "analyzer": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "description": "Name of the pre-built or custom analyzer to use both for indexing and search."
-                },
-                "indexAnalyzer": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "description": "Name of the pre-built or custom analyzer to use both for indexing."
-                },
-                "searchAnalyzer": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "description": "Name of the pre-built or custom analyzer to use both for search."
-                },
-                "fields": {
-                    "type": "array",
-                    "description": "Nested fields for fields of type Edm.ComplexType or Collection(Edm.ComplexType)",
-                    "items": {
-                        "$ref": "#/definitions/field"
-                    }
+              "name": {
+                "type": "string",
+                "description": "The name of the field, which must be unique within the fields collection of the index or parent field.",
+                "externalDocs": {
+                  "url": "https://docs.microsoft.com/rest/api/searchservice/Naming-rules"
                 }
+              },
+              "type": {
+                "$ref": "#/definitions/DataType",
+                "description": "The data type of the field.",
+                "externalDocs": {
+                  "url": "https://docs.microsoft.com/rest/api/searchservice/supported-data-types"
+                }
+              },
+              "key": {
+                "type": "boolean",
+                "description": "A value indicating whether the field uniquely identifies documents in the index. Exactly one top-level field in each index must be chosen as the key field and it must be of type Edm.String. Key fields can be used to look up documents directly and update or delete specific documents. Default is false for simple fields and null for complex fields."
+              },
+              "retrievable": {
+                "type": "boolean",
+                "description": "A value indicating whether the field can be returned in a search result. You can disable this option if you want to use a field (for example, margin) as a filter, sorting, or scoring mechanism but do not want the field to be visible to the end user. This property must be true for key fields, and it must be null for complex fields. This property can be changed on existing fields. Enabling this property does not cause any increase in index storage requirements. Default is true for simple fields and null for complex fields."
+              },
+              "searchable": {
+                "type": "boolean",
+                "description": "A value indicating whether the field is full-text searchable. This means it will undergo analysis such as word-breaking during indexing. If you set a searchable field to a value like \"sunny day\", internally it will be split into the individual tokens \"sunny\" and \"day\". This enables full-text searches for these terms. Fields of type Edm.String or Collection(Edm.String) are searchable by default. This property must be false for simple fields of other non-string data types, and it must be null for complex fields. Note: searchable fields consume extra space in your index since Azure Cognitive Search will store an additional tokenized version of the field value for full-text searches. If you want to save space in your index and you don't need a field to be included in searches, set searchable to false."
+              },
+              "filterable": {
+                "type": "boolean",
+                "description": "A value indicating whether to enable the field to be referenced in $filter queries. filterable differs from searchable in how strings are handled. Fields of type Edm.String or Collection(Edm.String) that are filterable do not undergo word-breaking, so comparisons are for exact matches only. For example, if you set such a field f to \"sunny day\", $filter=f eq 'sunny' will find no matches, but $filter=f eq 'sunny day' will. This property must be null for complex fields. Default is true for simple fields and null for complex fields."
+              },
+              "sortable": {
+                "type": "boolean",
+                "description": "A value indicating whether to enable the field to be referenced in $orderby expressions. By default Azure Cognitive Search sorts results by score, but in many experiences users will want to sort by fields in the documents. A simple field can be sortable only if it is single-valued (it has a single value in the scope of the parent document). Simple collection fields cannot be sortable, since they are multi-valued. Simple sub-fields of complex collections are also multi-valued, and therefore cannot be sortable. This is true whether it's an immediate parent field, or an ancestor field, that's the complex collection. Complex fields cannot be sortable and the sortable property must be null for such fields. The default for sortable is true for single-valued simple fields, false for multi-valued simple fields, and null for complex fields."
+              },
+              "facetable": {
+                "type": "boolean",
+                "description": "A value indicating whether to enable the field to be referenced in facet queries. Typically used in a presentation of search results that includes hit count by category (for example, search for digital cameras and see hits by brand, by megapixels, by price, and so on). This property must be null for complex fields. Fields of type Edm.GeographyPoint or Collection(Edm.GeographyPoint) cannot be facetable. Default is true for all other simple fields."
+              },
+              "analyzer": {
+                "externalDocs": {
+                  "url": "https://docs.microsoft.com/rest/api/searchservice/Language-support"
+                },
+                "$ref": "#/definitions/Analyzer",
+                "description": "The name of the language analyzer to use for the field. This option can be used only with searchable fields and it can't be set together with either searchAnalyzer or indexAnalyzer. Once the analyzer is chosen, it cannot be changed for the field. Must be null for complex fields."
+              },
+              "searchAnalyzer": {
+                "externalDocs": {
+                  "url": "https://docs.microsoft.com/rest/api/searchservice/Language-support"
+                },
+                "$ref": "#/definitions/Analyzer",
+                "description": "The name of the analyzer used at search time for the field. This option can be used only with searchable fields. It must be set together with indexAnalyzer and it cannot be set together with the analyzer option. This analyzer can be updated on an existing field. Must be null for complex fields."
+              },
+              "indexAnalyzer": {
+                "externalDocs": {
+                  "url": "https://docs.microsoft.com/rest/api/searchservice/Language-support"
+                },
+                "$ref": "#/definitions/Analyzer",
+                "description": "The name of the analyzer used at indexing time for the field. This option can be used only with searchable fields. It must be set together with searchAnalyzer and it cannot be set together with the analyzer option. Once the analyzer is chosen, it cannot be changed for the field. Must be null for complex fields."
+              },
+              "synonymMaps": {
+                "externalDocs": {
+                  "url": "https://docs.microsoft.com/rest/api/searchservice/Synonym-Map-operations"
+                },
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "A list of the names of synonym maps to associate with this field. This option can be used only with searchable fields. Currently only one synonym map per field is supported. Assigning a synonym map to a field ensures that query terms targeting that field are expanded at query-time using the rules in the synonym map. This attribute can be changed on existing fields. Must be null or an empty collection for complex fields."
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Field"
+                },
+                "description": "A list of sub-fields if this is a field of type Edm.ComplexType or Collection(Edm.ComplexType). Must be null or empty for simple fields."
+              }
             },
             "required": [
-                "name",
-                "type"
+              "name",
+              "type"
             ],
-            "additionalProperties": false
-        }
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Create-Index"
+            },
+            "description": "Represents a field in an index definition, which describes the name, data type, and search behavior of a field."
+          },
+          "TextWeights": {
+            "properties": {
+              "weights": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number",
+                  "format": "double",
+                  "x-nullable": false
+                },
+                "description": "The dictionary of per-field weights to boost document scoring. The keys are field names and the values are the weights for each field."
+              }
+            },
+            "required": [
+              "weights"
+            ],
+            "description": "Defines weights on index fields for which matches should boost scoring in search queries."
+          },
+          "ScoringFunction": {
+            "discriminator": "type",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "fieldName": {
+                "type": "string",
+                "description": "The name of the field used as input to the scoring function."
+              },
+              "boost": {
+                "type": "number",
+                "format": "double",
+                "description": "A multiplier for the raw score. Must be a positive number not equal to 1.0."
+              },
+              "interpolation": {
+                "$ref": "#/definitions/ScoringFunctionInterpolation",
+                "description": "A value indicating how boosting will be interpolated across document scores; defaults to \"Linear\"."
+              }
+            },
+            "required": [
+              "type",
+              "fieldName",
+              "boost"
+            ],
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Add-scoring-profiles-to-a-search-index"
+            },
+            "description": "Abstract base class for functions that can modify document scores during ranking."
+          },
+          "DistanceScoringFunction": {
+            "x-ms-discriminator-value": "distance",
+            "allOf": [
+              {
+                "$ref": "#/definitions/ScoringFunction"
+              }
+            ],
+            "properties": {
+              "distance": {
+                "x-ms-client-name": "Parameters",
+                "$ref": "#/definitions/DistanceScoringParameters",
+                "description": "Parameter values for the distance scoring function."
+              }
+            },
+            "required": [
+              "distance"
+            ],
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Add-scoring-profiles-to-a-search-index"
+            },
+            "description": "Defines a function that boosts scores based on distance from a geographic location."
+          },
+          "DistanceScoringParameters": {
+            "properties": {
+              "referencePointParameter": {
+                "type": "string",
+                "description": "The name of the parameter passed in search queries to specify the reference location."
+              },
+              "boostingDistance": {
+                "type": "number",
+                "format": "double",
+                "description": "The distance in kilometers from the reference location where the boosting range ends."
+              }
+            },
+            "required": [
+              "referencePointParameter",
+              "boostingDistance"
+            ],
+            "description": "Provides parameter values to a distance scoring function."
+          },
+          "FreshnessScoringFunction": {
+            "x-ms-discriminator-value": "freshness",
+            "allOf": [
+              {
+                "$ref": "#/definitions/ScoringFunction"
+              }
+            ],
+            "properties": {
+              "freshness": {
+                "x-ms-client-name": "Parameters",
+                "$ref": "#/definitions/FreshnessScoringParameters",
+                "description": "Parameter values for the freshness scoring function."
+              }
+            },
+            "required": [
+              "freshness"
+            ],
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Add-scoring-profiles-to-a-search-index"
+            },
+            "description": "Defines a function that boosts scores based on the value of a date-time field."
+          },
+          "FreshnessScoringParameters": {
+            "properties": {
+              "boostingDuration": {
+                "type": "string",
+                "format": "duration",
+                "description": "The expiration period after which boosting will stop for a particular document."
+              }
+            },
+            "required": [
+              "boostingDuration"
+            ],
+            "description": "Provides parameter values to a freshness scoring function."
+          },
+          "MagnitudeScoringFunction": {
+            "x-ms-discriminator-value": "magnitude",
+            "allOf": [
+              {
+                "$ref": "#/definitions/ScoringFunction"
+              }
+            ],
+            "properties": {
+              "magnitude": {
+                "x-ms-client-name": "Parameters",
+                "$ref": "#/definitions/MagnitudeScoringParameters",
+                "description": "Parameter values for the magnitude scoring function."
+              }
+            },
+            "required": [
+              "magnitude"
+            ],
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Add-scoring-profiles-to-a-search-index"
+            },
+            "description": "Defines a function that boosts scores based on the magnitude of a numeric field."
+          },
+          "MagnitudeScoringParameters": {
+            "properties": {
+              "boostingRangeStart": {
+                "type": "number",
+                "format": "double",
+                "description": "The field value at which boosting starts."
+              },
+              "boostingRangeEnd": {
+                "type": "number",
+                "format": "double",
+                "description": "The field value at which boosting ends."
+              },
+              "constantBoostBeyondRange": {
+                "x-ms-client-name": "ShouldBoostBeyondRangeByConstant",
+                "type": "boolean",
+                "description": "A value indicating whether to apply a constant boost for field values beyond the range end value; default is false."
+              }
+            },
+            "required": [
+              "boostingRangeStart",
+              "boostingRangeEnd"
+            ],
+            "description": "Provides parameter values to a magnitude scoring function."
+          },
+          "TagScoringFunction": {
+            "x-ms-discriminator-value": "tag",
+            "allOf": [
+              {
+                "$ref": "#/definitions/ScoringFunction"
+              }
+            ],
+            "properties": {
+              "tag": {
+                "x-ms-client-name": "Parameters",
+                "$ref": "#/definitions/TagScoringParameters",
+                "description": "Parameter values for the tag scoring function."
+              }
+            },
+            "required": [
+              "tag"
+            ],
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Add-scoring-profiles-to-a-search-index"
+            },
+            "description": "Defines a function that boosts scores of documents with string values matching a given list of tags."
+          },
+          "TagScoringParameters": {
+            "properties": {
+              "tagsParameter": {
+                "type": "string",
+                "description": "The name of the parameter passed in search queries to specify the list of tags to compare against the target field."
+              }
+            },
+            "required": [
+              "tagsParameter"
+            ],
+            "description": "Provides parameter values to a tag scoring function."
+          },
+          "ScoringFunctionInterpolation": {
+            "type": "string",
+            "enum": [
+              "linear",
+              "constant",
+              "quadratic",
+              "logarithmic"
+            ],
+            "x-ms-enum": {
+              "name": "ScoringFunctionInterpolation"
+            },
+            "description": "Defines the function used to interpolate score boosting across a range of documents."
+          },
+          "ScoringProfile": {
+            "properties": {
+              "name": {
+                "externalDocs": {
+                  "url": "https://docs.microsoft.com/rest/api/searchservice/Naming-rules"
+                },
+                "type": "string",
+                "description": "The name of the scoring profile."
+              },
+              "text": {
+                "x-ms-client-name": "TextWeights",
+                "$ref": "#/definitions/TextWeights",
+                "description": "Parameters that boost scoring based on text matches in certain index fields."
+              },
+              "functions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/ScoringFunction"
+                },
+                "description": "The collection of functions that influence the scoring of documents."
+              },
+              "functionAggregation": {
+                "$ref": "#/definitions/ScoringFunctionAggregation",
+                "description": "A value indicating how the results of individual scoring functions should be combined. Defaults to \"Sum\". Ignored if there are no scoring functions."
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Add-scoring-profiles-to-a-search-index"
+            },
+            "description": "Defines parameters for a search index that influence scoring in search queries."
+          },
+          "ScoringFunctionAggregation": {
+            "type": "string",
+            "enum": [
+              "sum",
+              "average",
+              "minimum",
+              "maximum",
+              "firstMatching"
+            ],
+            "x-ms-enum": {
+              "name": "ScoringFunctionAggregation"
+            },
+            "description": "Defines the aggregation function used to combine the results of all the scoring functions in a scoring profile."
+          },
+          "CorsOptions": {
+            "properties": {
+              "allowedOrigins": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The list of origins from which JavaScript code will be granted access to your index. Can contain a list of hosts of the form {protocol}://{fully-qualified-domain-name}[:{port#}], or a single '*' to allow all origins (not recommended)."
+              },
+              "maxAgeInSeconds": {
+                "type": "integer",
+                "format": "int64",
+                "description": "The duration for which browsers should cache CORS preflight responses. Defaults to 5 minutes."
+              }
+            },
+            "required": [
+              "allowedOrigins"
+            ],
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Create-Index"
+            },
+            "description": "Defines options to control Cross-Origin Resource Sharing (CORS) for an index."
+          },
+          "Suggester": {
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the suggester."
+              },
+              "searchMode": {
+                "type": "string",
+                "enum": [
+                  "analyzingInfixMatching"
+                ],
+                "x-ms-enum": {
+                  "name": "searchMode",
+                  "modelAsString": false
+                },
+                "description": "A value indicating the capabilities of the suggester."
+              },
+              "sourceFields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The list of field names to which the suggester applies. Each field must be searchable."
+              }
+            },
+            "required": [
+              "name",
+              "searchMode",
+              "sourceFields"
+            ],
+            "description": "Defines how the Suggest API should apply to a group of fields in the index."
+          },
+          "AnalyzerName": {
+            "type": "string",
+            "enum": [
+              "ar.microsoft",
+              "ar.lucene",
+              "hy.lucene",
+              "bn.microsoft",
+              "eu.lucene",
+              "bg.microsoft",
+              "bg.lucene",
+              "ca.microsoft",
+              "ca.lucene",
+              "zh-Hans.microsoft",
+              "zh-Hans.lucene",
+              "zh-Hant.microsoft",
+              "zh-Hant.lucene",
+              "hr.microsoft",
+              "cs.microsoft",
+              "cs.lucene",
+              "da.microsoft",
+              "da.lucene",
+              "nl.microsoft",
+              "nl.lucene",
+              "en.microsoft",
+              "en.lucene",
+              "et.microsoft",
+              "fi.microsoft",
+              "fi.lucene",
+              "fr.microsoft",
+              "fr.lucene",
+              "gl.lucene",
+              "de.microsoft",
+              "de.lucene",
+              "el.microsoft",
+              "el.lucene",
+              "gu.microsoft",
+              "he.microsoft",
+              "hi.microsoft",
+              "hi.lucene",
+              "hu.microsoft",
+              "hu.lucene",
+              "is.microsoft",
+              "id.microsoft",
+              "id.lucene",
+              "ga.lucene",
+              "it.microsoft",
+              "it.lucene",
+              "ja.microsoft",
+              "ja.lucene",
+              "kn.microsoft",
+              "ko.microsoft",
+              "ko.lucene",
+              "lv.microsoft",
+              "lv.lucene",
+              "lt.microsoft",
+              "ml.microsoft",
+              "ms.microsoft",
+              "mr.microsoft",
+              "nb.microsoft",
+              "no.lucene",
+              "fa.lucene",
+              "pl.microsoft",
+              "pl.lucene",
+              "pt-BR.microsoft",
+              "pt-BR.lucene",
+              "pt-PT.microsoft",
+              "pt-PT.lucene",
+              "pa.microsoft",
+              "ro.microsoft",
+              "ro.lucene",
+              "ru.microsoft",
+              "ru.lucene",
+              "sr-cyrillic.microsoft",
+              "sr-latin.microsoft",
+              "sk.microsoft",
+              "sl.microsoft",
+              "es.microsoft",
+              "es.lucene",
+              "sv.microsoft",
+              "sv.lucene",
+              "ta.microsoft",
+              "te.microsoft",
+              "th.microsoft",
+              "th.lucene",
+              "tr.microsoft",
+              "tr.lucene",
+              "uk.microsoft",
+              "ur.microsoft",
+              "vi.microsoft",
+              "standard.lucene",
+              "standardasciifolding.lucene",
+              "keyword",
+              "pattern",
+              "simple",
+              "stop",
+              "whitespace"
+            ],
+            "x-ms-enum": {
+              "name": "AnalyzerName",
+              "modelAsString": false
+            },
+            "description": "Defines the names of all text analyzers supported by Azure Cognitive Search.",
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Language-support"
+            }
+          },
+          "TokenizerName": {
+            "type": "string",
+            "enum": [
+              "classic",
+              "edgeNGram",
+              "keyword_v2",
+              "letter",
+              "lowercase",
+              "microsoft_language_tokenizer",
+              "microsoft_language_stemming_tokenizer",
+              "nGram",
+              "path_hierarchy_v2",
+              "pattern",
+              "standard_v2",
+              "uax_url_email",
+              "whitespace"
+            ],
+            "x-ms-enum": {
+              "name": "TokenizerName",
+              "modelAsString": false
+            },
+            "description": "Defines the names of all tokenizers supported by Azure Cognitive Search.",
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Custom-analyzers-in-Azure-Search"
+            }
+          },
+          "TokenFilterName": {
+            "type": "string",
+            "enum": [
+              "arabic_normalization",
+              "apostrophe",
+              "asciifolding",
+              "cjk_bigram",
+              "cjk_width",
+              "classic",
+              "common_grams",
+              "edgeNGram_v2",
+              "elision",
+              "german_normalization",
+              "hindi_normalization",
+              "indic_normalization",
+              "keyword_repeat",
+              "kstem",
+              "length",
+              "limit",
+              "lowercase",
+              "nGram_v2",
+              "persian_normalization",
+              "phonetic",
+              "porter_stem",
+              "reverse",
+              "scandinavian_normalization",
+              "scandinavian_folding",
+              "shingle",
+              "snowball",
+              "sorani_normalization",
+              "stemmer",
+              "stopwords",
+              "trim",
+              "truncate",
+              "unique",
+              "uppercase",
+              "word_delimiter"
+            ],
+            "x-ms-enum": {
+              "name": "TokenFilterName",
+              "modelAsString": false
+            },
+            "description": "Defines the names of all token filters supported by Azure Cognitive Search.",
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Custom-analyzers-in-Azure-Search"
+            }
+          },
+          "CharFilterName": {
+            "type": "string",
+            "enum": [
+              "html_strip"
+            ],
+            "x-ms-enum": {
+              "name": "CharFilterName",
+              "modelAsString": false
+            },
+            "description": "Defines the names of all character filters supported by Azure Cognitive Search.",
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Custom-analyzers-in-Azure-Search"
+            }
+          },
+          "RegexFlags": {
+            "type": "string",
+            "enum": [
+              "CANON_EQ",
+              "CASE_INSENSITIVE",
+              "COMMENTS",
+              "DOTALL",
+              "LITERAL",
+              "MULTILINE",
+              "UNICODE_CASE",
+              "UNIX_LINES"
+            ],
+            "x-ms-enum": {
+              "name": "RegexFlags",
+              "modelAsString": false
+            },
+            "description": "Defines flags that can be combined to control how regular expressions are used in the pattern analyzer and pattern tokenizer.",
+            "externalDocs": {
+              "url": "http://docs.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html#field_summary"
+            }
+          },
+          "DataType": {
+            "type": "string",
+            "enum": [
+              "Edm.String",
+              "Edm.Int32",
+              "Edm.Int64",
+              "Edm.Double",
+              "Edm.Boolean",
+              "Edm.DateTimeOffset",
+              "Edm.GeographyPoint",
+              "Edm.ComplexType",
+              "Collection(Edm.String)",
+              "Collection(Edm.Int32)",
+              "Collection(Edm.Int64)",
+              "Collection(Edm.Double)",
+              "Collection(Edm.Boolean)",
+              "Collection(Edm.DateTimeOffset)",
+              "Collection(Edm.GeographyPoint)",
+              "Collection(Edm.ComplexType)"
+            ],
+            "x-ms-enum": {
+              "name": "DataType",
+              "modelAsString": false
+            },
+            "description": "Defines the data type of a field in a search index."
+          },
+          "Analyzer": {
+            "discriminator": "@odata.type",
+            "properties": {
+              "@odata.type": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "externalDocs": {
+                  "url": "https://docs.microsoft.com/rest/api/searchservice/custom-analyzers-in-azure-search#index-attribute-reference"
+                },
+                "description": "The name of the analyzer. It must only contain letters, digits, spaces, dashes or underscores, can only start and end with alphanumeric characters, and is limited to 128 characters."
+              }
+            },
+            "required": [
+              "@odata.type",
+              "name"
+            ],
+            "description": "Abstract base class for analyzers."
+          },
+          "CustomAnalyzer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.CustomAnalyzer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Analyzer"
+              }
+            ],
+            "properties": {
+              "tokenizer": {
+                "$ref": "#/definitions/TokenizerName",
+                "description": "The name of the tokenizer to use to divide continuous text into a sequence of tokens, such as breaking a sentence into words."
+              },
+              "tokenFilters": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/TokenFilterName",
+                  "x-nullable": false
+                },
+                "description": "A list of token filters used to filter out or modify the tokens generated by a tokenizer. For example, you can specify a lowercase filter that converts all characters to lowercase. The filters are run in the order in which they are listed."
+              },
+              "charFilters": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/CharFilterName",
+                  "x-nullable": false
+                },
+                "description": "A list of character filters used to prepare input text before it is processed by the tokenizer. For instance, they can replace certain characters or symbols. The filters are run in the order in which they are listed."
+              }
+            },
+            "required": [
+              "tokenizer"
+            ],
+            "description": "Allows you to take control over the process of converting text into indexable/searchable tokens. It's a user-defined configuration consisting of a single predefined tokenizer and one or more filters. The tokenizer is responsible for breaking text into tokens, and the filters for modifying tokens emitted by the tokenizer."
+          },
+          "PatternAnalyzer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.PatternAnalyzer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Analyzer"
+              }
+            ],
+            "properties": {
+              "lowercase": {
+                "x-ms-client-name": "LowerCaseTerms",
+                "type": "boolean",
+                "default": true,
+                "description": "A value indicating whether terms should be lower-cased. Default is true."
+              },
+              "pattern": {
+                "type": "string",
+                "default": "\\W+",
+                "description": "A regular expression pattern to match token separators. Default is an expression that matches one or more whitespace characters."
+              },
+              "flags": {
+                "$ref": "#/definitions/RegexFlags",
+                "description": "Regular expression flags."
+              },
+              "stopwords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "A list of stopwords."
+              }
+            },
+            "description": "Flexibly separates text into terms via a regular expression pattern. This analyzer is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/miscellaneous/PatternAnalyzer.html"
+            }
+          },
+          "StandardAnalyzer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.StandardAnalyzer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Analyzer"
+              }
+            ],
+            "properties": {
+              "maxTokenLength": {
+                "type": "integer",
+                "format": "int32",
+                "default": 255,
+                "maximum": 300,
+                "description": "The maximum token length. Default is 255. Tokens longer than the maximum length are split. The maximum token length that can be used is 300 characters."
+              },
+              "stopwords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "A list of stopwords."
+              }
+            },
+            "description": "Standard Apache Lucene analyzer; Composed of the standard tokenizer, lowercase filter and stop filter.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/standard/StandardAnalyzer.html"
+            }
+          },
+          "StopAnalyzer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.StopAnalyzer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Analyzer"
+              }
+            ],
+            "properties": {
+              "stopwords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "A list of stopwords."
+              }
+            },
+            "description": "Divides text at non-letters; Applies the lowercase and stopword token filters. This analyzer is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/core/StopAnalyzer.html"
+            }
+          },
+          "Tokenizer": {
+            "discriminator": "@odata.type",
+            "properties": {
+              "@odata.type": {
+                "type": "string",
+                "enum": [
+                  "#Microsoft.Azure.Search.ClassicTokenizer",
+                  "#Microsoft.Azure.Search.EdgeNGramTokenizer",
+                  "#Microsoft.Azure.Search.KeywordTokenizerV2",
+                  "#Microsoft.Azure.Search.MicrosoftLanguageTokenizer",
+                  "#Microsoft.Azure.Search.MicrosoftLanguageStemmingTokenizer",
+                  "#Microsoft.Azure.Search.NGramTokenizer",
+                  "#Microsoft.Azure.Search.PathHierarchyTokenizerV2",
+                  "#Microsoft.Azure.Search.PatternTokenizer",
+                  "#Microsoft.Azure.Search.StandardTokenizerV2",
+                  "#Microsoft.Azure.Search.UaxUrlEmailTokenizer"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "externalDocs": {
+                  "url": "https://docs.microsoft.com/rest/api/searchservice/custom-analyzers-in-azure-search#index-attribute-reference"
+                },
+                "description": "The name of the tokenizer. It must only contain letters, digits, spaces, dashes or underscores, can only start and end with alphanumeric characters, and is limited to 128 characters."
+              }
+            },
+            "required": [
+              "@odata.type",
+              "name"
+            ],
+            "description": "Abstract base class for tokenizers.",
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Custom-analyzers-in-Azure-Search"
+            }
+          },
+          "ClassicTokenizer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.ClassicTokenizer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Tokenizer"
+              }
+            ],
+            "properties": {
+              "maxTokenLength": {
+                "type": "integer",
+                "format": "int32",
+                "default": 255,
+                "maximum": 300,
+                "description": "The maximum token length. Default is 255. Tokens longer than the maximum length are split. The maximum token length that can be used is 300 characters."
+              }
+            },
+            "description": "Grammar-based tokenizer that is suitable for processing most European-language documents. This tokenizer is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/standard/ClassicTokenizer.html"
+            }
+          },
+          "TokenCharacterKind": {
+            "type": "string",
+            "enum": [
+              "letter",
+              "digit",
+              "whitespace",
+              "punctuation",
+              "symbol"
+            ],
+            "x-ms-enum": {
+              "name": "TokenCharacterKind",
+              "modelAsString": false
+            },
+            "description": "Represents classes of characters on which a token filter can operate."
+          },
+          "EdgeNGramTokenizer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.EdgeNGramTokenizer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Tokenizer"
+              }
+            ],
+            "properties": {
+              "minGram": {
+                "type": "integer",
+                "format": "int32",
+                "default": 1,
+                "maximum": 300,
+                "description": "The minimum n-gram length. Default is 1. Maximum is 300. Must be less than the value of maxGram."
+              },
+              "maxGram": {
+                "type": "integer",
+                "format": "int32",
+                "default": 2,
+                "maximum": 300,
+                "description": "The maximum n-gram length. Default is 2. Maximum is 300."
+              },
+              "tokenChars": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/TokenCharacterKind",
+                  "x-nullable": false
+                },
+                "description": "Character classes to keep in the tokens."
+              }
+            },
+            "description": "Tokenizes the input from an edge into n-grams of the given size(s). This tokenizer is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "https://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/ngram/EdgeNGramTokenizer.html"
+            }
+          },
+          "KeywordTokenizer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.KeywordTokenizer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Tokenizer"
+              }
+            ],
+            "properties": {
+              "bufferSize": {
+                "type": "integer",
+                "format": "int32",
+                "default": 256,
+                "description": "The read buffer size in bytes. Default is 256."
+              }
+            },
+            "description": "Emits the entire input as a single token. This tokenizer is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/core/KeywordTokenizer.html"
+            },
+            "x-ms-external": true
+          },
+          "KeywordTokenizerV2": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.KeywordTokenizerV2",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Tokenizer"
+              }
+            ],
+            "properties": {
+              "maxTokenLength": {
+                "type": "integer",
+                "format": "int32",
+                "default": 256,
+                "maximum": 300,
+                "description": "The maximum token length. Default is 256. Tokens longer than the maximum length are split. The maximum token length that can be used is 300 characters."
+              }
+            },
+            "description": "Emits the entire input as a single token. This tokenizer is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/core/KeywordTokenizer.html"
+            }
+          },
+          "MicrosoftTokenizerLanguage": {
+            "type": "string",
+            "enum": [
+              "bangla",
+              "bulgarian",
+              "catalan",
+              "chineseSimplified",
+              "chineseTraditional",
+              "croatian",
+              "czech",
+              "danish",
+              "dutch",
+              "english",
+              "french",
+              "german",
+              "greek",
+              "gujarati",
+              "hindi",
+              "icelandic",
+              "indonesian",
+              "italian",
+              "japanese",
+              "kannada",
+              "korean",
+              "malay",
+              "malayalam",
+              "marathi",
+              "norwegianBokmaal",
+              "polish",
+              "portuguese",
+              "portugueseBrazilian",
+              "punjabi",
+              "romanian",
+              "russian",
+              "serbianCyrillic",
+              "serbianLatin",
+              "slovenian",
+              "spanish",
+              "swedish",
+              "tamil",
+              "telugu",
+              "thai",
+              "ukrainian",
+              "urdu",
+              "vietnamese"
+            ],
+            "x-ms-enum": {
+              "name": "MicrosoftTokenizerLanguage",
+              "modelAsString": false
+            },
+            "description": "Lists the languages supported by the Microsoft language tokenizer."
+          },
+          "MicrosoftLanguageTokenizer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.MicrosoftLanguageTokenizer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Tokenizer"
+              }
+            ],
+            "properties": {
+              "maxTokenLength": {
+                "type": "integer",
+                "format": "int32",
+                "default": 255,
+                "maximum": 300,
+                "description": "The maximum token length. Tokens longer than the maximum length are split. Maximum token length that can be used is 300 characters. Tokens longer than 300 characters are first split into tokens of length 300 and then each of those tokens is split based on the max token length set. Default is 255."
+              },
+              "isSearchTokenizer": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating how the tokenizer is used. Set to true if used as the search tokenizer, set to false if used as the indexing tokenizer. Default is false."
+              },
+              "language": {
+                "$ref": "#/definitions/MicrosoftTokenizerLanguage",
+                "description": "The language to use. The default is English."
+              }
+            },
+            "description": "Divides text using language-specific rules."
+          },
+          "MicrosoftStemmingTokenizerLanguage": {
+            "type": "string",
+            "enum": [
+              "arabic",
+              "bangla",
+              "bulgarian",
+              "catalan",
+              "croatian",
+              "czech",
+              "danish",
+              "dutch",
+              "english",
+              "estonian",
+              "finnish",
+              "french",
+              "german",
+              "greek",
+              "gujarati",
+              "hebrew",
+              "hindi",
+              "hungarian",
+              "icelandic",
+              "indonesian",
+              "italian",
+              "kannada",
+              "latvian",
+              "lithuanian",
+              "malay",
+              "malayalam",
+              "marathi",
+              "norwegianBokmaal",
+              "polish",
+              "portuguese",
+              "portugueseBrazilian",
+              "punjabi",
+              "romanian",
+              "russian",
+              "serbianCyrillic",
+              "serbianLatin",
+              "slovak",
+              "slovenian",
+              "spanish",
+              "swedish",
+              "tamil",
+              "telugu",
+              "turkish",
+              "ukrainian",
+              "urdu"
+            ],
+            "x-ms-enum": {
+              "name": "MicrosoftStemmingTokenizerLanguage",
+              "modelAsString": false
+            },
+            "description": "Lists the languages supported by the Microsoft language stemming tokenizer."
+          },
+          "MicrosoftLanguageStemmingTokenizer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.MicrosoftLanguageStemmingTokenizer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Tokenizer"
+              }
+            ],
+            "properties": {
+              "maxTokenLength": {
+                "type": "integer",
+                "format": "int32",
+                "default": 255,
+                "maximum": 300,
+                "description": "The maximum token length. Tokens longer than the maximum length are split. Maximum token length that can be used is 300 characters. Tokens longer than 300 characters are first split into tokens of length 300 and then each of those tokens is split based on the max token length set. Default is 255."
+              },
+              "isSearchTokenizer": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating how the tokenizer is used. Set to true if used as the search tokenizer, set to false if used as the indexing tokenizer. Default is false."
+              },
+              "language": {
+                "$ref": "#/definitions/MicrosoftStemmingTokenizerLanguage",
+                "description": "The language to use. The default is English."
+              }
+            },
+            "description": "Divides text using language-specific rules and reduces words to their base forms."
+          },
+          "NGramTokenizer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.NGramTokenizer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Tokenizer"
+              }
+            ],
+            "properties": {
+              "minGram": {
+                "type": "integer",
+                "format": "int32",
+                "default": 1,
+                "maximum": 300,
+                "description": "The minimum n-gram length. Default is 1. Maximum is 300. Must be less than the value of maxGram."
+              },
+              "maxGram": {
+                "type": "integer",
+                "format": "int32",
+                "default": 2,
+                "maximum": 300,
+                "description": "The maximum n-gram length. Default is 2. Maximum is 300."
+              },
+              "tokenChars": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/TokenCharacterKind",
+                  "x-nullable": false
+                },
+                "description": "Character classes to keep in the tokens."
+              }
+            },
+            "description": "Tokenizes the input into n-grams of the given size(s). This tokenizer is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/ngram/NGramTokenizer.html"
+            }
+          },
+          "PathHierarchyTokenizer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.PathHierarchyTokenizer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Tokenizer"
+              }
+            ],
+            "properties": {
+              "delimiter": {
+                "type": "string",
+                "format": "char",
+                "default": "/",
+                "description": "The delimiter character to use. Default is \"/\"."
+              },
+              "replacement": {
+                "type": "string",
+                "format": "char",
+                "default": "/",
+                "description": "A value that, if set, replaces the delimiter character. Default is \"/\"."
+              },
+              "bufferSize": {
+                "type": "integer",
+                "format": "int32",
+                "default": 1024,
+                "description": "The buffer size. Default is 1024."
+              },
+              "reverse": {
+                "x-ms-client-name": "ReverseTokenOrder",
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether to generate tokens in reverse order. Default is false."
+              },
+              "skip": {
+                "x-ms-client-name": "NumberOfTokensToSkip",
+                "type": "integer",
+                "format": "int32",
+                "default": 0,
+                "description": "The number of initial tokens to skip. Default is 0."
+              }
+            },
+            "description": "Tokenizer for path-like hierarchies. This tokenizer is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/path/PathHierarchyTokenizer.html"
+            },
+            "x-ms-external": true
+          },
+          "PathHierarchyTokenizerV2": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.PathHierarchyTokenizerV2",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Tokenizer"
+              }
+            ],
+            "properties": {
+              "delimiter": {
+                "type": "string",
+                "format": "char",
+                "default": "/",
+                "description": "The delimiter character to use. Default is \"/\"."
+              },
+              "replacement": {
+                "type": "string",
+                "format": "char",
+                "default": "/",
+                "description": "A value that, if set, replaces the delimiter character. Default is \"/\"."
+              },
+              "maxTokenLength": {
+                "type": "integer",
+                "format": "int32",
+                "default": 300,
+                "maximum": 300,
+                "description": "The maximum token length. Default and maximum is 300."
+              },
+              "reverse": {
+                "x-ms-client-name": "ReverseTokenOrder",
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether to generate tokens in reverse order. Default is false."
+              },
+              "skip": {
+                "x-ms-client-name": "NumberOfTokensToSkip",
+                "type": "integer",
+                "format": "int32",
+                "default": 0,
+                "description": "The number of initial tokens to skip. Default is 0."
+              }
+            },
+            "description": "Tokenizer for path-like hierarchies. This tokenizer is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/path/PathHierarchyTokenizer.html"
+            }
+          },
+          "PatternTokenizer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.PatternTokenizer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Tokenizer"
+              }
+            ],
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "default": "\\W+",
+                "description": "A regular expression pattern to match token separators. Default is an expression that matches one or more whitespace characters."
+              },
+              "flags": {
+                "$ref": "#/definitions/RegexFlags",
+                "description": "Regular expression flags."
+              },
+              "group": {
+                "type": "integer",
+                "format": "int32",
+                "default": -1,
+                "description": "The zero-based ordinal of the matching group in the regular expression pattern to extract into tokens. Use -1 if you want to use the entire pattern to split the input into tokens, irrespective of matching groups. Default is -1."
+              }
+            },
+            "description": "Tokenizer that uses regex pattern matching to construct distinct tokens. This tokenizer is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/pattern/PatternTokenizer.html"
+            }
+          },
+          "StandardTokenizer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.StandardTokenizer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Tokenizer"
+              }
+            ],
+            "properties": {
+              "maxTokenLength": {
+                "type": "integer",
+                "format": "int32",
+                "default": 255,
+                "description": "The maximum token length. Default is 255. Tokens longer than the maximum length are split."
+              }
+            },
+            "description": "Breaks text following the Unicode Text Segmentation rules. This tokenizer is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/standard/StandardTokenizer.html"
+            },
+            "x-ms-external": true
+          },
+          "StandardTokenizerV2": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.StandardTokenizerV2",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Tokenizer"
+              }
+            ],
+            "properties": {
+              "maxTokenLength": {
+                "type": "integer",
+                "format": "int32",
+                "default": 255,
+                "maximum": 300,
+                "description": "The maximum token length. Default is 255. Tokens longer than the maximum length are split. The maximum token length that can be used is 300 characters."
+              }
+            },
+            "description": "Breaks text following the Unicode Text Segmentation rules. This tokenizer is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/standard/StandardTokenizer.html"
+            }
+          },
+          "UaxUrlEmailTokenizer": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.UaxUrlEmailTokenizer",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Tokenizer"
+              }
+            ],
+            "properties": {
+              "maxTokenLength": {
+                "type": "integer",
+                "format": "int32",
+                "default": 255,
+                "maximum": 300,
+                "description": "The maximum token length. Default is 255. Tokens longer than the maximum length are split. The maximum token length that can be used is 300 characters."
+              }
+            },
+            "description": "Tokenizes urls and emails as one token. This tokenizer is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/standard/UAX29URLEmailTokenizer.html"
+            }
+          },
+          "TokenFilter": {
+            "discriminator": "@odata.type",
+            "properties": {
+              "@odata.type": {
+                "type": "string",
+                "enum": [
+                  "#Microsoft.Azure.Search.AsciiFoldingTokenFilter",
+                  "#Microsoft.Azure.Search.CjkBigramTokenFilter",
+                  "#Microsoft.Azure.Search.CommonGramTokenFilter",
+                  "#Microsoft.Azure.Search.DictionaryDecompounderTokenFilter",
+                  "#Microsoft.Azure.Search.EdgeNGramTokenFilterV2",
+                  "#Microsoft.Azure.Search.ElisionTokenFilter",
+                  "#Microsoft.Azure.Search.IndicNormalizationTokenFilter",
+                  "#Microsoft.Azure.Search.KeepTokenFilter",
+                  "#Microsoft.Azure.Search.KeywordMarkerTokenFilter",
+                  "#Microsoft.Azure.Search.LengthTokenFilter",
+                  "#Microsoft.Azure.Search.LimitTokenFilter",
+                  "#Microsoft.Azure.Search.NGramTokenFilterV2",
+                  "#Microsoft.Azure.Search.PatternCaptureTokenFilter",
+                  "#Microsoft.Azure.Search.PatternReplaceTokenFilter",
+                  "#Microsoft.Azure.Search.PhoneticTokenFilter",
+                  "#Microsoft.Azure.Search.ShingleTokenFilter",
+                  "#Microsoft.Azure.Search.SnowballTokenFilter",
+                  "#Microsoft.Azure.Search.SoraniNormalizationTokenFilter",
+                  "#Microsoft.Azure.Search.StemmerTokenFilter",
+                  "#Microsoft.Azure.Search.StemmerOverrideTokenFilter",
+                  "#Microsoft.Azure.Search.StopwordsTokenFilter",
+                  "#Microsoft.Azure.Search.TruncateTokenFilter",
+                  "#Microsoft.Azure.Search.UniqueTokenFilter",
+                  "#Microsoft.Azure.Search.WordDelimiterTokenFilter"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "externalDocs": {
+                  "url": "https://docs.microsoft.com/rest/api/searchservice/custom-analyzers-in-azure-search#index-attribute-reference"
+                },
+                "description": "The name of the token filter. It must only contain letters, digits, spaces, dashes or underscores, can only start and end with alphanumeric characters, and is limited to 128 characters."
+              }
+            },
+            "required": [
+              "@odata.type",
+              "name"
+            ],
+            "description": "Abstract base class for token filters.",
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Custom-analyzers-in-Azure-Search"
+            }
+          },
+          "AsciiFoldingTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.AsciiFoldingTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "preserveOriginal": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether the original token will be kept. Default is false."
+              }
+            },
+            "description": "Converts alphabetic, numeric, and symbolic Unicode characters which are not in the first 127 ASCII characters (the \"Basic Latin\" Unicode block) into their ASCII equivalents, if such equivalents exist. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/miscellaneous/ASCIIFoldingFilter.html"
+            }
+          },
+          "CjkBigramTokenFilterScripts": {
+            "type": "string",
+            "enum": [
+              "han",
+              "hiragana",
+              "katakana",
+              "hangul"
+            ],
+            "x-ms-enum": {
+              "name": "CjkBigramTokenFilterScripts",
+              "modelAsString": false
+            },
+            "description": "Scripts that can be ignored by CjkBigramTokenFilter."
+          },
+          "CjkBigramTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.CjkBigramTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "ignoreScripts": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/CjkBigramTokenFilterScripts",
+                  "x-nullable": false
+                },
+                "description": "The scripts to ignore."
+              },
+              "outputUnigrams": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether to output both unigrams and bigrams (if true), or just bigrams (if false). Default is false."
+              }
+            },
+            "description": "Forms bigrams of CJK terms that are generated from StandardTokenizer. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/cjk/CJKBigramFilter.html"
+            }
+          },
+          "CommonGramTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.CommonGramTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "commonWords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The set of common words."
+              },
+              "ignoreCase": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether common words matching will be case insensitive. Default is false."
+              },
+              "queryMode": {
+                "x-ms-client-name": "UseQueryMode",
+                "type": "boolean",
+                "default": false,
+                "description": "A value that indicates whether the token filter is in query mode. When in query mode, the token filter generates bigrams and then removes common words and single terms followed by a common word. Default is false."
+              }
+            },
+            "required": [
+              "commonWords"
+            ],
+            "description": "Construct bigrams for frequently occurring terms while indexing. Single terms are still indexed too, with bigrams overlaid. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/commongrams/CommonGramsFilter.html"
+            }
+          },
+          "DictionaryDecompounderTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.DictionaryDecompounderTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "wordList": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The list of words to match against."
+              },
+              "minWordSize": {
+                "type": "integer",
+                "format": "int32",
+                "default": 5,
+                "maximum": 300,
+                "description": "The minimum word size. Only words longer than this get processed. Default is 5. Maximum is 300."
+              },
+              "minSubwordSize": {
+                "type": "integer",
+                "format": "int32",
+                "default": 2,
+                "maximum": 300,
+                "description": "The minimum subword size. Only subwords longer than this are outputted. Default is 2. Maximum is 300."
+              },
+              "maxSubwordSize": {
+                "type": "integer",
+                "format": "int32",
+                "default": 15,
+                "maximum": 300,
+                "description": "The maximum subword size. Only subwords shorter than this are outputted. Default is 15. Maximum is 300."
+              },
+              "onlyLongestMatch": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether to add only the longest matching subword to the output. Default is false."
+              }
+            },
+            "required": [
+              "wordList"
+            ],
+            "description": "Decomposes compound words found in many Germanic languages. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/compound/DictionaryCompoundWordTokenFilter.html"
+            }
+          },
+          "EdgeNGramTokenFilterSide": {
+            "type": "string",
+            "enum": [
+              "front",
+              "back"
+            ],
+            "x-ms-enum": {
+              "name": "EdgeNGramTokenFilterSide",
+              "modelAsString": false
+            },
+            "description": "Specifies which side of the input an n-gram should be generated from."
+          },
+          "EdgeNGramTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.EdgeNGramTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "minGram": {
+                "type": "integer",
+                "format": "int32",
+                "default": 1,
+                "description": "The minimum n-gram length. Default is 1. Must be less than the value of maxGram."
+              },
+              "maxGram": {
+                "type": "integer",
+                "format": "int32",
+                "default": 2,
+                "description": "The maximum n-gram length. Default is 2."
+              },
+              "side": {
+                "$ref": "#/definitions/EdgeNGramTokenFilterSide",
+                "default": "front",
+                "description": "Specifies which side of the input the n-gram should be generated from. Default is \"front\"."
+              }
+            },
+            "description": "Generates n-grams of the given size(s) starting from the front or the back of an input token. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/ngram/EdgeNGramTokenFilter.html"
+            },
+            "x-ms-external": true
+          },
+          "EdgeNGramTokenFilterV2": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.EdgeNGramTokenFilterV2",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "minGram": {
+                "type": "integer",
+                "format": "int32",
+                "default": 1,
+                "maximum": 300,
+                "description": "The minimum n-gram length. Default is 1. Maximum is 300. Must be less than the value of maxGram."
+              },
+              "maxGram": {
+                "type": "integer",
+                "format": "int32",
+                "default": 2,
+                "maximum": 300,
+                "description": "The maximum n-gram length. Default is 2. Maximum is 300."
+              },
+              "side": {
+                "$ref": "#/definitions/EdgeNGramTokenFilterSide",
+                "default": "front",
+                "description": "Specifies which side of the input the n-gram should be generated from. Default is \"front\"."
+              }
+            },
+            "description": "Generates n-grams of the given size(s) starting from the front or the back of an input token. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/ngram/EdgeNGramTokenFilter.html"
+            }
+          },
+          "ElisionTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.ElisionTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "articles": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The set of articles to remove."
+              }
+            },
+            "description": "Removes elisions. For example, \"l'avion\" (the plane) will be converted to \"avion\" (plane). This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/util/ElisionFilter.html"
+            }
+          },
+          "KeepTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.KeepTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "keepWords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The list of words to keep."
+              },
+              "keepWordsCase": {
+                "x-ms-client-name": "LowerCaseKeepWords",
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether to lower case all words first. Default is false."
+              }
+            },
+            "required": [
+              "keepWords"
+            ],
+            "description": "A token filter that only keeps tokens with text contained in a specified list of words. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/miscellaneous/KeepWordFilter.html"
+            }
+          },
+          "KeywordMarkerTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.KeywordMarkerTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "keywords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "A list of words to mark as keywords."
+              },
+              "ignoreCase": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether to ignore case. If true, all words are converted to lower case first. Default is false."
+              }
+            },
+            "required": [
+              "keywords"
+            ],
+            "description": "Marks terms as keywords. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/miscellaneous/KeywordMarkerFilter.html"
+            }
+          },
+          "LengthTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.LengthTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "min": {
+                "type": "integer",
+                "format": "int32",
+                "default": 0,
+                "maximum": 300,
+                "description": "The minimum length in characters. Default is 0. Maximum is 300. Must be less than the value of max."
+              },
+              "max": {
+                "type": "integer",
+                "format": "int32",
+                "default": 300,
+                "maximum": 300,
+                "description": "The maximum length in characters. Default and maximum is 300."
+              }
+            },
+            "description": "Removes words that are too long or too short. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/miscellaneous/LengthFilter.html"
+            }
+          },
+          "LimitTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.LimitTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "maxTokenCount": {
+                "type": "integer",
+                "format": "int32",
+                "default": 1,
+                "description": "The maximum number of tokens to produce. Default is 1."
+              },
+              "consumeAllTokens": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether all tokens from the input must be consumed even if maxTokenCount is reached. Default is false."
+              }
+            },
+            "description": "Limits the number of tokens while indexing. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/miscellaneous/LimitTokenCountFilter.html"
+            }
+          },
+          "NGramTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.NGramTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "minGram": {
+                "type": "integer",
+                "format": "int32",
+                "default": 1,
+                "description": "The minimum n-gram length. Default is 1. Must be less than the value of maxGram."
+              },
+              "maxGram": {
+                "type": "integer",
+                "format": "int32",
+                "default": 2,
+                "description": "The maximum n-gram length. Default is 2."
+              }
+            },
+            "description": "Generates n-grams of the given size(s). This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/ngram/NGramTokenFilter.html"
+            },
+            "x-ms-external": true
+          },
+          "NGramTokenFilterV2": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.NGramTokenFilterV2",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "minGram": {
+                "type": "integer",
+                "format": "int32",
+                "default": 1,
+                "maximum": 300,
+                "description": "The minimum n-gram length. Default is 1. Maximum is 300. Must be less than the value of maxGram."
+              },
+              "maxGram": {
+                "type": "integer",
+                "format": "int32",
+                "default": 2,
+                "maximum": 300,
+                "description": "The maximum n-gram length. Default is 2. Maximum is 300."
+              }
+            },
+            "description": "Generates n-grams of the given size(s). This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/ngram/NGramTokenFilter.html"
+            }
+          },
+          "PatternCaptureTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.PatternCaptureTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "patterns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "A list of patterns to match against each token."
+              },
+              "preserveOriginal": {
+                "type": "boolean",
+                "default": true,
+                "description": "A value indicating whether to return the original token even if one of the patterns matches. Default is true."
+              }
+            },
+            "required": [
+              "patterns"
+            ],
+            "description": "Uses Java regexes to emit multiple tokens - one for each capture group in one or more patterns. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/pattern/PatternCaptureGroupTokenFilter.html"
+            }
+          },
+          "PatternReplaceTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.PatternReplaceTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "A regular expression pattern."
+              },
+              "replacement": {
+                "type": "string",
+                "description": "The replacement text."
+              }
+            },
+            "required": [
+              "pattern",
+              "replacement"
+            ],
+            "description": "A character filter that replaces characters in the input string. It uses a regular expression to identify character sequences to preserve and a replacement pattern to identify characters to replace. For example, given the input text \"aa bb aa bb\", pattern \"(aa)\\s+(bb)\", and replacement \"$1#$2\", the result would be \"aa#bb aa#bb\". This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/pattern/PatternReplaceFilter.html"
+            }
+          },
+          "PhoneticEncoder": {
+            "type": "string",
+            "enum": [
+              "metaphone",
+              "doubleMetaphone",
+              "soundex",
+              "refinedSoundex",
+              "caverphone1",
+              "caverphone2",
+              "cologne",
+              "nysiis",
+              "koelnerPhonetik",
+              "haasePhonetik",
+              "beiderMorse"
+            ],
+            "x-ms-enum": {
+              "name": "PhoneticEncoder",
+              "modelAsString": false
+            },
+            "description": "Identifies the type of phonetic encoder to use with a PhoneticTokenFilter."
+          },
+          "PhoneticTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.PhoneticTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "encoder": {
+                "$ref": "#/definitions/PhoneticEncoder",
+                "default": "metaphone",
+                "description": "The phonetic encoder to use. Default is \"metaphone\"."
+              },
+              "replace": {
+                "x-ms-client-name": "ReplaceOriginalTokens",
+                "type": "boolean",
+                "default": true,
+                "description": "A value indicating whether encoded tokens should replace original tokens. If false, encoded tokens are added as synonyms. Default is true."
+              }
+            },
+            "description": "Create tokens for phonetic matches. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "https://lucene.apache.org/core/4_10_3/analyzers-phonetic/org/apache/lucene/analysis/phonetic/package-tree.html"
+            }
+          },
+          "ShingleTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.ShingleTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "maxShingleSize": {
+                "type": "integer",
+                "format": "int32",
+                "default": 2,
+                "minimum": 2,
+                "description": "The maximum shingle size. Default and minimum value is 2."
+              },
+              "minShingleSize": {
+                "type": "integer",
+                "format": "int32",
+                "default": 2,
+                "minimum": 2,
+                "description": "The minimum shingle size. Default and minimum value is 2. Must be less than the value of maxShingleSize."
+              },
+              "outputUnigrams": {
+                "type": "boolean",
+                "default": true,
+                "description": "A value indicating whether the output stream will contain the input tokens (unigrams) as well as shingles. Default is true."
+              },
+              "outputUnigramsIfNoShingles": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether to output unigrams for those times when no shingles are available. This property takes precedence when outputUnigrams is set to false. Default is false."
+              },
+              "tokenSeparator": {
+                "type": "string",
+                "default": " ",
+                "description": "The string to use when joining adjacent tokens to form a shingle. Default is a single space (\" \")."
+              },
+              "filterToken": {
+                "type": "string",
+                "default": "_",
+                "description": "The string to insert for each position at which there is no token. Default is an underscore (\"_\")."
+              }
+            },
+            "description": "Creates combinations of tokens as a single token. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/shingle/ShingleFilter.html"
+            }
+          },
+          "SnowballTokenFilterLanguage": {
+            "type": "string",
+            "enum": [
+              "armenian",
+              "basque",
+              "catalan",
+              "danish",
+              "dutch",
+              "english",
+              "finnish",
+              "french",
+              "german",
+              "german2",
+              "hungarian",
+              "italian",
+              "kp",
+              "lovins",
+              "norwegian",
+              "porter",
+              "portuguese",
+              "romanian",
+              "russian",
+              "spanish",
+              "swedish",
+              "turkish"
+            ],
+            "x-ms-enum": {
+              "name": "SnowballTokenFilterLanguage",
+              "modelAsString": false
+            },
+            "description": "The language to use for a Snowball token filter."
+          },
+          "SnowballTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.SnowballTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "language": {
+                "$ref": "#/definitions/SnowballTokenFilterLanguage",
+                "description": "The language to use."
+              }
+            },
+            "required": [
+              "language"
+            ],
+            "description": "A filter that stems words using a Snowball-generated stemmer. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/snowball/SnowballFilter.html"
+            }
+          },
+          "StemmerTokenFilterLanguage": {
+            "type": "string",
+            "enum": [
+              "arabic",
+              "armenian",
+              "basque",
+              "brazilian",
+              "bulgarian",
+              "catalan",
+              "czech",
+              "danish",
+              "dutch",
+              "dutchKp",
+              "english",
+              "lightEnglish",
+              "minimalEnglish",
+              "possessiveEnglish",
+              "porter2",
+              "lovins",
+              "finnish",
+              "lightFinnish",
+              "french",
+              "lightFrench",
+              "minimalFrench",
+              "galician",
+              "minimalGalician",
+              "german",
+              "german2",
+              "lightGerman",
+              "minimalGerman",
+              "greek",
+              "hindi",
+              "hungarian",
+              "lightHungarian",
+              "indonesian",
+              "irish",
+              "italian",
+              "lightItalian",
+              "sorani",
+              "latvian",
+              "norwegian",
+              "lightNorwegian",
+              "minimalNorwegian",
+              "lightNynorsk",
+              "minimalNynorsk",
+              "portuguese",
+              "lightPortuguese",
+              "minimalPortuguese",
+              "portugueseRslp",
+              "romanian",
+              "russian",
+              "lightRussian",
+              "spanish",
+              "lightSpanish",
+              "swedish",
+              "lightSwedish",
+              "turkish"
+            ],
+            "x-ms-enum": {
+              "name": "StemmerTokenFilterLanguage",
+              "modelAsString": false
+            },
+            "description": "The language to use for a stemmer token filter."
+          },
+          "StemmerTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.StemmerTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "language": {
+                "$ref": "#/definitions/StemmerTokenFilterLanguage",
+                "description": "The language to use."
+              }
+            },
+            "required": [
+              "language"
+            ],
+            "description": "Language specific stemming filter. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Custom-analyzers-in-Azure-Search#TokenFilters"
+            }
+          },
+          "StemmerOverrideTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.StemmerOverrideTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "rules": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "A list of stemming rules in the following format: \"word => stem\", for example: \"ran => run\"."
+              }
+            },
+            "required": [
+              "rules"
+            ],
+            "description": "Provides the ability to override other stemming filters with custom dictionary-based stemming. Any dictionary-stemmed terms will be marked as keywords so that they will not be stemmed with stemmers down the chain. Must be placed before any stemming filters. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/miscellaneous/StemmerOverrideFilter.html"
+            }
+          },
+          "StopwordsList": {
+            "type": "string",
+            "enum": [
+              "arabic",
+              "armenian",
+              "basque",
+              "brazilian",
+              "bulgarian",
+              "catalan",
+              "czech",
+              "danish",
+              "dutch",
+              "english",
+              "finnish",
+              "french",
+              "galician",
+              "german",
+              "greek",
+              "hindi",
+              "hungarian",
+              "indonesian",
+              "irish",
+              "italian",
+              "latvian",
+              "norwegian",
+              "persian",
+              "portuguese",
+              "romanian",
+              "russian",
+              "sorani",
+              "spanish",
+              "swedish",
+              "thai",
+              "turkish"
+            ],
+            "x-ms-enum": {
+              "name": "StopwordsList",
+              "modelAsString": false
+            },
+            "description": "Identifies a predefined list of language-specific stopwords."
+          },
+          "StopwordsTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.StopwordsTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "stopwords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The list of stopwords. This property and the stopwords list property cannot both be set."
+              },
+              "stopwordsList": {
+                "$ref": "#/definitions/StopwordsList",
+                "default": "english",
+                "description": "A predefined list of stopwords to use. This property and the stopwords property cannot both be set. Default is English."
+              },
+              "ignoreCase": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether to ignore case. If true, all words are converted to lower case first. Default is false."
+              },
+              "removeTrailing": {
+                "x-ms-client-name": "RemoveTrailingStopWords",
+                "type": "boolean",
+                "default": true,
+                "description": "A value indicating whether to ignore the last search term if it's a stop word. Default is true."
+              }
+            },
+            "description": "Removes stop words from a token stream. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/core/StopFilter.html"
+            }
+          },
+          "SynonymTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.SynonymTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "synonyms": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "A list of synonyms in following one of two formats: 1. incredible, unbelievable, fabulous => amazing - all terms on the left side of => symbol will be replaced with all terms on its right side; 2. incredible, unbelievable, fabulous, amazing - comma separated list of equivalent words. Set the expand option to change how this list is interpreted."
+              },
+              "ignoreCase": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether to case-fold input for matching. Default is false."
+              },
+              "expand": {
+                "type": "boolean",
+                "default": true,
+                "description": "A value indicating whether all words in the list of synonyms (if => notation is not used) will map to one another. If true, all words in the list of synonyms (if => notation is not used) will map to one another. The following list: incredible, unbelievable, fabulous, amazing is equivalent to: incredible, unbelievable, fabulous, amazing => incredible, unbelievable, fabulous, amazing. If false, the following list: incredible, unbelievable, fabulous, amazing will be equivalent to: incredible, unbelievable, fabulous, amazing => incredible. Default is true."
+              }
+            },
+            "required": [
+              "synonyms"
+            ],
+            "description": "Matches single or multi-word synonyms in a token stream. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/synonym/SynonymFilter.html"
+            }
+          },
+          "TruncateTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.TruncateTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "length": {
+                "type": "integer",
+                "format": "int32",
+                "default": 300,
+                "maximum": 300,
+                "description": "The length at which terms will be truncated. Default and maximum is 300."
+              }
+            },
+            "description": "Truncates the terms to a specific length. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/miscellaneous/TruncateTokenFilter.html"
+            }
+          },
+          "UniqueTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.UniqueTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "onlyOnSamePosition": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether to remove duplicates only at the same position. Default is false."
+              }
+            },
+            "description": "Filters out tokens with same text as the previous token. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/miscellaneous/RemoveDuplicatesTokenFilter.html"
+            }
+          },
+          "WordDelimiterTokenFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.WordDelimiterTokenFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenFilter"
+              }
+            ],
+            "properties": {
+              "generateWordParts": {
+                "type": "boolean",
+                "default": true,
+                "description": "A value indicating whether to generate part words. If set, causes parts of words to be generated; for example \"AzureSearch\" becomes \"Azure\" \"Search\". Default is true."
+              },
+              "generateNumberParts": {
+                "type": "boolean",
+                "default": true,
+                "description": "A value indicating whether to generate number subwords. Default is true."
+              },
+              "catenateWords": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether maximum runs of word parts will be catenated. For example, if this is set to true, \"Azure-Search\" becomes \"AzureSearch\". Default is false."
+              },
+              "catenateNumbers": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether maximum runs of number parts will be catenated. For example, if this is set to true, \"1-2\" becomes \"12\". Default is false."
+              },
+              "catenateAll": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether all subword parts will be catenated. For example, if this is set to true, \"Azure-Search-1\" becomes \"AzureSearch1\". Default is false."
+              },
+              "splitOnCaseChange": {
+                "type": "boolean",
+                "default": true,
+                "description": "A value indicating whether to split words on caseChange. For example, if this is set to true, \"AzureSearch\" becomes \"Azure\" \"Search\". Default is true."
+              },
+              "preserveOriginal": {
+                "type": "boolean",
+                "default": false,
+                "description": "A value indicating whether original words will be preserved and added to the subword list. Default is false."
+              },
+              "splitOnNumerics": {
+                "type": "boolean",
+                "default": true,
+                "description": "A value indicating whether to split on numbers. For example, if this is set to true, \"Azure1Search\" becomes \"Azure\" \"1\" \"Search\". Default is true."
+              },
+              "stemEnglishPossessive": {
+                "type": "boolean",
+                "default": true,
+                "description": "A value indicating whether to remove trailing \"'s\" for each subword. Default is true."
+              },
+              "protectedWords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "A list of tokens to protect from being delimited."
+              }
+            },
+            "description": "Splits words into subwords and performs optional transformations on subword groups. This token filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "http://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/miscellaneous/WordDelimiterFilter.html"
+            }
+          },
+          "CharFilter": {
+            "discriminator": "@odata.type",
+            "properties": {
+              "@odata.type": {
+                "type": "string",
+                "enum": [
+                  "Microsoft.Azure.Search.MappingCharFilter",
+                  "Microsoft.Azure.Search.PatternReplaceCharFilter"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "externalDocs": {
+                  "url": "https://docs.microsoft.com/rest/api/searchservice/custom-analyzers-in-azure-search#index-attribute-reference"
+                },
+                "description": "The name of the char filter. It must only contain letters, digits, spaces, dashes or underscores, can only start and end with alphanumeric characters, and is limited to 128 characters."
+              }
+            },
+            "required": [
+              "@odata.type",
+              "name"
+            ],
+            "description": "Abstract base class for character filters.",
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Custom-analyzers-in-Azure-Search"
+            }
+          },
+          "MappingCharFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.MappingCharFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/CharFilter"
+              }
+            ],
+            "properties": {
+              "mappings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "A list of mappings of the following format: \"a=>b\" (all occurrences of the character \"a\" will be replaced with character \"b\")."
+              }
+            },
+            "required": [
+              "mappings"
+            ],
+            "description": "A character filter that applies mappings defined with the mappings option. Matching is greedy (longest pattern matching at a given point wins). Replacement is allowed to be the empty string. This character filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "https://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/charfilter/MappingCharFilter.html"
+            }
+          },
+          "PatternReplaceCharFilter": {
+            "x-ms-discriminator-value": "#Microsoft.Azure.Search.PatternReplaceCharFilter",
+            "allOf": [
+              {
+                "$ref": "#/definitions/CharFilter"
+              }
+            ],
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "A regular expression pattern."
+              },
+              "replacement": {
+                "type": "string",
+                "description": "The replacement text."
+              }
+            },
+            "required": [
+              "pattern",
+              "replacement"
+            ],
+            "description": "A character filter that replaces characters in the input string. It uses a regular expression to identify character sequences to preserve and a replacement pattern to identify characters to replace. For example, given the input text \"aa bb aa bb\", pattern \"(aa)\\s+(bb)\", and replacement \"$1#$2\", the result would be \"aa#bb aa#bb\". This character filter is implemented using Apache Lucene.",
+            "externalDocs": {
+              "url": "https://lucene.apache.org/core/4_10_3/analyzers-common/org/apache/lucene/analysis/pattern/PatternReplaceCharFilter.html"
+            }
+          }
     }
 }
