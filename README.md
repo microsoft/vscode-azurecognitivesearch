@@ -1,6 +1,6 @@
-# Azure Search for Visual Studio Code (Preview)
+# Azure Cognitive Search for Visual Studio Code (Preview)
 
-Azure Search is a Microsoft-managed service for understanding, indexing and searching content of all nature, from databases to blobs to custom content.
+[Azure Cognitive Search](https://docs.microsoft.com/en-us/azure/search/search-what-is-azure-search) (formerly known as "Azure Search") is a search-as-a-service cloud solution that gives developers APIs and tools for adding a rich search experience over private, heterogeneous content in web, mobile, and enterprise applications.
 
 ## Features
 
@@ -8,23 +8,36 @@ Azure Search is a Microsoft-managed service for understanding, indexing and sear
 * Inspect service details including replicas, partitions, etc.
 * List indexes in each service
 
+## Quickstart
+
+1. `git clone https://github.com/dereklegenzoff/vscode-azuresearch.git`
+2. `code vscode-azuresearch`
+3. `npm install`
+4. `F5` to run the extension
+
 ## Extension Settings
 
 This extension contributes the following settings:
 
 * `azureSearch.showExplorer`: enable/disable showing Azure Search in the Azure explorer window
 
-## Quickstart
-1. `git clone https://github.com/dereklegenzoff/vscode-azuresearch.git`
-2. `code vscode-azuresearch`
-3. `npm install`
-4. `F5` to run the extension
-
 ## Release Notes
 
 ### 0.0.1
 
 TBD
+
+## Contributing
+
+There are several ways you can contribute to our [repo](https://github.com/dereklegenzoff/vscode-azuresearch):
+
+* **Ideas, feature requests and bugs**: We are open to all ideas and we want to get rid of bugs! Use the [Issues](https://github.com/Microsoft/vscode-azurestorage/issues) section to report a new issue, provide your ideas or contribute to existing threads.
+* **Documentation**: Found a typo or strangely worded sentences? Submit a PR!
+* **Code**: Contribute bug fixes, features or design changes:
+  * Clone the repository locally and open in VS Code.
+  * Open the terminal (press `CTRL+`\`) and run `npm install`.
+  * To build, press `F1` and type in `Tasks: Run Build Task`.
+  * Debug: press `F5` to start debugging the extension.
 
 ### Legal
 

@@ -3,8 +3,9 @@ import { SimpleSearchClient, Index, Field } from "./SimpleSearchClient";
 import { DocumentListTreeItem } from "./DocumentListTreeItem";
 import { IDocumentRepository } from "./IDocumentRepository";
 import { getResourcesPath } from "./constants";
-import { Uri } from "vscode";
+import { Uri, Range } from "vscode";
 import * as path from 'path';
+import { EDOM } from "constants";
 
 export class DocumentTreeItem extends AzureTreeItem implements IDocumentRepository {
     public static readonly contextValue: string = "azureSearchDocument";
@@ -39,7 +40,9 @@ export class DocumentTreeItem extends AzureTreeItem implements IDocumentReposito
     public async readContent(): Promise<{ content: any, etag?: string } | undefined> {
         // New doc being created in an editor
         if (!this.key) {
-            return undefined;
+            var schema = await this.getSchema();
+
+            return { content: schema, etag: undefined };
         }
 
         const c = await this.searchClient.lookupDocument(this.index.name, this.key);
@@ -63,5 +66,46 @@ export class DocumentTreeItem extends AzureTreeItem implements IDocumentReposito
             const keyField = <Field>this.index.fields.find(f => f.key);
             await this.searchClient.deleteDocument(this.index.name, keyField.name, this.key);
         }
+    }
+
+    private async getSchema(): Promise<string> {
+        var indexSchema = await this.searchClient.getResource("indexes", this.index.name)
+        
+        var jsonSchema = this.mapField(indexSchema.content.fields)
+
+        return jsonSchema;
+    }
+
+    private mapField(fields: any): any {
+
+        var jsonSchema: any = {};
+        for (let i = 0; i < fields.length; i++) {
+            var field = fields[i]
+            if (field.type == "Collection(Edm.ComplexType)") {
+                jsonSchema[field.name] = [this.mapField(field.fields)];
+            }
+            else if (field.type == "Edm.ComplexType") {
+                jsonSchema[field.name] = this.mapField(field.fields);
+            }
+            else if (field.type.includes("Collection")) {
+                jsonSchema[field.name] = []; 
+            }
+            else if (field.type == "Edm.String") {
+                jsonSchema[field.name] = ""; 
+            }
+            else if (field.type == "Edm.Boolean") {
+                jsonSchema[field.name] = false; 
+            }
+            else if (field.type == "Edm.Int32" || field.type == "Edm.Int64") {
+                jsonSchema[field.name] = 0; 
+            }
+            else if (field.type == "Edm.Double") {
+                jsonSchema[field.name] = 0.0; 
+            }
+            else {
+                jsonSchema[field.name] = null; 
+            }
+        }    
+        return jsonSchema;  
     }
 }

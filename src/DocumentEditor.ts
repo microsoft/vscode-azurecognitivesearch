@@ -29,6 +29,7 @@ export class DocumentEditor implements vscode.Disposable {
         this.fileMap[localPath] = item;
 
         const result = await item.readContent();
+
         await fse.writeJson(localPath, result ? result.content : {}, { spaces: 4 });
 
         const doc = await vscode.workspace.openTextDocument(localPath);

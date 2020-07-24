@@ -2,6 +2,9 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as fs from 'fs';
+import * as fse from "fs-extra";
+import * as path from "path";
+import * as os from "os";
 import { ext } from './extensionVariables';
 import { AzureUserInput, registerUIExtensionVariables, callWithTelemetryAndErrorHandling, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal, registerEvent, DialogResponses, AzureParentTreeItem, createAzExtOutputChannel } from 'vscode-azureextensionui';
 import { AzureAccountTreeItem } from './AzureAccountTreeItem';
@@ -19,6 +22,7 @@ import { IndexListTreeItem } from './IndexListTreeItem';
 import { SkillsetListTreeItem } from './SkillSetListTreeItem';
 import { SynonymMapListTreeItem } from './SynonymMapListTreeItem';
 import TelemetryReporter from 'vscode-extension-telemetry';
+import { tree } from 'gulp';
 
 function readJson(path: string) {
     const json = fs.readFileSync(path, "utf8");
@@ -78,6 +82,7 @@ export async function activateInternal(context: vscode.ExtensionContext, perfSta
 		registerCommand("azureSearch.createSynonymMap", async (actionContext: IActionContext, treeItem: SynonymMapListTreeItem) => createResource(treeItem, actionContext, SynonymMapListTreeItem.contextValue));
 		registerCommand("azureSearch.deleteSynonymMap", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, SynonymMapListTreeItem.itemContextValue));
 		registerCommand("azureSearch.search", async (actionContext: IActionContext, treeItem: AzExtTreeItem) => search(treeItem, actionContext, searchResultDocumentProvider));
+		registerCommand("azureSearch.openSearchEditor", async (actionContext: IActionContext, treeItem: IndexTreeItem) => openSearchEditor(treeItem));
 		registerCommand("azureSearch.openInPortal", async (actionContext: IActionContext, treeItem?: AzureTreeItem) => {
 			if (!treeItem) {
 				treeItem = <SearchServiceTreeItem>await ext.tree.showTreeItemPicker(SearchServiceTreeItem.contextValue, actionContext);
@@ -168,6 +173,23 @@ function findSearchTarget(treeItem: AzExtTreeItem) : IndexTreeItem | undefined {
 	}
 
 	return indexItem;
+}
+
+async function openSearchEditor(treeItem: IndexTreeItem): Promise<void> {
+	const filename = `sandbox.azuresearch`;
+	const localPath = path.join(os.tmpdir(), "vscode-azuresearch-editor", filename);
+	await fse.ensureFile(localPath);
+
+	var template = "// Press Ctrl+Alt+R to search";
+	template += "\n";
+	template += "search=*"
+	await fse.writeFile(localPath, template);
+
+	const doc = await vscode.workspace.openTextDocument(localPath);
+	vscode.languages.setTextDocumentLanguage(doc, "azuresearch");
+	await vscode.window.showTextDocument(doc);
+
+	ext.treeView.reveal(treeItem, {select: true})
 }
 
 async function searchToDocument(editor: vscode.TextEditor, root: AzExtTreeItem, documentProvider: SearchResultDocumentProvider): Promise<void> {
