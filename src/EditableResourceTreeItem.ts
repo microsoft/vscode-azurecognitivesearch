@@ -75,7 +75,17 @@ export class EditableResourceTreeItem extends AzureTreeItem implements IDocument
             this.creating = false;
             this.itemName = created.content.name;
             this.label = created.content.name;
-            this.refresh();
+
+            // refreshing the parent to get index properly added to tree
+            if (this.itemKind === "indexes")
+            {
+                this.parent?.refresh();
+            }
+            else
+            {
+                this.refresh();
+            }
+            
         }
         else {
             await this.searchClient.updateResource(this.itemSet, this.itemName, content, etag);
