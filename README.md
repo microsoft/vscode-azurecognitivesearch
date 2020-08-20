@@ -15,13 +15,6 @@ This VS Code extension makes it easy to manage your search service, create and u
   ![Create index demo](media/create-index.gif)
 * Add or update documents
 
-## Quickstart
-
-1. `git clone https://github.com/dereklegenzoff/vscode-azuresearch.git`
-2. `code vscode-azuresearch`
-3. `npm install`
-4. `F5` to run the extension
-
 ## Contributing
 
 There are several ways you can contribute to our [repo](https://github.com/dereklegenzoff/vscode-azuresearch):
