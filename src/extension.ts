@@ -16,7 +16,7 @@ import { DataSourceListTreeItem } from './DataSourceListTreeItem';
 import { EditableResourceTreeItem } from './EditableResourceTreeItem';
 import { IndexerListTreeItem } from './IndexerListTreeItem';
 import { IndexListTreeItem } from './IndexListTreeItem';
-import { SkillsetListTreeItem } from './SkillSetListTreeItem';
+import { SkillsetListTreeItem } from './SkillsetListTreeItem';
 import { SynonymMapListTreeItem } from './SynonymMapListTreeItem';
 import TelemetryReporter from 'vscode-extension-telemetry';
 
