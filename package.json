@@ -153,6 +153,11 @@
 				"category": "Azure Search"
 			},
 			{
+				"command": "azureSearch.openSearchEditor",
+				"title": "Search index",
+				"category": "Azure Search"
+			},
+			{
 				"command": "azureSearch.deleteIndex",
 				"title": "Delete index",
 				"category": "Azure Search"
@@ -270,6 +275,11 @@
 				{
 					"command": "azureSearch.createIndex",
 					"when": "view == azureSearch && viewItem == azureSearchIndexList",
+					"group": "navigation@98"
+				},
+				{
+					"command": "azureSearch.openSearchEditor",
+					"when": "view == azureSearch && viewItem == azureSearchIndex",
 					"group": "navigation@98"
 				},
 				{
