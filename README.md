@@ -2,11 +2,16 @@
 
 [Azure Cognitive Search](https://docs.microsoft.com/en-us/azure/search/search-what-is-azure-search) (formerly known as "Azure Search") is a search-as-a-service cloud solution that gives developers APIs and tools for adding a rich search experience over private, heterogeneous content in web, mobile, and enterprise applications.
 
+This VS Code extension makes it easy to manage your search service, create and update indexes and other components, add documents, send queries, and more.
+
 ## Features
 
-* Browse Azure Search services
+* Browse Azure Cognitive Search services
 * Inspect service details including replicas, partitions, etc.
 * List indexes in each service
+* Create new indexes
+  ![Create index demo](media/create-index.gif)
+* Add or update documents
 
 ## Quickstart
 
@@ -14,18 +19,6 @@
 2. `code vscode-azuresearch`
 3. `npm install`
 4. `F5` to run the extension
-
-## Extension Settings
-
-This extension contributes the following settings:
-
-* `azureSearch.showExplorer`: enable/disable showing Azure Search in the Azure explorer window
-
-## Release Notes
-
-### 0.0.1
-
-TBD
 
 ## Contributing
 
