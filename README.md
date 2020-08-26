@@ -12,7 +12,7 @@ This VS Code extension makes it easy to manage your search service, create and u
 * Inspect service details including replicas, partitions, etc.
 * List indexes in each service
 * Create new indexes
-  ![Create index demo](media/create-index.gif)
+  ![Create index demo](resources/create-index.gif)
 * Add or update documents
 
 ## Contributing
