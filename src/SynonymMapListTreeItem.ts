@@ -6,8 +6,8 @@ import { Uri } from "vscode";
 import * as path from 'path';
 
 export class SynonymMapListTreeItem extends SearchResourceListTreeItem {
-    public static readonly contextValue: string = "azureSearchSynonymMapList";
-    public static readonly itemContextValue: string = "azureSearchSynonymMap";
+    public static readonly contextValue: string = "azureCognitiveSearchSynonymMapList";
+    public static readonly itemContextValue: string = "azureCognitiveSearchSynonymMap";
 
     public constructor(parent: SearchServiceTreeItem, searchClient: SimpleSearchClient) {
         super(parent,

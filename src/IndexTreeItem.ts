@@ -9,7 +9,7 @@ import { Uri } from "vscode";
 import { getResourcesPath } from "./constants";
 
 export class IndexTreeItem extends AzureParentTreeItem {
-    public static readonly contextValue: string = "azureSearchIndex";
+    public static readonly contextValue: string = "azureCognitiveSearchIndex";
     public readonly contextValue: string = IndexTreeItem.contextValue;
     public readonly label: string;
     public readonly itemKind: string = "index";
@@ -29,7 +29,7 @@ export class IndexTreeItem extends AzureParentTreeItem {
 
     public async loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
         return [
-            new EditableResourceTreeItem(this, "azureSearchIndexDetails", "indexes", this.index.name, "index", "azsindex", false, this.searchClient, "Index Details"),
+            new EditableResourceTreeItem(this, "azureCognitiveSearchIndexDetails", "indexes", this.index.name, "index", "azsindex", false, this.searchClient, "Index Details"),
             new DocumentListTreeItem(this, this.searchClient, this.index)
         ];
     }    
@@ -52,7 +52,7 @@ export class IndexTreeItem extends AzureParentTreeItem {
 
     static getTreeItemPosition(item: AzExtTreeItem) : number {
         switch (item.contextValue) {
-            case "azureSearchIndexDetails": return 1;
+            case "azureCognitiveSearchIndexDetails": return 1;
             case DocumentListTreeItem.contextValue: return 2;
         }
 

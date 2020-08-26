@@ -6,7 +6,7 @@ import { Uri } from "vscode";
 import * as path from 'path';
 
 export class EditableResourceTreeItem extends AzureTreeItem implements IDocumentRepository {
-    public readonly commandId: string = "azureSearch.openDocument";
+    public readonly commandId: string = "azureCognitiveSearch.openDocument";
     public readonly namePrefix: string;
     public label: string;
 

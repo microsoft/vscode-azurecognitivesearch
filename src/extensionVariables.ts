@@ -10,5 +10,5 @@ export namespace ext {
 
     export let tree: AzExtTreeDataProvider;
     export let treeView: TreeView<AzExtTreeItem>;
-    export const prefix: string = 'azureSearch';
+    export const prefix: string = 'azureCognitiveSearch';
 }

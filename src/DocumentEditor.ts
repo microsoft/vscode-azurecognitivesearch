@@ -24,7 +24,7 @@ export class DocumentEditor implements vscode.Disposable {
     public async showEditor(item: IDocumentRepository): Promise<void> {
         const suffix = DocumentEditor.getRandomSuffix();
         const filename = `${item.namePrefix}-${suffix}.${item.extension}`;
-        const localPath = path.join(os.tmpdir(), "vscode-azuresearch-editor", filename);
+        const localPath = path.join(os.tmpdir(), "vscode-azs-editor", filename);
         await fse.ensureFile(localPath);
         this.fileMap[localPath] = item;
 

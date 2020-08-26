@@ -5,7 +5,7 @@
 
 import { ext } from './extensionVariables';
 
-export const extensionPrefix: string = 'azureSearch';
+export const extensionPrefix: string = 'azureCognitiveSearch';
 
 export function getResourcesPath(): string {
     return ext.context.asAbsolutePath('resources');

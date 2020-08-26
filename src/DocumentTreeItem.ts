@@ -8,9 +8,9 @@ import * as path from 'path';
 import { EDOM } from "constants";
 
 export class DocumentTreeItem extends AzureTreeItem implements IDocumentRepository {
-    public static readonly contextValue: string = "azureSearchDocument";
+    public static readonly contextValue: string = "azureCognitiveSearchDocument";
     public readonly contextValue: string = DocumentTreeItem.contextValue;
-    public readonly commandId: string = "azureSearch.openDocument";
+    public readonly commandId: string = "azureCognitiveSearch.openDocument";
     public label: string;
     readonly namePrefix: string;
     readonly itemName: string;

@@ -14,7 +14,7 @@ import { Uri } from "vscode";
 import * as path from 'path';
 
 export class SearchServiceTreeItem extends AzureParentTreeItem {
-    public static contextValue: string = "azureSearchService";
+    public static contextValue: string = "azureCognitiveSearchService";
     public readonly contextValue: string = SearchServiceTreeItem.contextValue;
     public label: string = isNullOrUndefined(this.searchService.name) ? "InvalidSearchService" : this.searchService.name;
 
@@ -59,7 +59,7 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
 
     static getTreeItemPosition(item: AzExtTreeItem) : number {
         switch (item.contextValue) {
-            case "azureSearchServiceDetails": return 1;
+            case "azureCognitiveSearchServiceDetails": return 1;
             case IndexListTreeItem.contextValue: return 2;
             case DataSourceListTreeItem.contextValue: return 3;
             case IndexerListTreeItem.contextValue: return 4;
