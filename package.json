@@ -1,7 +1,7 @@
 {
 	"name": "vscode-azuresearch",
 	"displayName": "Azure Cognitive Search",
-	"description": "Manage your Azure Cognitive Search services, explore and manipulate index content, view and update indexes, data sources, indexers, synonyms, and skillsets.",
+	"description": "Manage your Azure Cognitive Search services, create indexes, add documents, search, and more.",
 	"version": "0.0.3",
 	"publisher": "Microsoft",
 	"aiKey": "AIF-d9b70cd4-b9f9-4d70-929b-a071c400b217",
