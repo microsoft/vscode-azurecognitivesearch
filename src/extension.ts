@@ -35,14 +35,14 @@ export async function activateInternal(context: vscode.ExtensionContext, perfSta
 
 	ext.context = context;
 
-	// let reporter: TelemetryReporter | undefined;
-    // try {
-    //     const { aiKey, name, version } = readJson(context.asAbsolutePath("./package.json"));
-    //     reporter = new TelemetryReporter(name, version, aiKey);
-    //     ext.reporter = reporter;
-    //     context.subscriptions.push(reporter);
-    // } catch (error) {
-	// }
+	let reporter: TelemetryReporter | undefined;
+    try {
+        const { aiKey, name, version } = readJson(context.asAbsolutePath("./package.json"));
+        reporter = new TelemetryReporter(name, version, aiKey);
+        ext.reporter = reporter;
+        context.subscriptions.push(reporter);
+    } catch (error) {
+	}
 	
 	ext.ui = new AzureUserInput(context.globalState);
 	ext.outputChannel = createAzExtOutputChannel("Azure Search", ext.prefix);
@@ -106,6 +106,7 @@ export async function activateInternal(context: vscode.ExtensionContext, perfSta
 		registerEvent("azureSearch.searchResults.onDidCloseTextDocument",
 					vscode.workspace.onDidCloseTextDocument,
 					async (_actionContext: IActionContext, doc: vscode.TextDocument) => { 
+						 _actionContext.telemetry.measurements.duration
 			if (doc.uri.scheme === "search") { 
 				searchResultDocumentProvider.unregisterContent(doc.uri.path); 
 			} 
