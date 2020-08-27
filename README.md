@@ -8,12 +8,33 @@ This VS Code extension makes it easy to manage your search service, create and u
 
 ## Features
 
-* Browse all of your Azure Cognitive Search services
-* Create new indexes, indexers, data sources, skillsets and synonym maps
+### Browse all of your Azure Cognitive Search services
+
+![Overview of the extension](resources/overview.png)
+
+### Create new indexes, indexers, data sources, skillsets and synonym maps
+
 ![Create index demo](resources/create-index.gif)
-* Edit or delete indexes, indexers, data sources, skillsets and synonym maps
-* Add or update documents in the search index
-* Query your search services
+
+### Edit or delete indexes, indexers, data sources, skillsets and synonym maps
+
+![Delete index](rsources/delete-index.gif)
+
+### Add or update documents in the search index
+
+![Add of update documents](resources/add-document.gif)
+
+### Query your search services
+
+## Managing Azure Subscriptions
+
+If you are not signed in to Azure, you will see a "Sign in to Azure..." link. Alternatively, you can select "View->Command Palette" in the VS Code menu, and search for "Azure: Sign In".
+
+If you don't have an Azure Account, you can sign up for one today for free and receive $200 in credits by selecting "Create a Free Azure Account..." or selecting "View->Command Palette" and searching for "Azure: Create an Account".
+
+You may sign out of Azure by selecting "View->Command Palette" and searching for "Azure: Sign Out".
+
+To select which subscriptions show up in the extension's explorer, click on the "Select Subscriptions..." button on any subscription node (indicated by a "filter" icon when you hover over it), or select "View->Command Palette" and search for "Azure: Select Subscriptions". Note that this selection affects all VS Code extensions that support the [Azure Account and Sign-In](https://github.com/Microsoft/vscode-azure-account) extension.
 
 ## Contributing
 

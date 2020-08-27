@@ -148,7 +148,7 @@ async function search(treeItem: AzExtTreeItem, actionContext: IActionContext, do
 		indexItem = <IndexTreeItem>await ext.tree.showTreeItemPicker(IndexTreeItem.contextValue, actionContext);
 	}
 
-	let query = await ext.ui.showInputBox({ placeHolder: "search=....&$filter=...", prompt: "Enter an Azure Search query string. You can use search, $filter, $top, etc." });
+	let query = await ext.ui.showInputBox({ placeHolder: "search=....&$filter=...", prompt: "Enter an Azure Cognitive Search query string. You can use search, $filter, $top, etc." });
 	const result = await indexItem.search(query);
 	const id = documentProvider.registerContent(JSON.stringify(result, undefined, 4));
 	const doc = await vscode.workspace.openTextDocument(vscode.Uri.parse(`search:${id}`));
@@ -187,7 +187,7 @@ async function openSearchEditor(treeItem: IndexTreeItem): Promise<void> {
 	await fse.writeFile(localPath, template);
 
 	const doc = await vscode.workspace.openTextDocument(localPath);
-	vscode.languages.setTextDocumentLanguage(doc, "azs");
+	vscode.languages.setTextDocumentLanguage(doc, "azurecognitivesearch");
 	await vscode.window.showTextDocument(doc);
 
 	ext.treeView.reveal(treeItem, {select: true})
@@ -203,11 +203,11 @@ async function searchToDocument(editor: vscode.TextEditor, root: AzExtTreeItem, 
 		}
 
 		if (ext.treeView.selection.length === 0) {
-			ext.ui.showWarningMessage("Select an Azure Search index from the left panel.");
+			ext.ui.showWarningMessage("Select an Azure Cognitive Search index from the left panel.");
 			await ext.treeView.reveal(root, { expand: true });
 		}
 		else if (ext.treeView.selection[0].contextValue !== "azureCognitiveSearchIndex") {
-			ext.ui.showWarningMessage("Select an Azure Search index from the left panel.");
+			ext.ui.showWarningMessage("Select an Azure Cognitive Search index from the left panel.");
 		}
 		else {
 			const indexItem = <IndexTreeItem>ext.treeView.selection[0];

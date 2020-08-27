@@ -26,8 +26,12 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/pablocastro/vscode-azuresearch"
+		"url": "https://github.com/microsoft/vscode-azurecognitivesearch"
 	},
+	"bugs": {
+		"url": "https://github.com/microsoft/vscode-azurecognitivesearch/issues"
+	},
+	"homepage": "https://github.com/microsoft/vscode-azurecognitivesearch",
 	"icon": "media/AzureSearch.png",
 	"preview": true,
 	"activationEvents": [
@@ -98,7 +102,7 @@
 					"light": "resources/light/refresh.svg",
 					"dark": "resources/dark/refresh.svg"
 				},
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.search",
@@ -107,12 +111,12 @@
 					"light": "resources/light/search.svg",
 					"dark": "resources/dark/search.svg"
 				},
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.openInPortal",
 				"title": "Open in Portal",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.selectSubscriptions",
@@ -121,7 +125,7 @@
 					"light": "resources/light/filter.svg",
 					"dark": "resources/dark/filter.svg"
 				},
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.createDocument",
@@ -130,72 +134,72 @@
 					"light": "resources/light/add.svg",
 					"dark": "resources/dark/add.svg"
 				},
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.deleteDocument",
 				"title": "Delete document",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.createDataSource",
 				"title": "Create new data source",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.deleteDataSource",
 				"title": "Delete data source",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.createIndexer",
 				"title": "Create new indexer",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.openSearchEditor",
 				"title": "Search index",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.deleteIndex",
 				"title": "Delete index",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.createIndex",
 				"title": "Create new index",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.deleteIndexer",
 				"title": "Delete indexer",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.createSkillset",
 				"title": "Create new skillset",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.deleteSkillset",
 				"title": "Delete skillset",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.createSynonymMap",
 				"title": "Create new synonym map",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.deleteSynonymMap",
 				"title": "Delete synonym map",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
 				"command": "azureCognitiveSearch.searchDoc",
 				"title": "Search",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			}
 		],
 		"menus": {
@@ -332,12 +336,12 @@
 			]
 		},
 		"configuration": {
-			"title": "Azure Search Services",
+			"title": "Azure Cognitive Search Services",
 			"properties": {
 				"azureCognitiveSearch.showExplorer": {
 					"type": "boolean",
 					"default": true,
-					"description": "Show or hide the Azure Search Explorer"
+					"description": "Show or hide the Azure Cognitive Search Explorer"
 				}
 			}
 		},
@@ -381,7 +385,7 @@
 				"command": "azureCognitiveSearch.searchDoc",
 				"key": "ctrl+alt+r",
 				"mac": "cmd+alt+r",
-				"when": "editorLangId == azureCognitiveSearch"
+				"when": "editorLangId == azurecognitivesearch"
 			}
 		]
 	},
