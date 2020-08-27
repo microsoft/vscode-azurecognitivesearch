@@ -2,18 +2,18 @@
 
 [![Build Status](https://delegenz.visualstudio.com/vs-code-pipelines/_apis/build/status/dereklegenzoff.vscode-azuresearch?branchName=master)](https://delegenz.visualstudio.com/vs-code-pipelines/_build/latest?definitionId=5&branchName=master)
 
-[Azure Cognitive Search](https://docs.microsoft.com/en-us/azure/search/search-what-is-azure-search) (formerly known as "Azure Search") is a search-as-a-service cloud solution that gives developers APIs and tools for adding a rich search experience over private, heterogeneous content in web, mobile, and enterprise applications.
+[Azure Cognitive Search](https://docs.microsoft.com/en-us/azure/search/search-what-is-azure-search) is a search-as-a-service cloud solution that gives developers APIs and tools for adding a rich search experience over private, heterogeneous content in web, mobile, and enterprise applications.
 
-This VS Code extension makes it easy to manage your search service, create and update indexes and other components, add documents, send queries, and more.
+This VS Code extension makes it easy to manage your search service, create and update indexes and other components, add documents, send queries, and more. Creating and editing components is done through the Rest API and the extension provides rich intellisense for API requests to make it easy to get up and running.
 
 ## Features
 
-* Browse Azure Cognitive Search services
-* Inspect service details including replicas, partitions, etc.
-* List indexes in each service
-* Create new indexes
-  ![Create index demo](resources/create-index.gif)
-* Add or update documents
+* Browse all of your Azure Cognitive Search services
+* Create new indexes, indexers, data sources, skillsets and synonym maps
+![Create index demo](resources/create-index.gif)
+* Edit or delete indexes, indexers, data sources, skillsets and synonym maps
+* Add or update documents in the search index
+* Query your search services
 
 ## Contributing
 
