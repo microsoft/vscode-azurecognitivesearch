@@ -60,92 +60,176 @@ export class DocumentEditor implements vscode.Disposable {
     }
 
     private static getDefaultJson(itemKind: string): any {
-        if (itemKind === 'indexes') {
-            return {
-                        "name": "my-index",
-                        "fields": [
-                            {
-                                "name": "id",
-                                "type": "Edm.String",
-                                "key": true,
-                                "searchable": true,
-                                "filterable": false,
-                                "facetable": false,
-                                "sortable": true
-                            },
-                            {
-                                "name": "text",
-                                "type": "Edm.String",
-                                "sortable": false,
-                                "searchable": true,
-                                "filterable": false,
-                                "facetable": false
-                            }
-                        ]
-                    }
-        }
-        else if (itemKind === "synonym map"){
-            return {
-                        "name": "my-synonyms",
-                        "format":"solr",
-                        "synonyms": "USA, United States, United States of America\nWashington, Wash., WA => WA\n"
-                    }
-        }
-        else if (itemKind === "data source"){
-            return {
-                        "name": "my-datasource",
-                        "type": "",
-                        "credentials": {
-                            "connectionString": ""
+        switch (itemKind) {
+            case 'indexes':
+                return {
+                    "name": "my-index",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "Edm.String",
+                            "key": true,
+                            "searchable": true,
+                            "filterable": false,
+                            "facetable": false,
+                            "sortable": true
                         },
-                        "container": {
-                            "name": ""
+                        {
+                            "name": "text",
+                            "type": "Edm.String",
+                            "sortable": false,
+                            "searchable": true,
+                            "filterable": false,
+                            "facetable": false
                         }
+                    ]
+                };
+            case 'synonym map':
+                return {
+                    "name": "my-synonyms",
+                    "format":"solr",
+                    "synonyms": "USA, United States, United States of America\nWashington, Wash., WA => WA\n"
+                };
+            case 'data source':
+                return {
+                    "name": "my-datasource",
+                    "type": "",
+                    "credentials": {
+                        "connectionString": ""
+                    },
+                    "container": {
+                        "name": ""
                     }
+                };
+            case 'skillset':
+                return {
+                    "name": "my-skillset",
+                    "description": "",
+                    "skills":
+                    [
+                        {
+                            "description": "Extract text (plain and structured) from image.",
+                            "@odata.type": "#Microsoft.Skills.Vision.OcrSkill",
+                            "context": "/document/normalized_images/*",
+                            "defaultLanguageCode": "en",
+                            "detectOrientation": true,
+                            "inputs": [
+                                {
+                                "name": "image",
+                                "source": "/document/normalized_images/*"
+                                }
+                            ],
+                            "outputs": [
+                                {
+                                "name": "text"
+                                }
+                            ]
+                        }
+                    ]
+                };
+            case 'indexer':
+                return {
+                    "name": "my-indexer",
+                    "dataSourceName": "",
+                    "targetIndexName": "",
+                    "skillsetName": "",
+                    "fieldMappings": [
+                        {
+                            "sourceFieldName": "",
+                            "targetFieldName": ""
+                        }
+                    ]
+                };
+            default:
+                return {};
         }
-        else if (itemKind === "skillset"){
-            return {
-                        "name": "my-skillset",
-                        "description": "",
-                        "skills":
-                        [
-                            {
-                                "description": "Extract text (plain and structured) from image.",
-                                "@odata.type": "#Microsoft.Skills.Vision.OcrSkill",
-                                "context": "/document/normalized_images/*",
-                                "defaultLanguageCode": "en",
-                                "detectOrientation": true,
-                                "inputs": [
-                                    {
-                                    "name": "image",
-                                    "source": "/document/normalized_images/*"
-                                    }
-                                ],
-                                "outputs": [
-                                    {
-                                    "name": "text"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-        }
-        else if (itemKind === "indexer"){
-            return {
-                        "name": "my-indexer",
-                        "dataSourceName": "",
-                        "targetIndexName": "",
-                        "skillsetName": "",
-                        "fieldMappings": [
-                            {
-                                "sourceFieldName": "",
-                                "targetFieldName": ""
-                            }
-                        ]
-                    }
-        }
-        else {
-            return {}
-        }
+
+        // if (itemKind === 'indexes') {
+        //     return {
+        //                 "name": "my-index",
+        //                 "fields": [
+        //                     {
+        //                         "name": "id",
+        //                         "type": "Edm.String",
+        //                         "key": true,
+        //                         "searchable": true,
+        //                         "filterable": false,
+        //                         "facetable": false,
+        //                         "sortable": true
+        //                     },
+        //                     {
+        //                         "name": "text",
+        //                         "type": "Edm.String",
+        //                         "sortable": false,
+        //                         "searchable": true,
+        //                         "filterable": false,
+        //                         "facetable": false
+        //                     }
+        //                 ]
+        //             }
+        // }
+        // else if (itemKind === "synonym map"){
+        //     return {
+        //                 "name": "my-synonyms",
+        //                 "format":"solr",
+        //                 "synonyms": "USA, United States, United States of America\nWashington, Wash., WA => WA\n"
+        //             }
+        // }
+        // else if (itemKind === "data source"){
+        //     return {
+        //                 "name": "my-datasource",
+        //                 "type": "",
+        //                 "credentials": {
+        //                     "connectionString": ""
+        //                 },
+        //                 "container": {
+        //                     "name": ""
+        //                 }
+        //             }
+        // }
+        // else if (itemKind === "skillset"){
+        //     return {
+        //                 "name": "my-skillset",
+        //                 "description": "",
+        //                 "skills":
+        //                 [
+        //                     {
+        //                         "description": "Extract text (plain and structured) from image.",
+        //                         "@odata.type": "#Microsoft.Skills.Vision.OcrSkill",
+        //                         "context": "/document/normalized_images/*",
+        //                         "defaultLanguageCode": "en",
+        //                         "detectOrientation": true,
+        //                         "inputs": [
+        //                             {
+        //                             "name": "image",
+        //                             "source": "/document/normalized_images/*"
+        //                             }
+        //                         ],
+        //                         "outputs": [
+        //                             {
+        //                             "name": "text"
+        //                             }
+        //                         ]
+        //                     }
+        //                 ]
+        //             }
+        // }
+        // else if (itemKind === "indexer"){
+        //     return {
+        //                 "name": "my-indexer",
+        //                 "dataSourceName": "",
+        //                 "targetIndexName": "",
+        //                 "skillsetName": "",
+        //                 "fieldMappings": [
+        //                     {
+        //                         "sourceFieldName": "",
+        //                         "targetFieldName": ""
+        //                     }
+        //                 ]
+        //             }
+        // }
+        // else {
+        //     return {}
+        // }
     }
 }

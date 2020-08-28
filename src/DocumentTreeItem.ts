@@ -71,21 +71,20 @@ export class DocumentTreeItem extends AzureTreeItem implements IDocumentReposito
     private async getSchema(): Promise<string> {
         var indexSchema = await this.searchClient.getResource("indexes", this.index.name)
         
-        var jsonSchema = this.mapField(indexSchema.content.fields)
+        var jsonSchema = this.mapFields(indexSchema.content.fields)
 
         return jsonSchema;
     }
 
-    private mapField(fields: any): any {
+    private mapFields(fields: Array<any>): any {
 
         var jsonSchema: any = {};
-        for (let i = 0; i < fields.length; i++) {
-            var field = fields[i]
+        for (let field of fields) {
             if (field.type == "Collection(Edm.ComplexType)") {
-                jsonSchema[field.name] = [this.mapField(field.fields)];
+                jsonSchema[field.name] = [this.mapFields(field.fields)];
             }
             else if (field.type == "Edm.ComplexType") {
-                jsonSchema[field.name] = this.mapField(field.fields);
+                jsonSchema[field.name] = this.mapFields(field.fields);
             }
             else if (field.type.includes("Collection")) {
                 jsonSchema[field.name] = []; 

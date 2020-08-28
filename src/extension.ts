@@ -23,10 +23,16 @@ import { SkillsetListTreeItem } from './SkillsetListTreeItem';
 import { SynonymMapListTreeItem } from './SynonymMapListTreeItem';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import { tree } from 'gulp';
+import * as crypto from "crypto";
 
 function readJson(path: string) {
     const json = fs.readFileSync(path, "utf8");
     return JSON.parse(json);
+}
+
+function getRandomSuffix(): string {
+	const buffer: Buffer = crypto.randomBytes(5);
+	return buffer.toString('hex');
 }
 
 // this method is called when your extension is activated
@@ -177,11 +183,12 @@ function findSearchTarget(treeItem: AzExtTreeItem) : IndexTreeItem | undefined {
 }
 
 async function openSearchEditor(treeItem: IndexTreeItem): Promise<void> {
-	const filename = `sandbox.azs`;
+	const suffix = getRandomSuffix()
+	const filename = "sandbox-" + suffix + ".azs";
 	const localPath = path.join(os.tmpdir(), "vscode-azs-editor", filename);
 	await fse.ensureFile(localPath);
 
-	var template = "// Press Ctrl+Alt+R to search";
+	var template = "// Press ctrl+alt+r or cmd+alt+r to search";
 	template += "\n";
 	template += "search=*"
 	await fse.writeFile(localPath, template);
@@ -192,6 +199,7 @@ async function openSearchEditor(treeItem: IndexTreeItem): Promise<void> {
 
 	ext.treeView.reveal(treeItem, {select: true})
 }
+
 
 async function searchToDocument(editor: vscode.TextEditor, root: AzExtTreeItem, documentProvider: SearchResultDocumentProvider): Promise<void> {
 		let text: string;
