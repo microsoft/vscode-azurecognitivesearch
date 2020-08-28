@@ -32,7 +32,7 @@
 		"url": "https://github.com/microsoft/vscode-azurecognitivesearch/issues"
 	},
 	"homepage": "https://github.com/microsoft/vscode-azurecognitivesearch",
-	"icon": "media/AzureSearch.png",
+	"icon": "resources/AzureSearch.png",
 	"preview": true,
 	"activationEvents": [
 		"onView:azureCognitiveSearch",
@@ -89,7 +89,7 @@
 			"azure": [
 				{
 					"id": "azureCognitiveSearch",
-					"name": "Search",
+					"name": "Cognitive Search",
 					"when": "config.azureCognitiveSearch.showExplorer == true"
 				}
 			]
