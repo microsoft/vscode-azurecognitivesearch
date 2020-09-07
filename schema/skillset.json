@@ -8,59 +8,69 @@
             "description": "The name of the skillset."
         },
         "description": {
-            "type": "string",
+            "type": ["string", "null"],
             "description": "The description of the skillset."
         },
         "skills": {
             "type": "array",
             "items": {
-                "$ref": "#/definitions/Skill"
+                "$ref": "#/definitions/SearchIndexerSkill"
             },
             "description": "A list of skills in the skillset."
         },
         "cognitiveServices": {
-            "$ref": "#/definitions/CognitiveServices",
+            "$ref": "#/definitions/CognitiveServicesAccount",
             "description": "Details about cognitive services to be used when running skills."
         },
         "knowledgeStore": {
             "$ref": "#/definitions/KnowledgeStore",
             "description": "A storage account where you can optionally save your enriched documents."
+        },
+        "encryptionKey": {
+            "$ref": "#/definitions/SearchResourceEncryptionKey",
+            "description": "A description of an encryption key that you create in Azure Key Vault. This key is used to provide an additional level of encryption-at-rest for your data when you want full assurance that no one, not even Microsoft, can decrypt your data in Azure Cognitive Search. Once you have encrypted your data, it will always remain encrypted. Azure Cognitive Search will ignore attempts to set this property to null. You can change this property as needed if you want to rotate your encryption key; Your data will be unaffected. Encryption with customer-managed keys is not available for free search services, and is only available for paid services created on or after January 1, 2019.",
+            "externalDocs": {
+              "url": "https://aka.ms/azure-search-encryption-with-cmk"
+            }
         }
     },
     "required": [
         "name",
         "skills"
     ],
+    "description": "Base type for skills.",
     "definitions": {
-        "CognitiveServices": {
+        "CognitiveServicesAccount": {
             "discriminator": "@odata.type",
             "properties": {
                 "@odata.type": {
                     "type": "string",
+                    "description": "Identifies the concrete type of the cognitive service resource attached to a skillset.",
                     "enum": [
                         "#Microsoft.Azure.Search.CognitiveServicesByKey",
                         "#Microsoft.Azure.Search.DefaultCognitiveServices"
                     ]
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Description of the cognitive service resource attached to a skillset."
                 }
             },
             "required": [
                 "@odata.type"
             ],
-            "description": "Abstract base class for describing any cognitive service resource attached to the skillset."
+            "description": "Base type for describing any cognitive service resource attached to a skillset."
         },
-        "DefaultCognitiveServices": {
+        "DefaultCognitiveServicesAccount": {
             "description": "An empty object that represents the default cognitive service resource for a skillset.",
             "x-ms-discriminator-value": "#Microsoft.Azure.Search.DefaultCognitiveServices",
             "allOf": [
                 {
-                    "$ref": "#/definitions/CognitiveServices"
+                    "$ref": "#/definitions/CognitiveServicesAccount"
                 }
             ]
         },
-        "CognitiveServicesByKey": {
+        "CognitiveServicesAccountKey": {
             "description": "A cognitive service resource provisioned with a key that is attached to a skillset.",
             "x-ms-discriminator-value": "#Microsoft.Azure.Search.CognitiveServicesByKey",
             "allOf": [
@@ -70,24 +80,26 @@
             ],
             "properties": {
                 "key": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The key used to provision the cognitive service resource attached to a skillset."
                 }
             },
             "required": [
                 "key"
             ]
         },
-        "Skill": {
+        "SearchIndexerSkill": {
             "discriminator": "@odata.type",
             "properties": {
                 "@odata.type": {
                     "type": "string",
+                    "description": "Identifies the concrete type of the skill.",
                     "enum": [
                         "#Microsoft.Skills.Text.KeyPhraseExtractionSkill",
                         "#Microsoft.Skills.Text.LanguageDetectionSkill",
                         "#Microsoft.Skills.Text.MergeSkill",
                         "#Microsoft.Skills.Text.EntityRecognitionSkill",
-                        "Microsoft.Skills.Text.PIIDetectionSkill",
+                        "#Microsoft.Skills.Text.PIIDetectionSkill",
                         "#Microsoft.Skills.Text.SentimentSkill",
                         "#Microsoft.Skills.Text.SplitSkill",
                         "#Microsoft.Skills.Text.TranslationSkill",
@@ -127,6 +139,188 @@
                     "description": "The output of a skill is either a field in a search index, or a value that can be consumed as an input by another skill."
                 }
             },
+            "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "@odata.type": { 
+                        "const": "#Microsoft.Skills.Text.KeyPhraseExtractionSkill"
+                      }
+                    }
+                  },
+                  "then": {
+                    "$ref": "#/definitions/KeyPhraseExtractionSkill"
+                  }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Text.LanguageDetectionSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/LanguageDetectionSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Text.MergeSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/MergeSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Text.EntityRecognitionSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/EntityRecognitionSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Text.PIIDetectionSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/PIIDetectionSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Text.SentimentSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/SentimentSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Text.SplitSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/SplitSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Text.TranslationSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/TranslationSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Vision.ImageAnalysisSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/ImageAnalysisSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Vision.OcrSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/OcrSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Util.ConditionalSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/ConditionalSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Util.DocumentExtractionSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/DocumentExtractionSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Util.ShaperSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/ShaperSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Custom.WebApiSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/WebApiSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Custom.AmlSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/AmlSkill"
+                    }
+                }  
+            ],
             "required": [
                 "@odata.type",
                 "inputs",
@@ -185,11 +379,6 @@
         },
         "ConditionalSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Util.ConditionalSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "externalDocs": {
                 "url": "https://docs.microsoft.com/azure/search/cognitive-search-skill-conditional"
             },
@@ -197,11 +386,6 @@
         },
         "KeyPhraseExtractionSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.KeyPhraseExtractionSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "properties": {
                 "defaultLanguageCode": {
                     "$ref": "#/definitions/KeyPhraseExtractionSkillLanguage",
@@ -221,11 +405,6 @@
         },
         "DocumentExtractionSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.DocumentExtractionSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "properties": {
                 "parsingMode": {
                     "type": "string",
@@ -282,16 +461,7 @@
         },
         "OcrSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Vision.OcrSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "properties": {
-                "textExtractionAlgorithm": {
-                    "$ref": "#/definitions/TextExtractionAlgorithm",
-                    "description": "A value indicating which algorithm to use for extracting text. Default is printed."
-                },
                 "defaultLanguageCode": {
                     "$ref": "#/definitions/OcrSkillLanguage",
                     "description": "A value indicating which language code to use. Default is en."
@@ -310,11 +480,6 @@
         },
         "ImageAnalysisSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Vision.ImageAnalysisSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "properties": {
                 "defaultLanguageCode": {
                     "$ref": "#/definitions/ImageAnalysisSkillLanguage",
@@ -344,11 +509,6 @@
         },
         "LanguageDetectionSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.LanguageDetectionSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "externalDocs": {
                 "url": "https://docs.microsoft.com/azure/search/cognitive-search-skill-language-detection"
             },
@@ -356,11 +516,6 @@
         },
         "ShaperSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Util.ShaperSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "externalDocs": {
                 "url": "https://docs.microsoft.com/azure/search/cognitive-search-skill-shaper"
             },
@@ -368,11 +523,6 @@
         },
         "MergeSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.MergeSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "properties": {
                 "insertPreTag": {
                     "type": "string",
@@ -392,11 +542,6 @@
         },
         "EntityRecognitionSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.EntityRecognitionSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "properties": {
                 "categories": {
                     "type": "array",
@@ -427,46 +572,8 @@
             },
             "description": "Text analytics entity recognition."
         },
-        "NamedEntityRecognitionSkill": {
-            "x-ms-discriminator-value": "#Microsoft.Skills.Text.NamedEntityRecognitionSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
-            "properties": {
-                "categories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/NamedEntityCategory",
-                        "x-nullable": false
-                    },
-                    "description": "A list of named entity categories."
-                },
-                "defaultLanguageCode": {
-                    "$ref": "#/definitions/NamedEntityRecognitionSkillLanguage",
-                    "description": "A value indicating which language code to use. Default is en."
-                },
-                "minimumPrecision": {
-                    "type": "number",
-                    "format": "double",
-                    "x-nullable": true,
-                    "description": "A value between 0 and 1 to indicate the confidence of the results."
-                }
-            },
-            "externalDocs": {
-                "url": "https://docs.microsoft.com/azure/search/cognitive-search-skill-named-entity-recognition"
-            },
-            "description": "Text analytics named entity recognition. This skill is deprecated in favor of EntityRecognitionSkill.",
-            "x-ms-external": true
-        },
         "PIIDetectionSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.PIIDetectionSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "properties": {
                 "defaultLanguageCode": {
                     "$ref": "#/definitions/PIIDetectionSkillLanguage",
@@ -508,11 +615,6 @@
         },
         "CustomEntityLookupSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.CustomEntityLookupSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "properties": {
                 "entitiesDefinitionUri": {
                     "type": "string",
@@ -569,11 +671,6 @@
         },
         "SentimentSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.SentimentSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "properties": {
                 "defaultLanguageCode": {
                     "$ref": "#/definitions/SentimentSkillLanguage",
@@ -587,11 +684,6 @@
         },
         "SplitSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.SplitSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "properties": {
                 "defaultLanguageCode": {
                     "$ref": "#/definitions/SplitSkillLanguage",
@@ -616,11 +708,6 @@
         },
         "TextTranslationSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.TranslationSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "properties": {
                 "defaultToLanguageCode": {
                     "$ref": "#/definitions/TextTranslationSkillLanguage",
@@ -645,11 +732,6 @@
         },
         "WebApiSkill": {
             "x-ms-discriminator-value": "#Microsoft.Skills.Custom.WebApiSkill",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/Skill"
-                }
-            ],
             "properties": {
                 "uri": {
                     "type": "string",
@@ -965,7 +1047,7 @@
             "description": "The language codes supported for input text by PIIDetectionSkill."
         },
         "TextTranslationSkillLanguage": {
-            "type": "string",
+            "type": ["string", "null"],
             "enum": [
                 "af",
                 "ar",
@@ -1108,7 +1190,54 @@
                     }
                 }
             }
-        }
+        },
+        "SearchResourceEncryptionKey": {
+            "type": ["object", "null"],
+            "description": "A customer-managed encryption key in Azure Key Vault. Keys that you create and manage can be used to encrypt or decrypt data-at-rest in Azure Cognitive Search, such as indexes and synonym maps.",
+            "properties": {
+                "keyVaultKeyName": {
+                    "type": "string",
+                    "description": "The name of your Azure Key Vault key to be used to encrypt your data at rest."
+                },
+                "keyVaultKeyVersion": {
+                    "type": "string",
+                    "description": "The version of your Azure Key Vault key to be used to encrypt your data at rest."
+                },
+                "keyVaultUri": {
+                    "type": "string",
+                    "description": "The URI of your Azure Key Vault, also referred to as DNS name, that contains the key to be used to encrypt your data at rest. An example URI might be https://my-keyvault-name.vault.azure.net."
+                },
+                "accessCredentials": {
+                    "$ref": "#/definitions/AzureActiveDirectoryApplicationCredentials",
+                    "description": "Optional Azure Active Directory credentials used for accessing your Azure Key Vault. Not required if using managed identity instead.",
+                    "externalDocs": {
+                        "url": "https://aka.ms/azure-search-msi"
+                    }
+                }
+            },
+            "required": [
+                "keyVaultKeyName",
+                "keyVaultKeyVersion",
+                "keyVaultUri"
+            ]
+        },
+        "AzureActiveDirectoryApplicationCredentials": {
+            "type": ["object", "null"],
+            "properties": {
+              "applicationId": {
+                "type": "string",
+                "description": "An AAD Application ID that was granted the required access permissions to the Azure Key Vault that is to be used when encrypting your data at rest. The Application ID should not be confused with the Object ID for your AAD Application."
+              },
+              "applicationSecret": {
+                "type": ["string", "null"],
+                "description": "The authentication key of the specified AAD application."
+              }
+            },
+            "required": [
+              "applicationId"
+            ],
+            "description": "Credentials of a registered application created for your search service, used for authenticated access to the encryption keys stored in Azure Key Vault."
+          }
     },
     "additionalProperties": false
 }

@@ -11,7 +11,7 @@
           "description": "The name of the indexer."
         },
         "description": {
-          "type": "string",
+          "type": ["string", "null"],
           "description": "The description of the indexer."
         },
         "dataSourceName": {
@@ -19,7 +19,7 @@
           "description": "The name of the datasource from which this indexer reads data."
         },
         "skillsetName": {
-          "type": "string",
+          "type": ["string", "null"],
           "description": "The name of the skillset executing with this indexer."
         },
         "targetIndexName": {
@@ -56,10 +56,17 @@
         },
         "disabled": {
           "x-ms-client-name": "IsDisabled",
-          "type": "boolean",
+          "type": ["boolean", "null"],
           "default": false,
           "description": "A value indicating whether the indexer is disabled. Default is false."
-        }
+        },
+        "encryptionKey": {
+          "$ref": "#/definitions/SearchResourceEncryptionKey",
+          "description": "A description of an encryption key that you create in Azure Key Vault. This key is used to provide an additional level of encryption-at-rest for your data when you want full assurance that no one, not even Microsoft, can decrypt your data in Azure Cognitive Search. Once you have encrypted your data, it will always remain encrypted. Azure Cognitive Search will ignore attempts to set this property to null. You can change this property as needed if you want to rotate your encryption key; Your data will be unaffected. Encryption with customer-managed keys is not available for free search services, and is only available for paid services created on or after January 1, 2019.",
+          "externalDocs": {
+            "url": "https://aka.ms/azure-search-encryption-with-cmk"
+          }
+      }
     },
     "required": [
         "name",
@@ -69,6 +76,7 @@
     "additionalProperties": false,
     "definitions": {
         "IndexingSchedule": {
+            "type": ["object", "null"],
             "properties": {
               "interval": {
                 "type": "string",
@@ -76,7 +84,7 @@
                 "description": "The interval of time between indexer executions."
               },
               "startTime": {
-                "type": "string",
+                "type": ["string", "null"],
                 "format": "date-time",
                 "description": "The time when an indexer should start running."
               }
@@ -87,9 +95,10 @@
             "description": "Represents a schedule for indexer execution."
         },
         "IndexingParameters": {
+            "type": ["object", "null"],
             "properties": {
               "batchSize": {
-                "type": "integer",
+                "type": ["integer", "null"],
                 "format": "int32",
                 "description": "The number of items that are read from the data source and indexed as a single batch in order to improve performance. The default depends on the data source type."
               },
@@ -105,10 +114,14 @@
                 "default": 0,
                 "description": "The maximum number of items in a single batch that can fail indexing for the batch to still be considered successful. -1 means no limit. Default is 0."
               },
-              "base64EncodeKeys": {
-                "type": "boolean",
-                "default": false,
-                "description": "Whether indexer will base64-encode all values that are inserted into key field of the target index. This is needed if keys can contain characters that are invalid in keys (such as dot '.'). Default is false."
+              "executionEnvironment": {
+                "type": ["string", "null"],
+                "default": "Standard",
+                "enum": [
+                  "Standard",
+                  "Private"
+                ],
+                "description": "Overrides the execution environment chosen by internal system processes. Explicitly setting the execution environment to Private is required if indexers are accessing external resources over private endpoint connections."
               },
               "configuration": {
                 "type": "object",
@@ -116,43 +129,54 @@
                     "parsingMode": {
                         "type": "string",
                         "enum": [
+                            "default",
                             "text",
                             "delimitedText",
                             "json",
                             "jsonArray",
                             "jsonLines"
-                        ]
+                        ],
+                        "description": "For Azure blobs, set to text to improve indexing performance on plain text files in blob storage. \n\nFor CSV blobs, set to delimitedText when blobs are plain CSV files. \n\nFor JSON blobs, set to json to extract structured content or to jsonArray to extract individual elements of an array as separate documents in Azure Cognitive Search. Use jsonLines to extract individual JSON entities, separated by a new line, as separate documents in Azure Cognitive Search."
                     },
                     "excludedFileNameExtensions": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "For Azure blobs, ignore any file types in the list. For example, you could exclude '.png, .png, .mp4' to skip over those files during indexing."
                     },
                     "indexedFileNameExtensions": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "For Azure blobs, selects blobs if the file extension is in the list. For example, you could focus indexing on specific application files '.docx, .pptx, .msg' to specifically include those file types."
                     },
                     "failOnUnsupportedContentType": {
                         "type": "boolean",
-                        "default": false
+                        "default": false,
+                        "description": "For Azure blobs, set to false if you want to continue indexing when an unsupported content type is encountered, and you don't know all the content types (file extensions) in advance."
                     },
                     "failOnUnprocessableDocument": {
                         "type": "boolean",
-                        "default": false
+                        "default": false,
+                        "description": "For Azure blobs, set to false if you want to continue indexing if a document fails indexing."
                     },
                     "indexStorageMetadataOnlyForOversizedDocuments": {
                         "type": "boolean",
-                        "default": false
+                        "default": false,
+                        "description": "For Azure blobs, set this property to true to still index storage metadata for blob content that is too large to process. Oversized blobs are treated as errors by default."
                     },
                     "delimitedTextHeaders": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "For CSV blobs, specifies a comma-delimited list of column headers, useful for mapping source fields to destination fields in an index."
                     },
                     "delimitedTextDelimiter": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "For CSV blobs, specifies the end-of-line delimiter for CSV files where each line starts a new document (for example, '|')."
                     },
                     "firstLineContainsHeaders": {
                         "type": "boolean",
-                        "default": true
+                        "default": true,
+                        "description": "For CSV blobs, indicates that the first (non-blank) line of each blob contains headers."
                     },
                     "documentRoot": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "For JSON arrays, given a structured or semi-structured document, you can specify a path to the array using this property."
                     },
                     "dataToExtract": {
                         "type": "string",
@@ -185,7 +209,7 @@
                   },
                     "queryTimeout": {
                         "type": "string",
-                        "description": "Format is 'hh:mm:ss'"
+                        "description": "For Azure SQL Database, set this parameter to increase the timeout beyond the 5-minute default. \n\nFormat is 'hh:mm:ss'"
                     }
                 },
                 "additionalProperties": {
@@ -209,38 +233,8 @@
                     "description": "The name of the target field in the index. Same as the source field name by default."
                 },
                 "mappingFunction": {
-                    "type": [
-                        "object",
-                        "null"
-                    ],
-                    "properties": {
-                        "name": {
-                            "type": "string",
-                            "enum": [
-                                "base64Encode",
-                                "base64Decode",
-                                "extractTokenAtPosition",
-                                "jsonArrayToStringCollection"
-                            ]
-                        },
-                        "parameters": {
-                            "type": "object",
-                            "properties": {
-                                "useHttpServerUtilityUrlTokenEncode": {
-                                    "type": "boolean"
-                                },
-                                "useHttpServerUtilityUrlTokenDecode": {
-                                    "type": "boolean"
-                                },
-                                "delimiter": {
-                                    "type": "string"
-                                },
-                                "position": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
-                    }
+                  "$ref": "#/definitions/FieldMappingFunction",
+                  "description": "A function to apply to each source field value before indexing."
                 }
             },
             "required": [
@@ -251,7 +245,7 @@
         "FieldMappingFunction": {
             "properties": {
               "name": {
-                "type": "string",
+                "type": ["string", "null"],
                 "description": "The name of the field mapping function.",
                 "enum": [
                     "base64Encode",
@@ -259,28 +253,89 @@
                     "extractTokenAtPosition",
                     "jsonArrayToStringCollection",
                     "urlEncode",
-                    "urlDecode"
+                    "urlDecode",
+                    "fixedLengthEncode"
                 ]
               },
               "parameters": {
-                "type": "object",
-                "properties": {
-                    "useHttpServerUtilityUrlTokenEncode": {
-                        "type": "boolean"
-                    },
-                    "useHttpServerUtilityUrlTokenDecode": {
-                        "type": "boolean"
-                    },
-                    "delimiter": {
-                        "type": "string"
-                    },
-                    "position": {
-                        "type": "integer"
-                    }
-                },
+                "type": ["object", "null"],
                 "description": "A dictionary of parameter name/value pairs to pass to the function. Each value must be of a primitive type."
               }
             },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "name": { 
+                      "const": "base64Encode"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "parameters": 
+                    {
+                      "properties": {
+                        "useHttpServerUtilityUrlTokenEncode":
+                        {
+                          "type": "boolean",
+                          "default": true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "name": { 
+                      "const": "base64Decode"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "parameters": { 
+                      "properties": {
+                        "useHttpServerUtilityUrlTokenDecode":
+                        {
+                          "type": "boolean",
+                          "default": true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "name": { 
+                      "const": "extractTokenAtPosition"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "parameters": {
+                      "properties": {
+                        "delimiter":
+                        {
+                          "type": "string",
+                          "description": "A string to use as the separator when splitting the input string."
+                        },
+                        "position":
+                        {
+                          "type": "integer",
+                          "description": "An integer zero-based position of the token to pick after the input string is split."
+                        }
+                      }
+                    }
+                  }                  
+                }
+              }
+            ],
             "required": [
               "name"
             ],
@@ -288,6 +343,53 @@
             "externalDocs": {
               "url": "https://docs.microsoft.com/azure/search/search-indexer-field-mappings"
             }
+          },
+          "SearchResourceEncryptionKey": {
+            "type": ["object", "null"],
+            "description": "A customer-managed encryption key in Azure Key Vault. Keys that you create and manage can be used to encrypt or decrypt data-at-rest in Azure Cognitive Search, such as indexes and synonym maps.",
+            "properties": {
+                "keyVaultKeyName": {
+                    "type": "string",
+                    "description": "The name of your Azure Key Vault key to be used to encrypt your data at rest."
+                },
+                "keyVaultKeyVersion": {
+                    "type": "string",
+                    "description": "The version of your Azure Key Vault key to be used to encrypt your data at rest."
+                },
+                "keyVaultUri": {
+                    "type": "string",
+                    "description": "The URI of your Azure Key Vault, also referred to as DNS name, that contains the key to be used to encrypt your data at rest. An example URI might be https://my-keyvault-name.vault.azure.net."
+                },
+                "accessCredentials": {
+                    "$ref": "#/definitions/AzureActiveDirectoryApplicationCredentials",
+                    "description": "Optional Azure Active Directory credentials used for accessing your Azure Key Vault. Not required if using managed identity instead.",
+                    "externalDocs": {
+                        "url": "https://aka.ms/azure-search-msi"
+                    }
+                }
+            },
+            "required": [
+                "keyVaultKeyName",
+                "keyVaultKeyVersion",
+                "keyVaultUri"
+            ]
+        },
+        "AzureActiveDirectoryApplicationCredentials": {
+            "type": ["object", "null"],
+            "properties": {
+              "applicationId": {
+                "type": "string",
+                "description": "An AAD Application ID that was granted the required access permissions to the Azure Key Vault that is to be used when encrypting your data at rest. The Application ID should not be confused with the Object ID for your AAD Application."
+              },
+              "applicationSecret": {
+                "type": ["string", "null"],
+                "description": "The authentication key of the specified AAD application."
+              }
+            },
+            "required": [
+              "applicationId"
+            ],
+            "description": "Credentials of a registered application created for your search service, used for authenticated access to the encryption keys stored in Azure Key Vault."
           }
     }
 }
