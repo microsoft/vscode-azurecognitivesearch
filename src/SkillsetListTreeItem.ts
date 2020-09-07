@@ -6,8 +6,8 @@ import { Uri } from "vscode";
 import * as path from 'path';
 
 export class SkillsetListTreeItem extends SearchResourceListTreeItem {
-    public static readonly contextValue: string = "azureSearchSkillsetList";
-    public static readonly itemContextValue: string = "azureSearchSkillset";
+    public static readonly contextValue: string = "azureCognitiveSearchSkillsetList";
+    public static readonly itemContextValue: string = "azureCognitiveSearchSkillset";
 
     public constructor(parent: SearchServiceTreeItem, searchClient: SimpleSearchClient) {
         super(parent,

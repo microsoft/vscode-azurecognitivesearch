@@ -1,9 +1,9 @@
 {
-	"name": "vscode-azuresearch",
-	"displayName": "Azure Search",
-	"description": "Manage your Azure Search services, explore and manipulate index content, view and update indexes, data sources, indexers, synonyms, and skillsets.",
-	"version": "0.0.2",
-	"publisher": "pmc",
+	"name": "vscode-azurecognitivesearch",
+	"displayName": "Azure Cognitive Search",
+	"description": "Manage your Azure Cognitive Search services, create indexes, add documents, search, and more.",
+	"version": "0.0.3",
+	"publisher": "ms-azuretools",
 	"aiKey": "AIF-d9b70cd4-b9f9-4d70-929b-a071c400b217",
 	"license": "SEE LICENSE IN LICENSE.md",
 	"engines": {
@@ -26,27 +26,31 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/pablocastro/vscode-azuresearch"
+		"url": "https://github.com/microsoft/vscode-azurecognitivesearch"
 	},
-	"icon": "media/AzureSearch.png",
+	"bugs": {
+		"url": "https://github.com/microsoft/vscode-azurecognitivesearch/issues"
+	},
+	"homepage": "https://github.com/microsoft/vscode-azurecognitivesearch",
+	"icon": "resources/AzureSearch.png",
 	"preview": true,
 	"activationEvents": [
-		"onView:azureSearch",
-		"onCommand:azureSearch.refresh",
-		"onCommand:azureSearch.openInPortal",
-		"onCommand:azureSearch.selectSubscriptions",
-		"onCommand:azureSearch.createDocument",
-		"onCommand:azureSearch.createDataSource",
-		"onCommand:azureSearch.createIndexer",
-		"onCommand:azureSearch.createSkillset",
-		"onCommand:azureSearch.createSynonymMap",
-		"onCommand:azureSearch.deleteDocument",
-		"onCommand:azureSearch.deleteDataSource",
-		"onCommand:azureSearch.deleteIndexer",
-		"onCommand:azureSearch.deleteSkillset",
-		"onCommand:azureSearch.deleteSynonymMap",
-		"onCommand:azureSearch.search",
-		"onCommand:azureSearch.searchDoc"
+		"onView:azureCognitiveSearch",
+		"onCommand:azureCognitiveSearch.refresh",
+		"onCommand:azureCognitiveSearch.openInPortal",
+		"onCommand:azureCognitiveSearch.selectSubscriptions",
+		"onCommand:azureCognitiveSearch.createDocument",
+		"onCommand:azureCognitiveSearch.createDataSource",
+		"onCommand:azureCognitiveSearch.createIndexer",
+		"onCommand:azureCognitiveSearch.createSkillset",
+		"onCommand:azureCognitiveSearch.createSynonymMap",
+		"onCommand:azureCognitiveSearch.deleteDocument",
+		"onCommand:azureCognitiveSearch.deleteDataSource",
+		"onCommand:azureCognitiveSearch.deleteIndexer",
+		"onCommand:azureCognitiveSearch.deleteSkillset",
+		"onCommand:azureCognitiveSearch.deleteSynonymMap",
+		"onCommand:azureCognitiveSearch.search",
+		"onCommand:azureCognitiveSearch.searchDoc"
 	],
 	"main": "main",
 	"contributes": {
@@ -84,250 +88,260 @@
 		"views": {
 			"azure": [
 				{
-					"id": "azureSearch",
-					"name": "Search",
-					"when": "config.azureSearch.showExplorer == true"
+					"id": "azureCognitiveSearch",
+					"name": "Cognitive Search",
+					"when": "config.azureCognitiveSearch.showExplorer == true"
 				}
 			]
 		},
 		"commands": [
 			{
-				"command": "azureSearch.refresh",
+				"command": "azureCognitiveSearch.refresh",
 				"title": "Refresh",
 				"icon": {
 					"light": "resources/light/refresh.svg",
 					"dark": "resources/dark/refresh.svg"
 				},
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.search",
+				"command": "azureCognitiveSearch.search",
 				"title": "Search",
 				"icon": {
 					"light": "resources/light/search.svg",
 					"dark": "resources/dark/search.svg"
 				},
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.openInPortal",
+				"command": "azureCognitiveSearch.openInPortal",
 				"title": "Open in Portal",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.selectSubscriptions",
+				"command": "azureCognitiveSearch.selectSubscriptions",
 				"title": "Select Subscriptions...",
 				"icon": {
 					"light": "resources/light/filter.svg",
 					"dark": "resources/dark/filter.svg"
 				},
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.createDocument",
+				"command": "azureCognitiveSearch.createDocument",
 				"title": "Create new document",
 				"icon": {
 					"light": "resources/light/add.svg",
 					"dark": "resources/dark/add.svg"
 				},
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.deleteDocument",
+				"command": "azureCognitiveSearch.deleteDocument",
 				"title": "Delete document",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.createDataSource",
+				"command": "azureCognitiveSearch.createDataSource",
 				"title": "Create new data source",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.deleteDataSource",
+				"command": "azureCognitiveSearch.deleteDataSource",
 				"title": "Delete data source",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.createIndexer",
+				"command": "azureCognitiveSearch.createIndexer",
 				"title": "Create new indexer",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.deleteIndex",
+				"command": "azureCognitiveSearch.openSearchEditor",
+				"title": "Search index",
+				"category": "Azure Cognitive Search"
+			},
+			{
+				"command": "azureCognitiveSearch.deleteIndex",
 				"title": "Delete index",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.createIndex",
+				"command": "azureCognitiveSearch.createIndex",
 				"title": "Create new index",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.deleteIndexer",
+				"command": "azureCognitiveSearch.deleteIndexer",
 				"title": "Delete indexer",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.createSkillset",
+				"command": "azureCognitiveSearch.createSkillset",
 				"title": "Create new skillset",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.deleteSkillset",
+				"command": "azureCognitiveSearch.deleteSkillset",
 				"title": "Delete skillset",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.createSynonymMap",
+				"command": "azureCognitiveSearch.createSynonymMap",
 				"title": "Create new synonym map",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.deleteSynonymMap",
+				"command": "azureCognitiveSearch.deleteSynonymMap",
 				"title": "Delete synonym map",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			},
 			{
-				"command": "azureSearch.searchDoc",
+				"command": "azureCognitiveSearch.searchDoc",
 				"title": "Search",
-				"category": "Azure Search"
+				"category": "Azure Cognitive Search"
 			}
 		],
 		"menus": {
 			"view/title": [
 				{
-					"command": "azureSearch.refresh",
-					"when": "view == azureSearch",
+					"command": "azureCognitiveSearch.refresh",
+					"when": "view == azureCognitiveSearch",
 					"group": "navigation@99"
 				},
 				{
-					"command": "azureSearch.search",
-					"when": "view == azureSearch",
+					"command": "azureCognitiveSearch.search",
+					"when": "view == azureCognitiveSearch",
 					"group": "navigation@97"
 				},
 				{
-					"command": "azureSearch.createDocument",
-					"when": "view == azureSearch && viewItem == azureSearchDocumentList",
+					"command": "azureCognitiveSearch.createDocument",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchDocumentList",
 					"group": "navigation@98"
 				},
 				{
-					"command": "azureSearch.deleteDocument",
-					"when": "view == azureSearch && viewItem == azureSearchDocument",
+					"command": "azureCognitiveSearch.deleteDocument",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchDocument",
 					"group": "navigation@98"
 				}
 			],
 			"view/item/context": [
 				{
-					"command": "azureSearch.selectSubscriptions",
-					"when": "view == azureSearch && viewItem == azureextensionui.azureSubscription",
+					"command": "azureCognitiveSearch.selectSubscriptions",
+					"when": "view == azureCognitiveSearch && viewItem == azureextensionui.azureSubscription",
 					"group": "inline"
 				},
 				{
-					"command": "azureSearch.refresh",
-					"when": "view == azureSearch && viewItem == azureextensionui.azureSubscription",
+					"command": "azureCognitiveSearch.refresh",
+					"when": "view == azureCognitiveSearch && viewItem == azureextensionui.azureSubscription",
 					"group": "9_refresh"
 				},
 				{
-					"command": "azureSearch.search",
-					"when": "view == azureSearch && (viewItem == azureSearchDocumentList || viewItem == azureSearchIndex)",
+					"command": "azureCognitiveSearch.search",
+					"when": "view == azureCognitiveSearch && (viewItem == azureCognitiveSearchDocumentList || viewItem == azureCognitiveSearchIndex)",
 					"group": "1_navigate"
 				},
 				{
-					"command": "azureSearch.openInPortal",
-					"when": "view == azureSearch && viewItem == azureSearchService",
+					"command": "azureCognitiveSearch.openInPortal",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchService",
 					"group": "navigation@2"
 				},
 				{
-					"command": "azureSearch.createDocument",
-					"when": "view == azureSearch && viewItem == azureSearchDocumentList",
+					"command": "azureCognitiveSearch.createDocument",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchDocumentList",
 					"group": "2_edit@1"
 				},
 				{
-					"command": "azureSearch.deleteDocument",
-					"when": "view == azureSearch && viewItem == azureSearchDocument",
+					"command": "azureCognitiveSearch.deleteDocument",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchDocument",
 					"group": "2_edit@2"
 				},
 				{
-					"command": "azureSearch.createDataSource",
-					"when": "view == azureSearch && viewItem == azureSearchDataSourceList",
+					"command": "azureCognitiveSearch.createDataSource",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchDataSourceList",
 					"group": "navigation@98"
 				},
 				{
-					"command": "azureSearch.deleteDataSource",
-					"when": "view == azureSearch && viewItem == azureSearchDataSource",
+					"command": "azureCognitiveSearch.deleteDataSource",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchDataSource",
 					"group": "navigation@98"
 				},
 				{
-					"command": "azureSearch.createIndexer",
-					"when": "view == azureSearch && viewItem == azureSearchIndexerList",
+					"command": "azureCognitiveSearch.createIndexer",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchIndexerList",
 					"group": "navigation@98"
 				},
 				{
-					"command": "azureSearch.deleteIndexer",
-					"when": "view == azureSearch && viewItem == azureSearchIndexer",
+					"command": "azureCognitiveSearch.deleteIndexer",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchIndexer",
 					"group": "navigation@98"
 				},
 				{
-					"command": "azureSearch.createIndex",
-					"when": "view == azureSearch && viewItem == azureSearchIndexList",
+					"command": "azureCognitiveSearch.createIndex",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchIndexList",
 					"group": "navigation@98"
 				},
 				{
-					"command": "azureSearch.deleteIndex",
-					"when": "view == azureSearch && viewItem == azureSearchIndex",
+					"command": "azureCognitiveSearch.openSearchEditor",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchIndex",
 					"group": "navigation@98"
 				},
 				{
-					"command": "azureSearch.createSkillset",
-					"when": "view == azureSearch && viewItem == azureSearchSkillsetList",
+					"command": "azureCognitiveSearch.deleteIndex",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchIndex",
 					"group": "navigation@98"
 				},
 				{
-					"command": "azureSearch.deleteSkillset",
-					"when": "view == azureSearch && viewItem == azureSearchSkillset",
+					"command": "azureCognitiveSearch.createSkillset",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchSkillsetList",
 					"group": "navigation@98"
 				},
 				{
-					"command": "azureSearch.createSynonymMap",
-					"when": "view == azureSearch && viewItem == azureSearchSynonymMapList",
+					"command": "azureCognitiveSearch.deleteSkillset",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchSkillset",
 					"group": "navigation@98"
 				},
 				{
-					"command": "azureSearch.deleteSynonymMap",
-					"when": "view == azureSearch && viewItem == azureSearchSynonymMap",
+					"command": "azureCognitiveSearch.createSynonymMap",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchSynonymMapList",
+					"group": "navigation@98"
+				},
+				{
+					"command": "azureCognitiveSearch.deleteSynonymMap",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchSynonymMap",
 					"group": "navigation@98"
 				}
 			],
 			"commandPalette": [
 				{
-					"command": "azureSearch.createDocument",
+					"command": "azureCognitiveSearch.createDocument",
 					"when": "never"
 				},
 				{
-					"command": "azureSearch.deleteDocument",
+					"command": "azureCognitiveSearch.deleteDocument",
 					"when": "never"
 				}
 			],
 			"editor/context": [
 				{
-					"command": "azureSearch.searchDoc",
-					"when": "editorLangId == azuresearch"
+					"command": "azureCognitiveSearch.searchDoc",
+					"when": "editorLangId == azureCognitiveSearch"
 				}
 			],
 			"editor/title": [
 				{
-					"command": "azureSearch.searchDoc",
-					"when": "editorLangId == azuresearch"
+					"command": "azureCognitiveSearch.searchDoc",
+					"when": "editorLangId == azureCognitiveSearch"
 				}
 			]
 		},
 		"configuration": {
-			"title": "Azure Search Services",
+			"title": "Azure Cognitive Search Services",
 			"properties": {
-				"azureSearch.showExplorer": {
+				"azureCognitiveSearch.showExplorer": {
 					"type": "boolean",
 					"default": true,
-					"description": "Show or hide the Azure Search Explorer"
+					"description": "Show or hide the Azure Cognitive Search Explorer"
 				}
 			}
 		},
@@ -355,21 +369,23 @@
 		],
 		"languages": [
 			{
-				"id": "azuresearch",
+				"id": "azurecognitivesearch",
 				"extensions": [
-					".azuresearch"
+					".azs"
 				],
 				"aliases": [
+					"AzureCognitiveSearch",
+					"azs",
 					"AzureSearch"
 				]
 			}
 		],
 		"keybindings": [
 			{
-				"command": "azureSearch.searchDoc",
+				"command": "azureCognitiveSearch.searchDoc",
 				"key": "ctrl+alt+r",
 				"mac": "cmd+alt+r",
-				"when": "editorLangId == azuresearch"
+				"when": "editorLangId == azurecognitivesearch"
 			}
 		]
 	},

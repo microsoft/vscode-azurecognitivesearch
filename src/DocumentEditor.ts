@@ -24,12 +24,13 @@ export class DocumentEditor implements vscode.Disposable {
     public async showEditor(item: IDocumentRepository): Promise<void> {
         const suffix = DocumentEditor.getRandomSuffix();
         const filename = `${item.namePrefix}-${suffix}.${item.extension}`;
-        const localPath = path.join(os.tmpdir(), "vscode-azuresearch-editor", filename);
+        const localPath = path.join(os.tmpdir(), "vscode-azs-editor", filename);
         await fse.ensureFile(localPath);
         this.fileMap[localPath] = item;
 
         const result = await item.readContent();
-        await fse.writeJson(localPath, result ? result.content : {}, { spaces: 4 });
+        const defaultJson = DocumentEditor.getDefaultJson(item.itemKind);
+        await fse.writeJson(localPath, result ? result.content : defaultJson, { spaces: 4 });
 
         const doc = await vscode.workspace.openTextDocument(localPath);
         vscode.languages.setTextDocumentLanguage(doc, "json");
@@ -56,5 +57,92 @@ export class DocumentEditor implements vscode.Disposable {
     private static getRandomSuffix(): string {
         const buffer: Buffer = crypto.randomBytes(5);
         return buffer.toString('hex');
+    }
+
+    private static getDefaultJson(itemKind: string): any {
+        switch (itemKind) {
+            case 'indexes':
+                return {
+                    "name": "my-index",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "Edm.String",
+                            "key": true,
+                            "searchable": true,
+                            "filterable": false,
+                            "facetable": false,
+                            "sortable": true
+                        },
+                        {
+                            "name": "text",
+                            "type": "Edm.String",
+                            "sortable": false,
+                            "searchable": true,
+                            "filterable": false,
+                            "facetable": false
+                        }
+                    ]
+                };
+            case 'synonym map':
+                return {
+                    "name": "my-synonyms",
+                    "format":"solr",
+                    "synonyms": "USA, United States, United States of America\nWashington, Wash., WA => WA\n"
+                };
+            case 'data source':
+                return {
+                    "name": "my-datasource",
+                    "type": "",
+                    "credentials": {
+                        "connectionString": ""
+                    },
+                    "container": {
+                        "name": ""
+                    }
+                };
+            case 'skillset':
+                return {
+                    "name": "my-skillset",
+                    "description": "",
+                    "skills":
+                    [
+                        {
+                            "description": "Extract text (plain and structured) from image.",
+                            "@odata.type": "#Microsoft.Skills.Vision.OcrSkill",
+                            "context": "/document/normalized_images/*",
+                            "defaultLanguageCode": "en",
+                            "detectOrientation": true,
+                            "inputs": [
+                                {
+                                "name": "image",
+                                "source": "/document/normalized_images/*"
+                                }
+                            ],
+                            "outputs": [
+                                {
+                                "name": "text"
+                                }
+                            ]
+                        }
+                    ]
+                };
+            case 'indexer':
+                return {
+                    "name": "my-indexer",
+                    "dataSourceName": "",
+                    "targetIndexName": "",
+                    "skillsetName": "",
+                    "fieldMappings": [
+                        {
+                            "sourceFieldName": "",
+                            "targetFieldName": ""
+                        }
+                    ]
+                };
+            default:
+                return {};
+        }
+
     }
 }

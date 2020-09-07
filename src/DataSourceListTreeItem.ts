@@ -6,8 +6,8 @@ import { Uri } from "vscode";
 import * as path from 'path';
 
 export class DataSourceListTreeItem extends SearchResourceListTreeItem {
-    public static readonly contextValue: string = "azureSearchDataSourceList";
-    public static readonly itemContextValue: string = "azureSearchDataSource";
+    public static readonly contextValue: string = "azureCognitiveSearchDataSourceList";
+    public static readonly itemContextValue: string = "azureCognitiveSearchDataSource";
 
     public constructor(parent: SearchServiceTreeItem, searchClient: SimpleSearchClient) {
         super(parent, 

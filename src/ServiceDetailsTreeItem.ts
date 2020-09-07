@@ -6,8 +6,8 @@ import { Uri } from "vscode";
 import * as path from 'path';
 
 export class ServiceDetailsTreeItem extends AzureTreeItem implements IDocumentRepository {
-    public readonly commandId: string = "azureSearch.openDocument";
-    public readonly contextValue: string = "azureSearchServiceDetails";
+    public readonly commandId: string = "azureCognitiveSearch.openDocument";
+    public readonly contextValue: string = "azureCognitiveSearchServiceDetails";
     public readonly label: string = "Service Details";
     public readonly namePrefix: string;
     readonly itemName: string;

@@ -2,7 +2,7 @@ import Axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import { appendExtensionUserAgent } from "vscode-azureextensionui";
 
 export class SimpleSearchClient {
-    private static readonly API_VERSION = "2019-05-06";
+    private static readonly API_VERSION = "2020-06-30";
     private readonly userAgent: string;
 
     public static readonly DataSources: string = "datasources";

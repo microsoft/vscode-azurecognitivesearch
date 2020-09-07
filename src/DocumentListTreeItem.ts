@@ -7,7 +7,7 @@ import { Uri } from "vscode";
 import * as path from 'path';
 
 export class DocumentListTreeItem extends AzureParentTreeItem {
-    public static readonly contextValue: string = "azureSearchDocumentList";
+    public static readonly contextValue: string = "azureCognitiveSearchDocumentList";
     public readonly contextValue: string = DocumentListTreeItem.contextValue;
     public readonly label: string = "Documents";
     private nextLink?: string;

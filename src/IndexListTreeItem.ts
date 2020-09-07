@@ -8,9 +8,9 @@ import * as path from 'path';
 import { EditableResourceTreeItem } from "./EditableResourceTreeItem";
 
 export class IndexListTreeItem extends AzureParentTreeItem {
-    public static contextValue: string = "azureSearchIndexList";
+    public static contextValue: string = "azureCognitiveSearchIndexList";
     public readonly contextValue: string = IndexListTreeItem.contextValue;
-    public static readonly itemContextValue: string = "azureSearchIndex";
+    public static readonly itemContextValue: string = "azureCognitiveSearchIndex";
     public static readonly itemSet: string = "indexes";
     public static readonly itemKind: string = "indexes";
     public static readonly extension: string = "azsindex";
