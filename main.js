@@ -18,16 +18,18 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-const ignoreBundle = !/^(false|0)?$/i.test(process.env.AZCODE_SEARCH_IGNORE_BUNDLE || '');
-const extensionPath = ignoreBundle ? "./out/src/extension" : "./dist/extension.bundle";
-const extension = require(extensionPath);
+//const ignoreBundle = !/^(false|0)?$/i.test(process.env.AZCODE_SEARCH_IGNORE_BUNDLE || '');
+//const extensionPath = ignoreBundle ? "./dist/extension.bundle" : "./dist/extension.bundle";
+//const extension = require(extensionPath);
+
+const extension = require('./dist/extension.bundle');
 
 async function activate(ctx) {
-    return await extension.activateInternal(ctx, perfStats);
+    return await extension.activateInternal(ctx, perfStats, true);
 }
 
 async function deactivate(ctx) {
-    return await extension.deactivateInternal();
+    return await extension.deactivateInternal(ctx, perfStats);
 }
 
 exports.activate = activate;
