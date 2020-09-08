@@ -163,18 +163,6 @@
               "then": {
                 "$ref": "#/definitions/SoftDeleteColumnDeletionDetectionPolicy"
               }
-            },
-            {
-              "if": {
-                "properties": {
-                  "@odata.type": { 
-                    "const": "#Microsoft.Azure.Search.NativeBlobSoftDeleteDeletionDetectionPolicy"
-                  }
-                }
-              },
-              "then": {
-                "$ref": "#/definitions/NativeBlobSoftDeleteDeletionDetectionPolicy"
-              }
             }
           ],
           "required": [
@@ -195,10 +183,6 @@
               "description": "The marker value that identifies an item as deleted."
             }
           }
-        },
-        "NativeBlobSoftDeleteDeletionDetectionPolicy": {
-          "description": "Defines a data deletion detection policy that captures deletions using the soft-deletion capability of Azure Blob Storage",
-          "x-ms-discriminator-value": "#Microsoft.Azure.Search.NativeBlobSoftDeleteDeletionDetectionPolicy"
         },
         "SearchIndexerDataSourceType": {
           "type": "string",
