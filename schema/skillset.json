@@ -75,7 +75,7 @@
             "x-ms-discriminator-value": "#Microsoft.Azure.Search.CognitiveServicesByKey",
             "allOf": [
                 {
-                    "$ref": "#/definitions/CognitiveServices"
+                    "$ref": "#/definitions/CognitiveServicesAccount"
                 }
             ],
             "properties": {
@@ -109,7 +109,8 @@
                         "#Microsoft.Skills.Util.DocumentExtractionSkill",
                         "#Microsoft.Skills.Util.ShaperSkill",
                         "#Microsoft.Skills.Custom.WebApiSkill",
-                        "#Microsoft.Skills.Custom.AmlSkill"
+                        "#Microsoft.Skills.Custom.AmlSkill",
+                        "Microsoft.Skills.Text.CustomEntityLookupSkill"
                     ]
                 },
                 "name": {
@@ -233,7 +234,7 @@
                       }
                     },
                     "then": {
-                      "$ref": "#/definitions/TranslationSkill"
+                      "$ref": "#/definitions/TextTranslationSkill"
                     }
                 },
                 {
@@ -318,6 +319,18 @@
                     },
                     "then": {
                       "$ref": "#/definitions/AmlSkill"
+                    }
+                },
+                {
+                    "if": {
+                      "properties": {
+                        "@odata.type": { 
+                          "const": "#Microsoft.Skills.Custom.CustomEntityLookupSkill"
+                        }
+                      }
+                    },
+                    "then": {
+                      "$ref": "#/definitions/CustomEntityLookupSkill"
                     }
                 }  
             ],
@@ -655,11 +668,23 @@
                                 "type": "string"
                             }
                         }
-                    }
-                    
+                    },
+                    "description": "Inline JSON entity definitions. This parameter supersedes the entitiesDefinitionUri parameter if present. No more than 10 KB of configuration may be provided inline"
                 },
                 "defaultLanguageCode": {
-                    "$ref": "#/definitions/CustomEntityLookupSkillLanguage",
+                    "type": "string",
+                    "default": "en",
+                    "enum": [
+                        "da",
+                        "de",
+                        "en",
+                        "es",
+                        "fi",
+                        "fr",
+                        "it",
+                        "ko",
+                        "pt"
+                    ],
                     "description": "A value indicating which language code to use. Default is en."
                 }
             },
@@ -778,19 +803,38 @@
             },
             "description": "A dictionary of http request headers."
         },
-        "SkillsetListResult": {
+        "AmlSkill": {
+            "x-ms-discriminator-value": "#Microsoft.Skills.Custom.AmlSkill",
             "properties": {
-                "value": {
-                    "x-ms-client-name": "Skillsets",
-                    "type": "array",
-                    "readOnly": true,
-                    "items": {
-                        "$ref": "#/definitions/Skillset"
-                    },
-                    "description": "The skillsets defined in the Search service."
+                "uri": {
+                    "type": "string",
+                    "description": "(Required for no authentication or key authentication) The scoring URI of the AML service to which the JSON payload will be sent. Only the https URI scheme is allowed."
+                },
+                "key": {
+                    "type": ["string", "null"],
+                    "description": "(Required for key authentication) The key for the AML service."
+                },
+                "resourceId": {
+                    "type": ["string", "null"],
+                    "description": "(Required for token authentication). The Azure Resource Manager resource ID of the AML service. It should be in the format subscriptions/{guid}/resourceGroups/{resource-group-name}/Microsoft.MachineLearningServices/workspaces/{workspace-name}/services/{service_name}."
+                },
+                "region": {
+                    "type": ["string", "null"],
+                    "description": "(Optional for token authentication). The region the AML service is deployed in."
+                },
+                "timeout": {
+                    "type": ["string", "null"],
+                    "description": "(Optional) When specified, indicates the timeout for the http client making the API call. It must be formatted as an XSD 'dayTimeDuration' value (a restricted subset of an ISO 8601 duration value). For example, PT60S for 60 seconds. If not set, a default value of 30 seconds is chosen. The timeout can be set to a maximum of 230 seconds and a minimum of 1 second."
+                },
+                "degreeOfParallelism": {
+                    "type": ["integer", "null"],
+                    "description": "(Optional) When specified, indicates the number of calls the indexer will make in parallel to the endpoint you have provided. You can decrease this value if your endpoint is failing under too high of a request load, or raise it if your endpoint is able to accept more requests and you would like an increase in the performance of the indexer. If not set, a default value of 5 is used. The degreeOfParallelism can be set to a maximum of 10 and a minimum of 1."
                 }
             },
-            "description": "Response from a list Skillset request. If successful, it includes the full definitions of all skillsets."
+            "externalDocs": {
+                "url": "https://docs.microsoft.com/en-us/azure/search/cognitive-search-aml-skill"
+            },
+            "description": "The AML skill allows you to extend AI enrichment with a custom Azure Machine Learning (AML) model."
         },
         "TextExtractionAlgorithm": {
             "type": "string",

@@ -1627,18 +1627,6 @@
                 "if": {
                   "properties": {
                     "@odata.type": { 
-                      "const": "#Microsoft.Azure.Search.IndicNormalizationTokenFilter"
-                    }
-                  }
-                },
-                "then": {
-                  "$ref": "#/definitions/IndicNormalizationTokenFilter"
-                }
-              },
-              {
-                "if": {
-                  "properties": {
-                    "@odata.type": { 
                       "const": "#Microsoft.Azure.Search.KeepTokenFilter"
                     }
                   }
@@ -1759,18 +1747,6 @@
                 "if": {
                   "properties": {
                     "@odata.type": { 
-                      "const": "#Microsoft.Azure.Search.SoraniNormalizationTokenFilter"
-                    }
-                  }
-                },
-                "then": {
-                  "$ref": "#/definitions/SoraniNormalizationTokenFilter"
-                }
-              },
-              {
-                "if": {
-                  "properties": {
-                    "@odata.type": { 
                       "const": "#Microsoft.Azure.Search.StemmerTokenFilter"
                     }
                   }
@@ -1801,6 +1777,18 @@
                 },
                 "then": {
                   "$ref": "#/definitions/StopwordsTokenFilter"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "@odata.type": { 
+                      "const": "#Microsoft.Azure.Search.SynonymTokenFilter"
+                    }
+                  }
+                },
+                "then": {
+                  "$ref": "#/definitions/SynonymTokenFilter"
                 }
               },
               {
