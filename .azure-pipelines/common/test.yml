@@ -17,10 +17,3 @@ steps:
   #   SERVICE_PRINCIPAL_SECRET: $(SERVICE_PRINCIPAL_SECRET)
   #   SERVICE_PRINCIPAL_DOMAIN: $(SERVICE_PRINCIPAL_DOMAIN)
      DISPLAY: :10 # Only necessary for linux tests
-
-- task: PublishTestResults@2
-  displayName: 'Publish Test Results'
-  inputs:
-    testResultsFiles: '*-results.xml'
-    testRunTitle: '$(Agent.OS)'
-  condition: succeededOrFailed()
