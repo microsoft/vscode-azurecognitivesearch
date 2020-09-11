@@ -110,7 +110,7 @@
                         "#Microsoft.Skills.Util.ShaperSkill",
                         "#Microsoft.Skills.Custom.WebApiSkill",
                         "#Microsoft.Skills.Custom.AmlSkill",
-                        "Microsoft.Skills.Text.CustomEntityLookupSkill"
+                        "#Microsoft.Skills.Custom.CustomEntityLookupSkill"
                     ]
                 },
                 "name": {
@@ -118,7 +118,7 @@
                     "description": "The name of the skill which uniquely identifies it within the skillset. A skill with no name defined will be given a default name of its 1-based index in the skills array, prefixed with the character '#'."
                 },
                 "description": {
-                    "type": "string",
+                    "type": ["string", "null"],
                     "description": "The description of the skill which describes the inputs, outputs, and usage of the skill."
                 },
                 "context": {
@@ -355,7 +355,7 @@
                     "description": "The source of the input."
                 },
                 "sourceContext": {
-                    "type": "string",
+                    "type": ["string", "null"],
                     "description": "The source context used for selecting recursive inputs."
                 },
                 "inputs": {
@@ -405,7 +405,7 @@
                     "description": "A value indicating which language code to use. Default is en."
                 },
                 "maxKeyPhraseCount": {
-                    "type": "integer",
+                    "type": ["integer", "null"],
                     "format": "int32",
                     "x-nullable": true,
                     "description": "A number indicating how many key phrases to return. If absent, all identified key phrases will be returned."
@@ -569,12 +569,12 @@
                     "description": "A value indicating which language code to use. Default is en."
                 },
                 "includeTypelessEntities": {
-                    "type": "boolean",
+                    "type": ["boolean", "null"],
                     "x-nullable": true,
                     "description": "Determines whether or not to include entities which are well known but don't conform to a pre-defined type. If this configuration is not set (default), set to null or set to false, entities which don't conform to one of the pre-defined types will not be surfaced."
                 },
                 "minimumPrecision": {
-                    "type": "number",
+                    "type": ["number", "null"],
                     "format": "double",
                     "x-nullable": true,
                     "description": "A value between 0 and 1 that be used to only include entities whose confidence score is greater than the value specified. If not set (default), or if explicitly set to null, all entities will be included."
@@ -593,7 +593,7 @@
                     "description": "A value indicating which language code to use. Default is en."
                 },
                 "minimumPrecision": {
-                    "type": "number",
+                    "type": ["number", "null"],
                     "format": "double",
                     "x-nullable": true,
                     "description": "A value between 0 and 1 to indicate the confidence of the results."
@@ -720,7 +720,7 @@
                     "description": "A value indicating which split mode to perform."
                 },
                 "maximumPageLength": {
-                    "type": "integer",
+                    "type": ["integer", "null"],
                     "format": "int32",
                     "x-nullable": true,
                     "description": "The desired maximum page length. Default is 10000."
@@ -747,9 +747,6 @@
                     "description": "The language code to translate documents from when neither the fromLanguageCode input nor the defaultFromLanguageCode parameter are provided, and the automatic language detection is unsuccessful. Default is en."
                 }
             },
-            "required": [
-                "defaultToLanguageCode"
-            ],
             "externalDocs": {
                 "url": "https://docs.microsoft.com/azure/search/cognitive-search-skill-text-translation"
             },
@@ -776,21 +773,18 @@
                     "description": "The desired timeout for the request. Default is 30 seconds."
                 },
                 "batchSize": {
-                    "type": "integer",
+                    "type": ["integer", "null"],
                     "format": "int32",
                     "x-nullable": true,
                     "description": "The desired batch size which indicates number of documents."
                 },
                 "degreeOfParallelism": {
-                    "type": "integer",
+                    "type": ["integer", "null"],
                     "format": "int32",
                     "x-nullable": true,
                     "description": "If set, the number of parallel calls that can be made to the Web API."
                 }
             },
-            "required": [
-                "uri"
-            ],
             "externalDocs": {
                 "url": "https://docs.microsoft.com/azure/search/cognitive-search-custom-skill-web-api"
             },
@@ -891,13 +885,13 @@
         "EntityCategory": {
             "type": "string",
             "enum": [
-                "location",
-                "organization",
-                "person",
-                "quantity",
-                "datetime",
-                "url",
-                "email"
+                "Location",
+                "Organization",
+                "Person",
+                "Quantity",
+                "DateTime",
+                "URL",
+                "Email"
             ],
             "x-ms-enum": {
                 "name": "EntityCategory",
@@ -1092,7 +1086,7 @@
         },
         "TextTranslationSkillLanguage": {
             "type": ["string", "null"],
-            "enum": [
+            "examples": [
                 "af",
                 "ar",
                 "bn",
@@ -1176,7 +1170,7 @@
             "description": "The language codes supported for input by ImageAnalysisSkill."
         },
         "KnowledgeStore": {
-            "type": "object",
+            "type": ["object", "null"],
             "description": "A storage account where you can optionally save your enriched documents.",
             "properties": {
                 "storageConnectionString": {
