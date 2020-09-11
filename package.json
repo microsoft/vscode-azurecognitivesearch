@@ -2,7 +2,7 @@
 	"name": "vscode-azurecognitivesearch",
 	"displayName": "Azure Cognitive Search",
 	"description": "Manage your Azure Cognitive Search services, create indexes, add documents, search, and more.",
-	"version": "0.0.3",
+	"version": "0.1.0",
 	"publisher": "ms-azuretools",
 	"aiKey": "AIF-d9b70cd4-b9f9-4d70-929b-a071c400b217",
 	"license": "SEE LICENSE IN LICENSE.md",
