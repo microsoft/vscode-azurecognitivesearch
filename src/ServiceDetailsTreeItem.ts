@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See LICENSE.md in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import { AzureTreeItem, AzureParentTreeItem } from "vscode-azureextensionui";
 import { IDocumentRepository } from "./IDocumentRepository";
 import { SearchService } from "azure-arm-search/lib/models";
