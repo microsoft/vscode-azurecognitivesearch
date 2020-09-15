@@ -16,6 +16,10 @@ This VS Code extension makes it easy to manage your search service with the full
 
 ![Create index demo](resources/create-index.gif)
 
+### Take advantage of rich intellisense
+
+![Rich intellisense](resources/intellisense.gif)
+
 ### Edit or delete indexes, indexers, data sources, skillsets and synonym maps
 
 ![Delete index](resources/delete-index.gif)
