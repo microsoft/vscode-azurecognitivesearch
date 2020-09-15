@@ -18,10 +18,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-//const ignoreBundle = !/^(false|0)?$/i.test(process.env.AZCODE_SEARCH_IGNORE_BUNDLE || '');
-//const extensionPath = ignoreBundle ? "./dist/extension.bundle" : "./dist/extension.bundle";
-//const extension = require(extensionPath);
-
 const extension = require('./dist/extension.bundle');
 
 async function activate(ctx) {
