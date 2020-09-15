@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See LICENSE.md in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import { SearchManagementClient }  from 'azure-arm-search';
 import { ResourceManagementClient } from 'azure-arm-resource';
 import { SearchService } from 'azure-arm-search/lib/models';
