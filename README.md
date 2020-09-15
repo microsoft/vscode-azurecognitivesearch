@@ -1,6 +1,6 @@
 # Azure Cognitive Search for Visual Studio Code (Preview)
 
-[![Build Status](https://delegenz.visualstudio.com/vs-code-pipelines/_apis/build/status/dereklegenzoff.vscode-azuresearch?branchName=master)](https://delegenz.visualstudio.com/vs-code-pipelines/_build/latest?definitionId=5&branchName=master)
+[![Build Status](https://delegenz.visualstudio.com/vs-code-pipelines/_apis/build/status/microsoft.vscode-azurecognitivesearch?branchName=master)](https://delegenz.visualstudio.com/vs-code-pipelines/_build/latest?definitionId=6&branchName=master)
 
 [Azure Cognitive Search](https://docs.microsoft.com/en-us/azure/search/search-what-is-azure-search) is a search-as-a-service cloud solution that gives developers APIs and tools for adding a rich search experience over private, heterogeneous content in web, mobile, and enterprise applications.
 

@@ -20,8 +20,11 @@ let config = dev.getDefaultWebpackConfig({
     verbosity: DEBUG_WEBPACK ? 'debug' : 'normal',
     externals: { './getCoreNodeModule': 'commonjs getCoreNodeModule' },
     plugins: [
+        // @ts-ignore
+        // ignoring because syntax is correct but it is throwing an error
+        // https://github.com/webpack-contrib/copy-webpack-plugin/issues/455
         new CopyWebpackPlugin([
-            { from: './out/src/utils/getCoreNodeModule.js', to: 'node_modules' }
+                { from: './out/src/utils/getCoreNodeModule.js', to: 'node_modules' }
         ])
     ]
 });

@@ -51,7 +51,7 @@
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
-				"--extensionTestsPath=${workspaceFolder}/out/test"
+				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
 			],
 			"stopOnEntry": false,
 			"sourceMaps": true,
@@ -75,7 +75,7 @@
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
-				"--extensionTestsPath=${workspaceFolder}/dist/test"
+				"--extensionTestsPath=${workspaceFolder}/dist/test/suite/index"
 			],
 			"stopOnEntry": false,
 			"sourceMaps": true,
