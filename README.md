@@ -38,7 +38,7 @@ This VS Code extension makes it easy to manage your search service with the full
 
 1. On **View** > **Command palette**, scroll or type **Azure: Sign in**.
 
-1. Select the  **Azure** button on the bottom left. You should get the list of installed Azure extensions on the right.
+1. After signing in, select the  **Azure** button on the bottom left. You should get the list of installed Azure extensions on the right in extension explorer.
 
 1. Expand **Cognitive Search**, your subscription, and your search service to access content. You need Contribute permissions or above to access the content.
 
