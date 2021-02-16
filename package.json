@@ -50,7 +50,9 @@
 		"onCommand:azureCognitiveSearch.deleteSkillset",
 		"onCommand:azureCognitiveSearch.deleteSynonymMap",
 		"onCommand:azureCognitiveSearch.search",
-		"onCommand:azureCognitiveSearch.searchDoc"
+		"onCommand:azureCognitiveSearch.searchDoc",
+		"onCommand:azureCognitiveSearch.resetIndexer",
+		"onCommand:azureCognitiveSearch.runIndexer"
 	],
 	"main": "main",
 	"contributes": {
@@ -200,6 +202,16 @@
 				"command": "azureCognitiveSearch.searchDoc",
 				"title": "Search",
 				"category": "Azure Cognitive Search"
+			},
+			{
+				"command": "azureCognitiveSearch.resetIndexer",
+				"title": "Reset indexer",
+				"category": "Azure Cognitive Search"
+			},
+			{
+				"command": "azureCognitiveSearch.runIndexer",
+				"title": "Run indexer",
+				"category": "Azure Cognitive Search"
 			}
 		],
 		"menus": {
@@ -269,6 +281,16 @@
 				{
 					"command": "azureCognitiveSearch.createIndexer",
 					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchIndexerList",
+					"group": "navigation@98"
+				},
+				{
+					"command": "azureCognitiveSearch.resetIndexer",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchIndexer",
+					"group": "navigation@98"
+				},
+				{
+					"command": "azureCognitiveSearch.runIndexer",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchIndexer",
 					"group": "navigation@98"
 				},
 				{

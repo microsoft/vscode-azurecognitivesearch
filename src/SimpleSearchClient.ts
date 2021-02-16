@@ -51,6 +51,14 @@ export class SimpleSearchClient {
         return this.httpDelete(`${resource}/${name}`);
     }
 
+    public async resetIndexer(resource: string, name: string): Promise<void> {
+        return this.httpPost(`${resource}/${name}/reset`, null);
+    }
+
+    public async runIndexer(resource: string, name: string): Promise<void> {
+        return this.httpPost(`${resource}/${name}/run`, null);
+    }
+
     public async query(indexName: string, query: string, raw: boolean = false) : Promise<QueryResponse> {
         let r = await this.httpGet(`indexes/${indexName}/docs`, query);
         if (!raw) {
