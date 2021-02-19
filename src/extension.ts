@@ -110,7 +110,7 @@ export async function activateInternal(context: vscode.ExtensionContext, perfSta
 		registerCommand("azureCognitiveSearch.resetIndexer", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => {
 			const r = await vscode.window.showWarningMessage(`Are you sure you want to reset ${treeItem.itemName} ${treeItem.itemKind}?`, DialogResponses.yes, DialogResponses.cancel);
 			if (r === DialogResponses.yes) {
-				await treeItem.reset(actionContext);
+				await treeItem.resetIndexer(actionContext);
 			}
 		});
 		registerCommand("azureCognitiveSearch.runIndexer", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => {

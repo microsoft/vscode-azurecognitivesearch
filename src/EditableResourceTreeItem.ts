@@ -62,7 +62,7 @@ export class EditableResourceTreeItem extends AzureTreeItem implements IDocument
         return this.searchClient.deleteResource(this.itemSet, this.itemName);
     }
 
-    public reset(_context: IActionContext): Promise<void> {
+    public resetIndexer(_context: IActionContext): Promise<void> {
         return this.searchClient.resetIndexer(this.itemSet, this.itemName);
     }
 
