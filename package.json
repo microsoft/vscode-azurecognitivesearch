@@ -160,7 +160,7 @@
 			},
 			{
 				"command": "azureCognitiveSearch.openSearchEditor",
-				"title": "Search index",
+				"title": "Query index",
 				"category": "Azure Cognitive Search"
 			},
 			{

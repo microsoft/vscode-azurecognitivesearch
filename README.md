@@ -4,21 +4,31 @@
 
 [Azure Cognitive Search](https://docs.microsoft.com/azure/search/search-what-is-azure-search) is a search-as-a-service cloud solution that gives developers APIs and tools for adding a rich search experience over private, heterogeneous content in web, mobile, and enterprise applications.
 
-This VS Code extension makes it easy to manage your search service with the full capabilities of the REST APIs while providing rich intellisense and snippets to make it easier to take advantage of the full range of capabilities. With the extension, you can create and update indexes and other components, add documents, search, and more. Check out the gifs and images below to see the extension in action.
+This Visual Studio Code extension makes it easy to manage your search service with the full capabilities of the REST APIs while providing rich IntelliSense and snippets to make it easier to take advantage of the full range of capabilities. With the extension, you can create and update indexes and other components, add documents, search, and more. Check out the gifs and images below to see the extension in action.
+
+You can learn more about the extension in this [blog post](https://techcommunity.microsoft.com/t5/azure-ai/accelerate-search-index-development-with-visual-studio-code/ba-p/2120941). You can also learn how to get up and running with Azure Cognitive Search in this [quickstart](https://docs.microsoft.com/azure/search/search-get-started-vs-code). 
 
 ## Features
 
-### Browse all of your Azure Cognitive Search services
+### Browse all your Azure Cognitive Search services
+
+Get access to all your search services in one place. You can quickly see all your indexes, indexers, and other components.
 
 ![Overview of the extension](resources/overview.png)
 
 ### Create new indexes, indexers, data sources, skillsets and synonym maps
 
+You can create a new index or other component just by editing the JSON and saving the file. You can then read, update, or delete these components at any time.
+
 ![Create index demo](resources/create-index.gif)
 
-### Take advantage of rich intellisense
+### Take advantage of rich IntelliDense
+
+The extension also includes IntelliSense to guide you as you’re building out your JSON. Instead of referencing external docs each time, you can see what parameters exist and what their allowed values are as you type.
 
 ![Rich intellisense](resources/intellisense.gif)
+
+In addition to IntelliSense, the extension provides snippets or templates for building more complex objects, such as data sources and skillsets, so that you have a good starting point.
 
 ### Edit or delete indexes, indexers, data sources, skillsets and synonym maps
 
@@ -26,9 +36,15 @@ This VS Code extension makes it easy to manage your search service with the full
 
 ### Add or update documents in the search index
 
+Adding or updating documents is something that’s not possible in the portal today. With the extension, you can quickly add a document, and it will even save you some time by creating a JSON template for you based on your index definition.
+
 ![Add of update documents](resources/add-document.gif)
 
-### Query your search services
+You can view or update existing documents too.
+
+### Query your search indexes
+
+Finally, once you’ve added documents to your search service, you can also query from within the extension and view the results side by side. You can even add multiple queries or save the queries to a file to refer to them later.
 
 ![Search an index](resources/search.gif)
 

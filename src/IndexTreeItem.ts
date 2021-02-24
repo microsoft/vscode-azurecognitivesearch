@@ -44,7 +44,12 @@ export class IndexTreeItem extends AzureParentTreeItem {
     }
 
     public async search(query: string): Promise<any> {
-        return await this.searchClient.query(this.index.name, query, true);
+        if (query.indexOf("{") > -1) {
+            return await this.searchClient.queryPost(this.index.name, query, true);
+        } else {
+            return await this.searchClient.query(this.index.name, query, true);
+        }
+        
     }
 
     public compareChildrenImpl(item1: AzExtTreeItem, item2: AzExtTreeItem): number {
