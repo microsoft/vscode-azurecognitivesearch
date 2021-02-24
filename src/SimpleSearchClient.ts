@@ -7,7 +7,7 @@ import Axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import { appendExtensionUserAgent } from "vscode-azureextensionui";
 
 export class SimpleSearchClient {
-    private static readonly API_VERSION = "2020-06-30";
+    private static readonly API_VERSION = "2020-06-30-Preview";
     private readonly userAgent: string;
 
     public static readonly DataSources: string = "datasources";
@@ -61,6 +61,14 @@ export class SimpleSearchClient {
 
     public async query(indexName: string, query: string, raw: boolean = false) : Promise<QueryResponse> {
         let r = await this.httpGet(`indexes/${indexName}/docs`, query);
+        if (!raw) {
+            this.fixupQueryResponse(r.data);
+        }
+        return r.data;
+    }
+
+    public async queryPost(indexName: string, query: string, raw: boolean = false) : Promise<QueryResponse> {
+        let r = await this.httpPost(`indexes/${indexName}/docs/search`, JSON.parse(query));
         if (!raw) {
             this.fixupQueryResponse(r.data);
         }
@@ -182,7 +190,7 @@ export class SimpleSearchClient {
     }
 
     private makeRequestConfig(): AxiosRequestConfig {
-        return { headers: { "api-key": this.apikey, "User-Agent": this.userAgent } };
+        return { headers: { "api-key": this.apikey, "User-Agent": this.userAgent} };
     }
 }
 
