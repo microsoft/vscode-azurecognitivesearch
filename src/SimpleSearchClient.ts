@@ -190,7 +190,7 @@ export class SimpleSearchClient {
     }
 
     private makeRequestConfig(): AxiosRequestConfig {
-        return { headers: { "api-key": this.apikey, "User-Agent": this.userAgent, "cContent-Type": "application/json" } };
+        return { headers: { "api-key": this.apikey, "User-Agent": this.userAgent} };
     }
 }
 
