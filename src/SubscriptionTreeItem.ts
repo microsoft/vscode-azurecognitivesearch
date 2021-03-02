@@ -29,7 +29,7 @@ export class SubscriptionTreeItem extends SubscriptionTreeItemBase {
         //      let searchManagementClient = createAzureClient(this.root, SearchManagementClient);
         // but SearchManagementClient defaults to an API version that the Search RP doesn't support. Will get that fixed.
         const searchManagementClient = new SearchManagementClient(this.root.credentials, this.root.subscriptionId, this.root.environment.resourceManagerEndpointUrl);
-        searchManagementClient.apiVersion = "2015-02-28";
+        searchManagementClient.apiVersion = "2020-08-01";
         addExtensionUserAgent(searchManagementClient);
 
         const resourceManagementClient = createAzureClient(this.root, ResourceManagementClient.ResourceManagementClient);

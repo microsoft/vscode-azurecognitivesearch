@@ -44,7 +44,7 @@ export class IndexTreeItem extends AzureParentTreeItem {
     }
 
     public async search(query: string): Promise<any> {
-        if (query.indexOf("{") > -1) {
+        if (query.indexOf("{") > -1 && query.trim().indexOf("{") < 5) {
             return await this.searchClient.queryPost(this.index.name, query, true);
         } else {
             return await this.searchClient.query(this.index.name, query, true);
