@@ -7,7 +7,8 @@ import Axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import { appendExtensionUserAgent } from "vscode-azureextensionui";
 
 export class SimpleSearchClient {
-    private static readonly API_VERSION = "2020-06-30-Preview";
+    private static readonly API_VERSION = "2020-06-30";
+    private static readonly API_VERSION_PREVIEW = "2020-06-30-preview";
     private readonly userAgent: string;
 
     public static readonly DataSources: string = "datasources";
@@ -186,7 +187,14 @@ export class SimpleSearchClient {
         if (options !== "" && options[0] !== "&") {
             options = "&" + options;
         }
-        return `https://${this.serviceName}.${suffix}/${path}?api-version=${SimpleSearchClient.API_VERSION}${options}`;
+
+        // Using the preview API for document operations
+        if (path.endsWith("docs") || path.endsWith("docs/search")) {
+            return `https://${this.serviceName}.${suffix}/${path}?api-version=${SimpleSearchClient.API_VERSION_PREVIEW}${options}`;
+        } else {
+            return `https://${this.serviceName}.${suffix}/${path}?api-version=${SimpleSearchClient.API_VERSION}${options}`;
+        }
+        
     }
 
     private makeRequestConfig(): AxiosRequestConfig {

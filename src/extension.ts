@@ -108,12 +108,20 @@ export async function activateInternal(context: vscode.ExtensionContext, perfSta
 			}
 		});
 		registerCommand("azureCognitiveSearch.resetIndexer", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => {
+			if (!treeItem) {
+				treeItem = await ext.tree.showTreeItemPicker(IndexerListTreeItem.itemContextValue, actionContext);
+			}
+			
 			const r = await vscode.window.showWarningMessage(`Are you sure you want to reset ${treeItem.itemName} ${treeItem.itemKind}?`, DialogResponses.yes, DialogResponses.cancel);
 			if (r === DialogResponses.yes) {
 				await treeItem.resetIndexer(actionContext);
 			}
 		});
 		registerCommand("azureCognitiveSearch.runIndexer", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => {
+			if (!treeItem) {
+				treeItem = await ext.tree.showTreeItemPicker(IndexerListTreeItem.contextValue, actionContext);
+			}
+			
 			const r = await vscode.window.showWarningMessage(`Are you sure you want to run ${treeItem.itemName} ${treeItem.itemKind}?`, DialogResponses.yes, DialogResponses.cancel);
 			if (r === DialogResponses.yes) {
 				await treeItem.runIndexer(actionContext);
@@ -206,8 +214,15 @@ async function openSearchEditor(treeItem: IndexTreeItem): Promise<void> {
 	await fse.ensureFile(localPath);
 
 	var template = "// Press ctrl+alt+r or cmd+alt+r to search";
-	template += "\n";
-	template += "search=*"
+	template += "\n\n";
+	template += "// You can send queries in the GET format\n";
+	template += "search=*";
+	template += "\n\n";
+	template += "// You can also send queries in the POST format\n";
+	template += "// Just be sure to highlight the entire request before searching\n";
+	template += "{\n";
+	template += "\t\"search\": \"*\"\n";
+	template += "}";
 	await fse.writeFile(localPath, template);
 
 	const doc = await vscode.workspace.openTextDocument(localPath);
