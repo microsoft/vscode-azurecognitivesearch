@@ -62,7 +62,7 @@
                 "url": "https://docs.microsoft.com/rest/api/searchservice/Create-Data-Source"
               },
               "type": ["string", "null"],
-              "description": "The connection string for the datasource."
+              "description": "The connection string for the datasource. Set to '<unchanged>' if you do not want the connection string updated."
             }
           },
           "description": "Represents credentials that can be used to connect to a datasource."
@@ -75,7 +75,7 @@
             },
             "query": {
               "type": ["string", "null"],
-              "description": "A query that is applied to this data container. The syntax and meaning of this parameter is datasource-specific. Not supported by Azure SQL datasources."
+              "description": "A query that is applied to this data container. The syntax and meaning of this parameter is datasource-specific."
             }
           },
           "required": [
@@ -191,7 +191,8 @@
             "cosmosdb",
             "azureblob",
             "azuretable",
-            "mysql"
+            "mysql",
+            "adlsgen2"
           ],
           "description": "Defines the type of a datasource."
         },

@@ -140,11 +140,13 @@
                     },
                     "excludedFileNameExtensions": {
                         "type": "string",
-                        "description": "For Azure blobs, ignore any file types in the list. For example, you could exclude '.png, .png, .mp4' to skip over those files during indexing."
+                        "default": "",
+                        "description": "Comma-delimited list of filename extensions to ignore when processing from Azure blob storage.  For example, you could exclude \".png, .mp4\" to skip over those files during indexing."
                     },
                     "indexedFileNameExtensions": {
                         "type": "string",
-                        "description": "For Azure blobs, selects blobs if the file extension is in the list. For example, you could focus indexing on specific application files '.docx, .pptx, .msg' to specifically include those file types."
+                        "default": "",
+                        "description": "Comma-delimited list of filename extensions to select when processing from Azure blob storage.  For example, you could focus indexing on specific application files \".docx, .pptx, .msg\" to specifically include those file types."
                     },
                     "failOnUnsupportedContentType": {
                         "type": "boolean",
@@ -159,7 +161,7 @@
                     "indexStorageMetadataOnlyForOversizedDocuments": {
                         "type": "boolean",
                         "default": false,
-                        "description": "For Azure blobs, set this property to true to still index storage metadata for blob content that is too large to process. Oversized blobs are treated as errors by default."
+                        "description": "For Azure blobs, set this property to true to still index storage metadata for blob content that is too large to process. Oversized blobs are treated as errors by default. For limits on blob size, see https://docs.microsoft.com/azure/search/search-limits-quotas-capacity."
                     },
                     "delimitedTextHeaders": {
                         "type": "string",
@@ -167,7 +169,7 @@
                     },
                     "delimitedTextDelimiter": {
                         "type": "string",
-                        "description": "For CSV blobs, specifies the end-of-line delimiter for CSV files where each line starts a new document (for example, '|')."
+                        "description": "For CSV blobs, specifies the end-of-line single-character delimiter for CSV files where each line starts a new document (for example, \"|\")."
                     },
                     "firstLineContainsHeaders": {
                         "type": "boolean",
@@ -185,7 +187,8 @@
                             "allMetadata",
                             "contentAndMetadata"
                         ],
-                        "default": "contentAndMetadata"
+                        "default": "contentAndMetadata",
+                        "description": "Specifies the data to extract from Azure blob storage and tells the indexer which data to extract from image content when \"imageAction\" is set to a value other than \"none\".  This applies to embedded image content in a .PDF or other application, or image files such as .jpg and .png, in Azure blobs."                  
                     },
                     "imageAction": {
                         "type": "string",
@@ -193,11 +196,14 @@
                             "none",
                             "generateNormalizedImages",
                             "generateNormalizedImagePerPage"
-                        ]
+                        ],
+                        "default": "none",
+                        "description": "Determines how to process embedded images and image files in Azure blob storage.  Setting the \"imageAction\" configuration to any value other than \"none\" requires that a skillset also be attached to that indexer."
                     },
                     "allowSkillsetToReadFileData": {
                       "type": "boolean",
-                      "default": false
+                      "default": false,
+                      "description": "If true, will create a path //document//file_data that is an object representing the original file data downloaded from your blob data source.  This allows you to pass the original file data to a custom skill for processing within the enrichment pipeline, or to the Document Extraction skill."
                     },
                     "pdfTextRotationAlgorithm": {
                       "type": "string",
@@ -205,11 +211,22 @@
                           "none",
                           "detectAngles"
                       ],
-                      "default": "none"
-                  },
+                      "default": "none",
+                      "description": "Determines algorithm for text extraction from PDF files in Azure blob storage."
+                    },
+                    "executionEnvironment": {
+                      "type": "string",
+                      "enum": [
+                          "standard",
+                          "private"
+                      ],
+                      "default": "standard",
+                      "description": "Specifies the environment in which the indexer should execute."
+                    },
                     "queryTimeout": {
                         "type": "string",
-                        "description": "For Azure SQL Database, set this parameter to increase the timeout beyond the 5-minute default. \n\nFormat is 'hh:mm:ss'"
+                        "default": "00:05:00",
+                        "description": "Increases the timeout beyond the 5-minute default for Azure SQL database data sources, specified in the format \"hh:mm:ss\"."
                     }
                 },
                 "additionalProperties": {
@@ -219,7 +236,10 @@
               }
             },
             "description": "Represents parameters for indexer execution.",
-            "x-ms-external": true
+            "x-ms-external": true,
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/create-indexer#parameters"
+            }
           },
         "FieldMapping": {
             "type": "object",
