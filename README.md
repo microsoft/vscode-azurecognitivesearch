@@ -44,7 +44,7 @@ You can view or update existing documents too.
 
 ### Query your search indexes
 
-Finally, once you’ve added documents to your search service, you can also query from within the extension and view the results side by side. You can even add multiple queries or save the queries to a file to refer to them later.
+Once you’ve added documents to your search service, you can also query from within the extension and view the results side by side. You can even add multiple queries or save the queries to a file to refer to them later.
 
 ![Search an index](resources/search.gif)
 
