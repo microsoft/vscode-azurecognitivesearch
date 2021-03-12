@@ -29,7 +29,9 @@ export class SubscriptionTreeItem extends SubscriptionTreeItemBase {
         //      let searchManagementClient = createAzureClient(this.root, SearchManagementClient);
         // but SearchManagementClient defaults to an API version that the Search RP doesn't support. Will get that fixed.
         const searchManagementClient = new SearchManagementClient(this.root.credentials, this.root.subscriptionId, this.root.environment.resourceManagerEndpointUrl);
-        searchManagementClient.apiVersion = "2020-08-01";
+        
+        // This value can't be updated until we upgrade to @azure/arm-search as GET is no longer supported for ListQueryKeys in newer API versions and breaks azure-arm-search
+        searchManagementClient.apiVersion = "2015-08-19";
         addExtensionUserAgent(searchManagementClient);
 
         const resourceManagementClient = createAzureClient(this.root, ResourceManagementClient.ResourceManagementClient);
@@ -49,4 +51,5 @@ export class SubscriptionTreeItem extends SubscriptionTreeItemBase {
     public hasMoreChildrenImpl(): boolean {
         return !!this._nextLink;
     }
+
 }

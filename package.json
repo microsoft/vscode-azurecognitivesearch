@@ -52,7 +52,9 @@
 		"onCommand:azureCognitiveSearch.search",
 		"onCommand:azureCognitiveSearch.searchDoc",
 		"onCommand:azureCognitiveSearch.resetIndexer",
-		"onCommand:azureCognitiveSearch.runIndexer"
+		"onCommand:azureCognitiveSearch.runIndexer",
+		"onCommand:azureCognitiveSearch.copyAdminKey",
+		"onCommand:azureCognitiveSearch.copyQueryKey"
 	],
 	"main": "main",
 	"contributes": {
@@ -118,6 +120,16 @@
 			{
 				"command": "azureCognitiveSearch.openInPortal",
 				"title": "Open in Portal",
+				"category": "Azure Cognitive Search"
+			},
+			{
+				"command": "azureCognitiveSearch.copyAdminKey",
+				"title": "Copy Admin Key",
+				"category": "Azure Cognitive Search"
+			},
+			{
+				"command": "azureCognitiveSearch.copyQueryKey",
+				"title": "Copy Query Key",
 				"category": "Azure Cognitive Search"
 			},
 			{
@@ -257,6 +269,16 @@
 					"command": "azureCognitiveSearch.openInPortal",
 					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchService",
 					"group": "navigation@2"
+				},
+				{
+					"command": "azureCognitiveSearch.copyAdminKey",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchService",
+					"group": "navigation@3"
+				},
+				{
+					"command": "azureCognitiveSearch.copyQueryKey",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchService",
+					"group": "navigation@4"
 				},
 				{
 					"command": "azureCognitiveSearch.createDocument",

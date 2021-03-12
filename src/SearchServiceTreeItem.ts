@@ -5,7 +5,7 @@
 
 import { AzureParentTreeItem, IActionContext, AzExtTreeItem, GenericTreeItem } from "vscode-azureextensionui";
 import { isNullOrUndefined } from "util";
-import { SearchService } from "azure-arm-search/lib/models";
+import { AdminKeyResult, QueryKey, SearchService } from "azure-arm-search/lib/models";
 import SearchManagementClient from "azure-arm-search";
 import { IndexListTreeItem } from "./IndexListTreeItem";
 import { SimpleSearchClient } from "./SimpleSearchClient";
@@ -15,6 +15,7 @@ import { SynonymMapListTreeItem } from "./SynonymMapListTreeItem";
 import { SkillsetListTreeItem } from "./SkillsetListTreeItem";
 import { ServiceDetailsTreeItem } from "./ServiceDetailsTreeItem";
 import { getResourcesPath } from "./constants";
+import * as crypto from "crypto";
 import { Uri } from "vscode";
 import * as path from 'path';
 
@@ -22,12 +23,17 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
     public static contextValue: string = "azureCognitiveSearchService";
     public readonly contextValue: string = SearchServiceTreeItem.contextValue;
     public label: string = isNullOrUndefined(this.searchService.name) ? "InvalidSearchService" : this.searchService.name;
+    public resourceGroup: string;
+    public name: string;
 
     public constructor(
         parent: AzureParentTreeItem,
         public readonly searchService: SearchService,
         public readonly searchManagementClient: SearchManagementClient) {
+
         super(parent);
+        this.resourceGroup = (<string>this.searchService.id).split("/")[4];
+        this.name = <string>this.searchService.name;
     }
 
     public iconPath: { light: string | Uri; dark: string | Uri } = {
@@ -36,13 +42,9 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
     };
 
     public async loadMoreChildrenImpl(clearCache: boolean, context: IActionContext): Promise<AzExtTreeItem[]> {
-
-        // TODO: straight to dev hell for this, there's probably a way to include resource group name in resource listing
-        const resourceGroup: string = (<string>this.searchService.id).split("/")[4];
-        const name = <string>this.searchService.name;
-        const keys = await this.searchManagementClient.adminKeys.get(resourceGroup, name);
-
-        const searchClient = new SimpleSearchClient(name, <string>keys.primaryKey);
+        
+        const keys = await this.getAdminKeys();
+        const searchClient = new SimpleSearchClient(this.name, <string>keys.primaryKey);
 
         return [
             new ServiceDetailsTreeItem(this, this.searchService),
@@ -73,5 +75,30 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
         }
 
         return 100;
+    }
+
+    public async getAdminKeys(): Promise<AdminKeyResult> {
+        const keys = await this.searchManagementClient.adminKeys.get(this.resourceGroup, this.name);
+        return keys;
+    }
+
+    public async createQueryKey(): Promise<QueryKey> {
+        const keyName = "vscode" + this.getRandomSuffix();
+        const key = await this.searchManagementClient.queryKeys.create(this.resourceGroup, this.name, keyName);
+        return key;
+    }
+
+    public async getQueryKey(): Promise<QueryKey> {
+        const keys = await this.searchManagementClient.queryKeys.listBySearchService(this.resourceGroup, this.name);
+        if (keys.length === 0) {
+            return this.createQueryKey();
+        } else {
+            return keys[0];
+        }
+    }
+
+    private getRandomSuffix(): string {
+        const buffer: Buffer = crypto.randomBytes(5);
+        return buffer.toString('hex');
     }
 }
