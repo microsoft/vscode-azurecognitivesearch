@@ -37,7 +37,12 @@ export class SearchServiceNameStep<T extends ISearchServiceWizardContext> extend
 
         const nameAvailabilityResult: CheckNameAvailabilityOutput = await client.services.checkNameAvailability(name);
         if (!nameAvailabilityResult.isNameAvailable) {
-            return nameAvailabilityResult.message;
+            if (nameAvailabilityResult.message) {
+                return nameAvailabilityResult.message;
+            } else {
+                return `Search service name "${name}" is not available`;
+            }
+            
         } else {
             return undefined;
         }
