@@ -83,7 +83,7 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
     }
 
     public async createQueryKey(): Promise<QueryKey> {
-        const keyName = "vscode" + this.getRandomSuffix();
+        const keyName = "vscode-" + this.getRandomSuffix();
         const key = await this.searchManagementClient.queryKeys.create(this.resourceGroup, this.name, keyName);
         return key;
     }

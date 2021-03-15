@@ -55,7 +55,8 @@
 		"onCommand:azureCognitiveSearch.runIndexer",
 		"onCommand:azureCognitiveSearch.copyAdminKey",
 		"onCommand:azureCognitiveSearch.copyQueryKey",
-		"onCommand:azureCognitiveSearch.createSearchService"
+		"onCommand:azureCognitiveSearch.createSearchService",
+		"onCommand:azureCognitiveSearch.deleteSearchService"
 	],
 	"main": "main",
 	"contributes": {

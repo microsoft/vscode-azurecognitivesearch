@@ -6,7 +6,7 @@
 import { SearchManagementClient, SearchManagementModels }  from 'azure-arm-search';
 import { ResourceManagementClient } from 'azure-arm-resource';
 import { SearchService, Sku } from 'azure-arm-search/lib/models';
-import { AzExtTreeItem, AzureTreeItem, createAzureClient, SubscriptionTreeItemBase, addExtensionUserAgent,  AzureWizard, AzureWizardPromptStep, ICreateChildImplContext, ILocationWizardContext, ResourceGroupListStep, LocationListStep } from 'vscode-azureextensionui';
+import { AzExtTreeItem, AzureTreeItem, createAzureClient, SubscriptionTreeItemBase, addExtensionUserAgent,  AzureWizard, AzureWizardPromptStep, ICreateChildImplContext, ILocationWizardContext, ResourceGroupListStep, LocationListStep, StorageAccountCreateStep } from 'vscode-azureextensionui';
 import { SearchServiceTreeItem } from './SearchServiceTreeItem';
 import { getResourcesPath } from "./constants";
 import { Uri } from "vscode";
@@ -17,6 +17,7 @@ import { nonNullProp } from './utils/nonNull';
 import { SearchServiceSkuStep } from './SearchServiceWizard/SearchServiceSkuStep';
 import { SearchServiceReplicaStep } from './SearchServiceWizard/SearchServiceReplicaStep';
 import { SearchServicePartitionStep } from './SearchServiceWizard/SearchServicePartitionStep';
+import { SearchServiceCreateStep } from './SearchServiceWizard/SearchServiceCreateStep';
 
 export class SubscriptionTreeItem extends SubscriptionTreeItemBase {
     private _nextLink: string | undefined;
@@ -78,7 +79,7 @@ export class SubscriptionTreeItem extends SubscriptionTreeItemBase {
 
         const wizard = new AzureWizard(wizardContext, {
             promptSteps,
-            executeSteps: [],
+            executeSteps: [new SearchServiceCreateStep()],
             title: 'Create new Azure Cognitive Search Service'
         });
 
@@ -88,21 +89,9 @@ export class SubscriptionTreeItem extends SubscriptionTreeItemBase {
         context.showCreatingTreeItem(newServiceName);
         await wizard.execute();
 
-        const sku: Sku = {
-            name: wizardContext.sku
-        }
+        const newSearchService: SearchService = nonNullProp(wizardContext, 'searchService');
 
-        const newSearchService: SearchManagementModels.SearchService = {
-            sku: sku,
-            replicaCount: wizardContext.replicaCount,
-            partitionCount: wizardContext.partitionCount,
-            location: wizardContext.location?.name
-        };
-
-
-        const s: SearchService = await searchManagementClient.services.beginCreateOrUpdate(<string>wizardContext.resourceGroup?.name, <string>wizardContext.newServiceName, newSearchService)
-
-        return new SearchServiceTreeItem(this, s, searchManagementClient);
+        return new SearchServiceTreeItem(this, newSearchService, searchManagementClient);
     }
 
 }
