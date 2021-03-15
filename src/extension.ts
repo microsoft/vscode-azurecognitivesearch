@@ -160,7 +160,10 @@ export async function activateInternal(context: vscode.ExtensionContext, perfSta
                 node = await ext.tree.showTreeItemPicker<AzureTreeItem>(SearchServiceTreeItem.contextValue, actionContext);
             }
 
-            await node.deleteTreeItem(actionContext);
+			const r = await vscode.window.showWarningMessage(`Are you sure you want to delete the search service ${node.label}?`, DialogResponses.yes, DialogResponses.cancel);
+			if (r === DialogResponses.yes) {
+				await node.deleteTreeItem(actionContext);
+			}
         });
 
 		vscode.commands.registerTextEditorCommand("azureCognitiveSearch.searchDoc", editor => searchToDocument(editor, azureAccountTreeItem, searchResultDocumentProvider));
