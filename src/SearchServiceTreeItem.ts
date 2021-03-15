@@ -97,6 +97,10 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
         }
     }
 
+    public async deleteTreeItemImpl(): Promise<void> {
+        await this.searchManagementClient.services.deleteMethod(this.resourceGroup, this.name);
+    }
+
     private getRandomSuffix(): string {
         const buffer: Buffer = crypto.randomBytes(5);
         return buffer.toString('hex');

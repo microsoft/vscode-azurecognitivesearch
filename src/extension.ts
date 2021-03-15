@@ -11,7 +11,7 @@ import * as fse from "fs-extra";
 import * as path from "path";
 import * as os from "os";
 import { ext } from './extensionVariables';
-import { AzureUserInput, registerUIExtensionVariables, callWithTelemetryAndErrorHandling, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal, registerEvent, DialogResponses, AzureParentTreeItem, createAzExtOutputChannel } from 'vscode-azureextensionui';
+import { AzureUserInput, registerUIExtensionVariables, callWithTelemetryAndErrorHandling, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal, registerEvent, DialogResponses, AzureParentTreeItem, createAzExtOutputChannel, ITreeItemPickerContext } from 'vscode-azureextensionui';
 import { AzureAccountTreeItem } from './AzureAccountTreeItem';
 import { SearchServiceTreeItem } from './SearchServiceTreeItem';
 import { DocumentTreeItem } from './DocumentTreeItem';
@@ -29,6 +29,7 @@ import { SynonymMapListTreeItem } from './SynonymMapListTreeItem';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import { tree } from 'gulp';
 import * as crypto from "crypto";
+import { SubscriptionTreeItem } from './SubscriptionTreeItem';
 
 function readJson(path: string) {
     const json = fs.readFileSync(path, "utf8");
@@ -144,6 +145,22 @@ export async function activateInternal(context: vscode.ExtensionContext, perfSta
 
             await copyQueryKey(node);
             vscode.window.showInformationMessage(message);
+        });
+		registerCommand('azureCognitiveSearch.createSearchService', async (actionContext: IActionContext, node?: SubscriptionTreeItem) => {
+            if (!node) {
+                node = await ext.tree.showTreeItemPicker<SubscriptionTreeItem>(SubscriptionTreeItem.contextValue, actionContext);
+            }
+
+            await node.createChild(actionContext);
+        });
+		registerCommand('azureCognitiveSearch.deleteSearchService', async (actionContext: IActionContext, node?: AzureTreeItem) => {
+            const suppressCreateContext: ITreeItemPickerContext = actionContext;
+            suppressCreateContext.suppressCreatePick = true;
+            if (!node) {
+                node = await ext.tree.showTreeItemPicker<AzureTreeItem>(SearchServiceTreeItem.contextValue, actionContext);
+            }
+
+            await node.deleteTreeItem(actionContext);
         });
 
 		vscode.commands.registerTextEditorCommand("azureCognitiveSearch.searchDoc", editor => searchToDocument(editor, azureAccountTreeItem, searchResultDocumentProvider));
