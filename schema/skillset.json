@@ -8,7 +8,10 @@
             "description": "The name of the skillset."
         },
         "description": {
-            "type": ["string", "null"],
+            "type": [
+                "string",
+                "null"
+            ],
             "description": "The description of the skillset."
         },
         "skills": {
@@ -30,7 +33,7 @@
             "$ref": "#/definitions/SearchResourceEncryptionKey",
             "description": "A description of an encryption key that you create in Azure Key Vault. This key is used to provide an additional level of encryption-at-rest for your data when you want full assurance that no one, not even Microsoft, can decrypt your data in Azure Cognitive Search. Once you have encrypted your data, it will always remain encrypted. Azure Cognitive Search will ignore attempts to set this property to null. You can change this property as needed if you want to rotate your encryption key; Your data will be unaffected. Encryption with customer-managed keys is not available for free search services, and is only available for paid services created on or after January 1, 2019.",
             "externalDocs": {
-              "url": "https://aka.ms/azure-search-encryption-with-cmk"
+                "url": "https://aka.ms/azure-search-encryption-with-cmk"
             }
         }
     },
@@ -52,8 +55,18 @@
                     ]
                 },
                 "description": {
-                    "type": "string",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "description": "Description of the cognitive service resource attached to a skillset."
+                },
+                "key": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "The key used to provision the cognitive service resource attached to a skillset."
                 }
             },
             "required": [
@@ -118,7 +131,10 @@
                     "description": "The name of the skill which uniquely identifies it within the skillset. A skill with no name defined will be given a default name of its 1-based index in the skills array, prefixed with the character '#'."
                 },
                 "description": {
-                    "type": ["string", "null"],
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "description": "The description of the skill which describes the inputs, outputs, and usage of the skill."
                 },
                 "context": {
@@ -142,197 +158,197 @@
             },
             "allOf": [
                 {
-                  "if": {
-                    "properties": {
-                      "@odata.type": { 
-                        "const": "#Microsoft.Skills.Text.KeyPhraseExtractionSkill"
-                      }
-                    }
-                  },
-                  "then": {
-                    "$ref": "#/definitions/KeyPhraseExtractionSkill"
-                  }
-                },
-                {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Text.LanguageDetectionSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Text.KeyPhraseExtractionSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/LanguageDetectionSkill"
+                        "$ref": "#/definitions/KeyPhraseExtractionSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Text.MergeSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Text.LanguageDetectionSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/MergeSkill"
+                        "$ref": "#/definitions/LanguageDetectionSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Text.EntityRecognitionSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Text.MergeSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/EntityRecognitionSkill"
+                        "$ref": "#/definitions/MergeSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Text.PIIDetectionSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Text.EntityRecognitionSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/PIIDetectionSkill"
+                        "$ref": "#/definitions/EntityRecognitionSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Text.SentimentSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Text.PIIDetectionSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/SentimentSkill"
+                        "$ref": "#/definitions/PIIDetectionSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Text.SplitSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Text.SentimentSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/SplitSkill"
+                        "$ref": "#/definitions/SentimentSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Text.TranslationSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Text.SplitSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/TextTranslationSkill"
+                        "$ref": "#/definitions/SplitSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Vision.ImageAnalysisSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Text.TranslationSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/ImageAnalysisSkill"
+                        "$ref": "#/definitions/TextTranslationSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Vision.OcrSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Vision.ImageAnalysisSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/OcrSkill"
+                        "$ref": "#/definitions/ImageAnalysisSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Util.ConditionalSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Vision.OcrSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/ConditionalSkill"
+                        "$ref": "#/definitions/OcrSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Util.DocumentExtractionSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Util.ConditionalSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/DocumentExtractionSkill"
+                        "$ref": "#/definitions/ConditionalSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Util.ShaperSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Util.DocumentExtractionSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/ShaperSkill"
+                        "$ref": "#/definitions/DocumentExtractionSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Custom.WebApiSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Util.ShaperSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/WebApiSkill"
+                        "$ref": "#/definitions/ShaperSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Custom.AmlSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Custom.WebApiSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/AmlSkill"
+                        "$ref": "#/definitions/WebApiSkill"
                     }
                 },
                 {
                     "if": {
-                      "properties": {
-                        "@odata.type": { 
-                          "const": "#Microsoft.Skills.Custom.CustomEntityLookupSkill"
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Custom.AmlSkill"
+                            }
                         }
-                      }
                     },
                     "then": {
-                      "$ref": "#/definitions/CustomEntityLookupSkill"
+                        "$ref": "#/definitions/AmlSkill"
                     }
-                }  
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "@odata.type": {
+                                "const": "#Microsoft.Skills.Custom.CustomEntityLookupSkill"
+                            }
+                        }
+                    },
+                    "then": {
+                        "$ref": "#/definitions/CustomEntityLookupSkill"
+                    }
+                }
             ],
             "required": [
                 "@odata.type",
@@ -355,7 +371,10 @@
                     "description": "The source of the input."
                 },
                 "sourceContext": {
-                    "type": ["string", "null"],
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "description": "The source context used for selecting recursive inputs."
                 },
                 "inputs": {
@@ -405,7 +424,10 @@
                     "description": "A value indicating which language code to use. Default is en."
                 },
                 "maxKeyPhraseCount": {
-                    "type": ["integer", "null"],
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
                     "format": "int32",
                     "x-nullable": true,
                     "description": "A number indicating how many key phrases to return. If absent, all identified key phrases will be returned."
@@ -569,12 +591,18 @@
                     "description": "A value indicating which language code to use. Default is en."
                 },
                 "includeTypelessEntities": {
-                    "type": ["boolean", "null"],
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
                     "x-nullable": true,
                     "description": "Determines whether or not to include entities which are well known but don't conform to a pre-defined type. If this configuration is not set (default), set to null or set to false, entities which don't conform to one of the pre-defined types will not be surfaced."
                 },
                 "minimumPrecision": {
-                    "type": ["number", "null"],
+                    "type": [
+                        "number",
+                        "null"
+                    ],
                     "format": "double",
                     "x-nullable": true,
                     "description": "A value between 0 and 1 that be used to only include entities whose confidence score is greater than the value specified. If not set (default), or if explicitly set to null, all entities will be included."
@@ -593,7 +621,10 @@
                     "description": "A value indicating which language code to use. Default is en."
                 },
                 "minimumPrecision": {
-                    "type": ["number", "null"],
+                    "type": [
+                        "number",
+                        "null"
+                    ],
                     "format": "double",
                     "x-nullable": true,
                     "description": "A value between 0 and 1 to indicate the confidence of the results."
@@ -720,7 +751,10 @@
                     "description": "A value indicating which split mode to perform."
                 },
                 "maximumPageLength": {
-                    "type": ["integer", "null"],
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
                     "format": "int32",
                     "x-nullable": true,
                     "description": "The desired maximum page length. Default is 10000."
@@ -773,13 +807,19 @@
                     "description": "The desired timeout for the request. Default is 30 seconds."
                 },
                 "batchSize": {
-                    "type": ["integer", "null"],
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
                     "format": "int32",
                     "x-nullable": true,
                     "description": "The desired batch size which indicates number of documents."
                 },
                 "degreeOfParallelism": {
-                    "type": ["integer", "null"],
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
                     "format": "int32",
                     "x-nullable": true,
                     "description": "If set, the number of parallel calls that can be made to the Web API."
@@ -805,23 +845,38 @@
                     "description": "(Required for no authentication or key authentication) The scoring URI of the AML service to which the JSON payload will be sent. Only the https URI scheme is allowed."
                 },
                 "key": {
-                    "type": ["string", "null"],
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "description": "(Required for key authentication) The key for the AML service."
                 },
                 "resourceId": {
-                    "type": ["string", "null"],
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "description": "(Required for token authentication). The Azure Resource Manager resource ID of the AML service. It should be in the format subscriptions/{guid}/resourceGroups/{resource-group-name}/Microsoft.MachineLearningServices/workspaces/{workspace-name}/services/{service_name}."
                 },
                 "region": {
-                    "type": ["string", "null"],
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "description": "(Optional for token authentication). The region the AML service is deployed in."
                 },
                 "timeout": {
-                    "type": ["string", "null"],
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "description": "(Optional) When specified, indicates the timeout for the http client making the API call. It must be formatted as an XSD 'dayTimeDuration' value (a restricted subset of an ISO 8601 duration value). For example, PT60S for 60 seconds. If not set, a default value of 30 seconds is chosen. The timeout can be set to a maximum of 230 seconds and a minimum of 1 second."
                 },
                 "degreeOfParallelism": {
-                    "type": ["integer", "null"],
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
                     "description": "(Optional) When specified, indicates the number of calls the indexer will make in parallel to the endpoint you have provided. You can decrease this value if your endpoint is failing under too high of a request load, or raise it if your endpoint is able to accept more requests and you would like an increase in the performance of the indexer. If not set, a default value of 5 is used. The degreeOfParallelism can be set to a maximum of 10 and a minimum of 1."
                 }
             },
@@ -1085,7 +1140,10 @@
             "description": "The language codes supported for input text by PIIDetectionSkill."
         },
         "TextTranslationSkillLanguage": {
-            "type": ["string", "null"],
+            "type": [
+                "string",
+                "null"
+            ],
             "examples": [
                 "af",
                 "ar",
@@ -1170,7 +1228,10 @@
             "description": "The language codes supported for input by ImageAnalysisSkill."
         },
         "KnowledgeStore": {
-            "type": ["object", "null"],
+            "type": [
+                "object",
+                "null"
+            ],
             "description": "A storage account where you can optionally save your enriched documents.",
             "properties": {
                 "storageConnectionString": {
@@ -1230,7 +1291,10 @@
             }
         },
         "SearchResourceEncryptionKey": {
-            "type": ["object", "null"],
+            "type": [
+                "object",
+                "null"
+            ],
             "description": "A customer-managed encryption key in Azure Key Vault. Keys that you create and manage can be used to encrypt or decrypt data-at-rest in Azure Cognitive Search, such as indexes and synonym maps.",
             "properties": {
                 "keyVaultKeyName": {
@@ -1260,22 +1324,28 @@
             ]
         },
         "AzureActiveDirectoryApplicationCredentials": {
-            "type": ["object", "null"],
+            "type": [
+                "object",
+                "null"
+            ],
             "properties": {
-              "applicationId": {
-                "type": "string",
-                "description": "An AAD Application ID that was granted the required access permissions to the Azure Key Vault that is to be used when encrypting your data at rest. The Application ID should not be confused with the Object ID for your AAD Application."
-              },
-              "applicationSecret": {
-                "type": ["string", "null"],
-                "description": "The authentication key of the specified AAD application."
-              }
+                "applicationId": {
+                    "type": "string",
+                    "description": "An AAD Application ID that was granted the required access permissions to the Azure Key Vault that is to be used when encrypting your data at rest. The Application ID should not be confused with the Object ID for your AAD Application."
+                },
+                "applicationSecret": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "The authentication key of the specified AAD application."
+                }
             },
             "required": [
-              "applicationId"
+                "applicationId"
             ],
             "description": "Credentials of a registered application created for your search service, used for authenticated access to the encryption keys stored in Azure Key Vault."
-          }
+        }
     },
     "additionalProperties": false
 }
