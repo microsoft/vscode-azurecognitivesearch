@@ -11,7 +11,7 @@ import * as fse from "fs-extra";
 import * as path from "path";
 import * as os from "os";
 import { ext } from './extensionVariables';
-import { AzureUserInput, registerUIExtensionVariables, callWithTelemetryAndErrorHandling, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal, registerEvent, DialogResponses, AzureParentTreeItem, createAzExtOutputChannel } from 'vscode-azureextensionui';
+import { AzureUserInput, registerUIExtensionVariables, callWithTelemetryAndErrorHandling, AzExtTreeDataProvider, IActionContext, AzExtTreeItem, registerCommand, createApiProvider, AzureTreeItem, openInPortal, registerEvent, DialogResponses, AzureParentTreeItem, createAzExtOutputChannel, ITreeItemPickerContext } from 'vscode-azureextensionui';
 import { AzureAccountTreeItem } from './AzureAccountTreeItem';
 import { SearchServiceTreeItem } from './SearchServiceTreeItem';
 import { DocumentTreeItem } from './DocumentTreeItem';
@@ -29,6 +29,7 @@ import { SynonymMapListTreeItem } from './SynonymMapListTreeItem';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import { tree } from 'gulp';
 import * as crypto from "crypto";
+import { SubscriptionTreeItem } from './SubscriptionTreeItem';
 
 function readJson(path: string) {
     const json = fs.readFileSync(path, "utf8");
@@ -127,6 +128,43 @@ export async function activateInternal(context: vscode.ExtensionContext, perfSta
 				await treeItem.runIndexer(actionContext);
 			}
 		});
+		registerCommand('azureCognitiveSearch.copyAdminKey', async (actionContext: IActionContext, node?: SearchServiceTreeItem ) => {
+            const message = 'The primary admin key has been copied to the clipboard';
+            if (!node) {
+                node = await ext.tree.showTreeItemPicker<SearchServiceTreeItem>(SearchServiceTreeItem.contextValue, actionContext);
+            }
+
+            await copyAdminKey(node);
+            vscode.window.showInformationMessage(message);
+        });
+		registerCommand('azureCognitiveSearch.copyQueryKey', async (actionContext: IActionContext, node?: SearchServiceTreeItem ) => {
+            const message = 'The query key has been copied to the clipboard';
+            if (!node) {
+                node = await ext.tree.showTreeItemPicker<SearchServiceTreeItem>(SearchServiceTreeItem.contextValue, actionContext);
+            }
+
+            await copyQueryKey(node);
+            vscode.window.showInformationMessage(message);
+        });
+		registerCommand('azureCognitiveSearch.createSearchService', async (actionContext: IActionContext, node?: SubscriptionTreeItem) => {
+            if (!node) {
+                node = await ext.tree.showTreeItemPicker<SubscriptionTreeItem>(SubscriptionTreeItem.contextValue, actionContext);
+            }
+
+            await node.createChild(actionContext);
+        });
+		registerCommand('azureCognitiveSearch.deleteSearchService', async (actionContext: IActionContext, node?: AzureTreeItem) => {
+            const suppressCreateContext: ITreeItemPickerContext = actionContext;
+            suppressCreateContext.suppressCreatePick = true;
+            if (!node) {
+                node = await ext.tree.showTreeItemPicker<AzureTreeItem>(SearchServiceTreeItem.contextValue, actionContext);
+            }
+
+			const r = await vscode.window.showWarningMessage(`Are you sure you want to delete the search service ${node.label}?`, DialogResponses.yes, DialogResponses.cancel);
+			if (r === DialogResponses.yes) {
+				await node.deleteTreeItem(actionContext);
+			}
+        });
 
 		vscode.commands.registerTextEditorCommand("azureCognitiveSearch.searchDoc", editor => searchToDocument(editor, azureAccountTreeItem, searchResultDocumentProvider));
 
@@ -262,4 +300,14 @@ async function searchToDocument(editor: vscode.TextEditor, root: AzExtTreeItem, 
 			const doc = await vscode.workspace.openTextDocument(vscode.Uri.parse(`search:${id}`));
 			await vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);
 		}
+	}
+
+	async function copyAdminKey(treeItem: SearchServiceTreeItem ): Promise<void> {
+		let keys = await treeItem.getAdminKeys();
+		await vscode.env.clipboard.writeText(<string>keys.primaryKey);
+	}
+
+	async function copyQueryKey(treeItem: SearchServiceTreeItem ): Promise<void> {
+		let keys = await treeItem.getQueryKey();
+		await vscode.env.clipboard.writeText(<string>keys.key);
 	}

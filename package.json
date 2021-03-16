@@ -2,7 +2,7 @@
 	"name": "vscode-azurecognitivesearch",
 	"displayName": "Azure Cognitive Search",
 	"description": "Manage your Azure Cognitive Search services, create indexes, add documents, search, and more.",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"publisher": "ms-azuretools",
 	"aiKey": "AIF-d9b70cd4-b9f9-4d70-929b-a071c400b217",
 	"license": "SEE LICENSE IN LICENSE.md",
@@ -52,7 +52,11 @@
 		"onCommand:azureCognitiveSearch.search",
 		"onCommand:azureCognitiveSearch.searchDoc",
 		"onCommand:azureCognitiveSearch.resetIndexer",
-		"onCommand:azureCognitiveSearch.runIndexer"
+		"onCommand:azureCognitiveSearch.runIndexer",
+		"onCommand:azureCognitiveSearch.copyAdminKey",
+		"onCommand:azureCognitiveSearch.copyQueryKey",
+		"onCommand:azureCognitiveSearch.createSearchService",
+		"onCommand:azureCognitiveSearch.deleteSearchService"
 	],
 	"main": "main",
 	"contributes": {
@@ -118,6 +122,16 @@
 			{
 				"command": "azureCognitiveSearch.openInPortal",
 				"title": "Open in Portal",
+				"category": "Azure Cognitive Search"
+			},
+			{
+				"command": "azureCognitiveSearch.copyAdminKey",
+				"title": "Copy Admin Key",
+				"category": "Azure Cognitive Search"
+			},
+			{
+				"command": "azureCognitiveSearch.copyQueryKey",
+				"title": "Copy Query Key",
 				"category": "Azure Cognitive Search"
 			},
 			{
@@ -212,6 +226,16 @@
 				"command": "azureCognitiveSearch.runIndexer",
 				"title": "Run indexer",
 				"category": "Azure Cognitive Search"
+			},
+			{
+				"command": "azureCognitiveSearch.createSearchService",
+				"title": "Create new search service",
+				"category": "Azure Cognitive Search"
+			},
+			{
+				"command": "azureCognitiveSearch.deleteSearchService",
+				"title": "Delete search service",
+				"category": "Azure Cognitive Search"
 			}
 		],
 		"menus": {
@@ -246,7 +270,12 @@
 				{
 					"command": "azureCognitiveSearch.refresh",
 					"when": "view == azureCognitiveSearch && viewItem == azureextensionui.azureSubscription",
-					"group": "9_refresh"
+					"group": "1_refresh"
+				},
+				{
+					"command": "azureCognitiveSearch.createSearchService",
+					"when": "view == azureCognitiveSearch && viewItem == azureextensionui.azureSubscription",
+					"group": "2_newservice"
 				},
 				{
 					"command": "azureCognitiveSearch.search",
@@ -256,7 +285,22 @@
 				{
 					"command": "azureCognitiveSearch.openInPortal",
 					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchService",
-					"group": "navigation@2"
+					"group": "1_portal@2"
+				},
+				{
+					"command": "azureCognitiveSearch.copyAdminKey",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchService",
+					"group": "2_key@2"
+				},
+				{
+					"command": "azureCognitiveSearch.copyQueryKey",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchService",
+					"group": "2_key@3"
+				},
+				{
+					"command": "azureCognitiveSearch.deleteSearchService",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchService",
+					"group": "3_delete@2"
 				},
 				{
 					"command": "azureCognitiveSearch.createDocument",

@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.2.0 - 2021-03-16
+
+- Adding functionality to copy query key and admin key
+- Adding ability to create/delete a search service
+
 ## 0.1.1 - 2021-02-24
 
 - Adding functionality to Run/Reset an indexer
