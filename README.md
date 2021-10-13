@@ -68,7 +68,7 @@ To sign out, search for **Azure: Sign out** in **View** > **Command palette**.
 
 There are several ways you can contribute to our [repo](https://github.com/dereklegenzoff/vscode-azuresearch):
 
-* **Ideas, feature requests and bugs**: We are open to all ideas and we want to get rid of bugs! Use the [Issues](https://github.com/Microsoft/vscode-azurestorage/issues) section to report a new issue, provide your ideas or contribute to existing threads.
+* **Ideas, feature requests and bugs**: We are open to all ideas and we want to get rid of bugs! Use the [Issues](https://github.com/Microsoft/vscode-azurecognitivesearch/issues) section to report a new issue, provide your ideas or contribute to existing threads.
 * **Documentation**: Found a typo or strangely worded sentences? Submit a PR!
 * **Code**: Contribute bug fixes, features or design changes:
   * Clone the repository locally and open in VS Code.
