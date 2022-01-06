@@ -604,7 +604,7 @@
                     "description": "A number indicating how many key phrases to return. If absent, all identified key phrases will be returned."
                 },
                 "modelVersion": {
-                  "type": "string",
+                  "type": ["string", "null"],
                   "x-nullable": true,
                   "description": "The version of the model to use when calling the Text Analytics service. It will default to the latest available when not specified. We recommend you do not specify this value unless absolutely necessary."
                 }
@@ -726,12 +726,12 @@
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.LanguageDetectionSkill",
             "properties": {
                 "defaultCountryHint": {
-                  "type": "string",
+                  "type": ["string", "null"],
                   "x-nullable": true,
                   "description": "A country code to use as a hint to the language detection model if it cannot disambiguate the language."
                 },
                 "modelVersion": {
-                  "type": "string",
+                  "type": ["string", "null"],
                   "x-nullable": true,
                   "description": "The version of the model to use when calling the Text Analytics service. It will default to the latest available when not specified. We recommend you do not specify this value unless absolutely necessary."
                 }
@@ -809,12 +809,12 @@
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.PIIDetectionSkill",
             "properties": {
               "defaultLanguageCode": {
-                "type": "string",
+                "type": ["string", "null"],
                 "x-nullable": true,
                 "description": "A value indicating which language code to use. Default is en."
               },
               "minimumPrecision": {
-                "type": "number",
+                "type": ["number", "null"],
                 "format": "double",
                 "x-nullable": true,
                 "minimum": 0.0,
@@ -826,13 +826,13 @@
                 "description": "A parameter that provides various ways to mask the personal information detected in the input text. Default is 'none'."
               },
               "maskingCharacter": {
-                "type": "string",
+                "type": ["string", "null"],
                 "x-nullable": true,
                 "maxLength": 1,
                 "description": "The character used to mask the text if the maskingMode parameter is set to replace. Default is '*'."
               },
               "modelVersion": {
-                "type": "string",
+                "type": ["string", "null"],
                 "x-nullable": true,
                 "description": "The version of the model to use when calling the Text Analytics service. It will default to the latest available when not specified. We recommend you do not specify this value unless absolutely necessary."
               },
@@ -845,7 +845,7 @@
                 "description": "A list of PII entity categories that should be extracted and masked."
               },
               "domain": {
-                "type": "string",
+                "type": ["string", "null"],
                 "x-nullable": true,
                 "description": "If specified, will set the PII domain to include only a subset of the entity categories. Possible values include: 'phi', 'none'. Default is 'none'."
               }
@@ -940,7 +940,7 @@
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.V3.SentimentSkill",
             "properties": {
               "defaultLanguageCode": {
-                "type": "string",
+                "type": ["string", "null"],
                 "x-nullable": true,
                 "description": "A value indicating which language code to use. Default is en."
               },
@@ -950,7 +950,7 @@
                 "description": "If set to true, the skill output will include information from Text Analytics for opinion mining, namely targets (nouns or verbs) and their associated assessment (adjective) in the text. Default is false."
               },
               "modelVersion": {
-                "type": "string",
+                "type": ["string", "null"],
                 "x-nullable": true,
                 "description": "The version of the model to use when calling the Text Analytics service. It will default to the latest available when not specified. We recommend you do not specify this value unless absolutely necessary."
               }
@@ -964,12 +964,12 @@
             "x-ms-discriminator-value": "#Microsoft.Skills.Text.V3.EntityLinkingSkill",
             "properties": {
               "defaultLanguageCode": {
-                "type": "string",
+                "type": ["string", "null"],
                 "x-nullable": true,
                 "description": "A value indicating which language code to use. Default is en."
               },
               "minimumPrecision": {
-                "type": "number",
+                "type": ["number", "null"],
                 "format": "double",
                 "minimum": 0.0,
                 "maximum": 1.0,
@@ -977,7 +977,7 @@
                 "description": "A value between 0 and 1 that be used to only include entities whose confidence score is greater than the value specified. If not set (default), or if explicitly set to null, all entities will be included."
               },
               "modelVersion": {
-                "type": "string",
+                "type": ["string", "null"],
                 "x-nullable": true,
                 "description": "The version of the model to use when calling the Text Analytics service. It will default to the latest available when not specified. We recommend you do not specify this value unless absolutely necessary."
               }
@@ -999,12 +999,12 @@
                 "description": "A list of entity categories that should be extracted."
               },
               "defaultLanguageCode": {
-                "type": "string",
+                "type": ["string", "null"],
                 "x-nullable": true,
                 "description": "A value indicating which language code to use. Default is en."
               },
               "minimumPrecision": {
-                "type": "number",
+                "type": ["number", "null"],
                 "format": "double",
                 "minimum": 0.0,
                 "maximum": 1.0,
@@ -1012,7 +1012,7 @@
                 "description": "A value between 0 and 1 that be used to only include entities whose confidence score is greater than the value specified. If not set (default), or if explicitly set to null, all entities will be included."
               },
               "modelVersion": {
-                "type": "string",
+                "type": ["string", "null"],
                 "x-nullable": true,
                 "description": "The version of the model to use when calling the Text Analytics service. It will default to the latest available when not specified. We recommend you do not specify this value unless absolutely necessary."
               }
@@ -1355,7 +1355,7 @@
         },
         "OcrSkillLineEnding": {
             "type": "string",
-            "enum": [
+            "examples": [
               "space",
               "carriageReturn",
               "lineFeed",
