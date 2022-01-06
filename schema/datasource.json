@@ -31,6 +31,10 @@
           "$ref": "#/definitions/SearchIndexerDataContainer",
           "description": "The data container for the datasource."
         },
+        "identity": {
+          "$ref": "#/definitions/SearchIndexerDataIdentity",
+          "description": "An explicit managed identity to use for this datasource. If not specified and the connection string is a managed identity, the system-assigned managed identity is used. If not specified, the value remains unchanged. If \"none\" is specified, the value of this property is cleared."
+        },
         "dataChangeDetectionPolicy": {
             "$ref": "#/definitions/DataChangeDetectionPolicy",
             "description": "The data change detection policy for the datasource."
@@ -82,6 +86,62 @@
             "name"
           ],
           "description": "Represents information about the entity (such as Azure SQL table or DocumentDb collection) that will be indexed."
+        },
+        "SearchIndexerDataIdentity": {
+          "discriminator": "@odata.type",
+          "properties": {
+            "@odata.type": {
+              "type": "string",
+              "description": "Identifies the concrete type of the identity."
+            }
+          },
+          "required": [
+            "@odata.type"
+          ],
+          "description": "Abstract base type for data identities.",
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "@odata.type": { 
+                    "const": "#Microsoft.Azure.Search.SearchIndexerDataNoneIdentity"
+                  }
+                }
+              },
+              "then": {
+                "$ref": "#/definitions/SearchIndexerDataNoneIdentity"
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "@odata.type": { 
+                    "const": "#Microsoft.Azure.Search.SearchIndexerDataUserAssignedIdentity"
+                  }
+                }
+              },
+              "then": {
+                "$ref": "#/definitions/SearchIndexerDataUserAssignedIdentity"
+              }
+            }
+          ]
+        },
+        "SearchIndexerDataNoneIdentity": {
+          "description": "Clears the identity property of a datasource.",
+          "x-ms-discriminator-value": "#Microsoft.Azure.Search.SearchIndexerDataNoneIdentity"
+        },
+        "SearchIndexerDataUserAssignedIdentity": {
+          "description": "Specifies the identity for a datasource to use.",
+          "x-ms-discriminator-value": "#Microsoft.Azure.Search.SearchIndexerDataUserAssignedIdentity",
+          "properties": {
+            "userAssignedIdentity": {
+              "type": "string",
+              "description": "The fully qualified Azure resource Id of a user assigned managed identity typically in the form \"/subscriptions/12345678-1234-1234-1234-1234567890ab/resourceGroups/rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myId\" that should have been assigned to the search service."
+            }
+          },
+          "required": [
+            "userAssignedIdentity"
+          ]
         },
         "DataChangeDetectionPolicy": {
           "type": ["object", "null"],
