@@ -44,11 +44,13 @@
 		"onCommand:azureCognitiveSearch.createIndexer",
 		"onCommand:azureCognitiveSearch.createSkillset",
 		"onCommand:azureCognitiveSearch.createSynonymMap",
+		"onCommand:azureCognitiveSearch.createAlias",
 		"onCommand:azureCognitiveSearch.deleteDocument",
 		"onCommand:azureCognitiveSearch.deleteDataSource",
 		"onCommand:azureCognitiveSearch.deleteIndexer",
 		"onCommand:azureCognitiveSearch.deleteSkillset",
 		"onCommand:azureCognitiveSearch.deleteSynonymMap",
+		"onCommand:azureCognitiveSearch.deleteAlias",
 		"onCommand:azureCognitiveSearch.search",
 		"onCommand:azureCognitiveSearch.searchDoc",
 		"onCommand:azureCognitiveSearch.resetIndexer",
@@ -210,6 +212,16 @@
 			{
 				"command": "azureCognitiveSearch.deleteSynonymMap",
 				"title": "Delete synonym map",
+				"category": "Azure Cognitive Search"
+			},
+			{
+				"command": "azureCognitiveSearch.createAlias",
+				"title": "Create new alias",
+				"category": "Azure Cognitive Search"
+			},
+			{
+				"command": "azureCognitiveSearch.deleteAlias",
+				"title": "Delete alias",
 				"category": "Azure Cognitive Search"
 			},
 			{
@@ -376,6 +388,16 @@
 					"command": "azureCognitiveSearch.deleteSynonymMap",
 					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchSynonymMap",
 					"group": "navigation@98"
+				},
+				{
+					"command": "azureCognitiveSearch.createAlias",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchAliasList",
+					"group": "navigation@98"
+				},
+				{
+					"command": "azureCognitiveSearch.deleteAlias",
+					"when": "view == azureCognitiveSearch && viewItem == azureCognitiveSearchAlias",
+					"group": "navigation@98"
 				}
 			],
 			"commandPalette": [
@@ -431,6 +453,10 @@
 			{
 				"fileMatch": "*.azsskset",
 				"url": "./schema/skillset.json"
+			},
+			{
+				"fileMatch": "*.azsalias",
+				"url": "./schema/alias.json"
 			}
 		],
 		"languages": [
