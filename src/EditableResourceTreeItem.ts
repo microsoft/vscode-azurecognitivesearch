@@ -56,6 +56,12 @@ export class EditableResourceTreeItem extends AzureTreeItem implements IDocument
                 dark: path.join(getResourcesPath(), 'dark', 'info.svg')
             };
         } 
+        else if (itemKind === "alias") {
+            this.iconPath = {
+                light: path.join(getResourcesPath(), 'light', 'link.svg'),
+                dark: path.join(getResourcesPath(), 'dark', 'link.svg')
+            };
+        } 
     }
 
     public deleteTreeItemImpl?(_context: IActionContext): Promise<void> {

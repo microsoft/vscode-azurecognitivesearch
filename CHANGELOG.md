@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.3.1 - 2022-03-08
+
+- Adding support for index aliases
+
+## 0.3.0
+
+- Updating extension to use the latest 2021-04-30-Preview API version. This adds support for normalizers, semantic configurations, managed identity for data sources, and new cognitive skills.
+- Updating schemas to the 2021-04-30-Preview API version.
+
 ## 0.2.0 - 2021-03-16
 
 - Adding functionality to copy query key and admin key

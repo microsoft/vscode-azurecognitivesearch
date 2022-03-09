@@ -145,6 +145,14 @@ export class DocumentEditor implements vscode.Disposable {
                         }
                     ]
                 };
+            case 'alias':
+                return {
+                    "name": "alias1",
+                    "indexes": [
+                        "index1"
+                    ]
+                }
+                
             default:
                 return {};
         }

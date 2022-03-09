@@ -26,6 +26,7 @@ import { IndexerListTreeItem } from './IndexerListTreeItem';
 import { IndexListTreeItem } from './IndexListTreeItem';
 import { SkillsetListTreeItem } from './SkillsetListTreeItem';
 import { SynonymMapListTreeItem } from './SynonymMapListTreeItem';
+import { AliasListTreeItem } from './AliasListTreeItem';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import { tree } from 'gulp';
 import * as crypto from "crypto";
@@ -93,6 +94,9 @@ export async function activateInternal(context: vscode.ExtensionContext, perfSta
 		registerCommand("azureCognitiveSearch.deleteSkillset", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, SkillsetListTreeItem.itemContextValue));
 		registerCommand("azureCognitiveSearch.createSynonymMap", async (actionContext: IActionContext, treeItem: SynonymMapListTreeItem) => createResource(treeItem, actionContext, SynonymMapListTreeItem.contextValue));
 		registerCommand("azureCognitiveSearch.deleteSynonymMap", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, SynonymMapListTreeItem.itemContextValue));
+		registerCommand("azureCognitiveSearch.createAlias", async (actionContext: IActionContext, treeItem: AliasListTreeItem) => createResource(treeItem, actionContext, AliasListTreeItem.contextValue));
+		registerCommand("azureCognitiveSearch.deleteAlias", async  (actionContext: IActionContext, treeItem: EditableResourceTreeItem) => deleteResource(treeItem, actionContext, AliasListTreeItem.itemContextValue));
+
 		registerCommand("azureCognitiveSearch.search", async (actionContext: IActionContext, treeItem: AzExtTreeItem) => search(treeItem, actionContext, searchResultDocumentProvider));
 		registerCommand("azureCognitiveSearch.openSearchEditor", async (actionContext: IActionContext, treeItem: IndexTreeItem) => openSearchEditor(treeItem));
 		registerCommand("azureCognitiveSearch.openInPortal", async (actionContext: IActionContext, treeItem?: AzureTreeItem) => {
@@ -251,7 +255,7 @@ async function openSearchEditor(treeItem: IndexTreeItem): Promise<void> {
 	const localPath = path.join(os.tmpdir(), "vscode-azs-editor", filename);
 	await fse.ensureFile(localPath);
 
-	var template = "// Press ctrl+alt+r or cmd+alt+r to search";
+	var template = "// Press ctrl+alt+r or cmd+option+r to search";
 	template += "\n\n";
 	template += "// You can send queries in the GET format\n";
 	template += "search=*";

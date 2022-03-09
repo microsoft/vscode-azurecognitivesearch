@@ -12,6 +12,7 @@ import { SimpleSearchClient } from "./SimpleSearchClient";
 import { DataSourceListTreeItem } from "./DataSourceListTreeItem";
 import { IndexerListTreeItem } from "./IndexerListTreeItem";
 import { SynonymMapListTreeItem } from "./SynonymMapListTreeItem";
+import { AliasListTreeItem } from "./AliasListTreeItem";
 import { SkillsetListTreeItem } from "./SkillsetListTreeItem";
 import { ServiceDetailsTreeItem } from "./ServiceDetailsTreeItem";
 import { getResourcesPath } from "./constants";
@@ -52,7 +53,8 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
             new DataSourceListTreeItem(this, searchClient),
             new IndexerListTreeItem(this, searchClient),
             new SkillsetListTreeItem(this, searchClient),
-            new SynonymMapListTreeItem(this, searchClient)
+            new SynonymMapListTreeItem(this, searchClient),
+            new AliasListTreeItem(this, searchClient)
         ];
     }    
     
@@ -72,6 +74,7 @@ export class SearchServiceTreeItem extends AzureParentTreeItem {
             case IndexerListTreeItem.contextValue: return 4;
             case SkillsetListTreeItem.contextValue: return 5;
             case SynonymMapListTreeItem.contextValue: return 6;
+            case AliasListTreeItem.contextValue: return 7;
         }
 
         return 100;

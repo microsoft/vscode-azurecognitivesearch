@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Azure Search Alias",
+    "type": "object",
+    "properties": {
+        "name": {
+            "externalDocs": {
+              "url": "https://docs.microsoft.com/rest/api/searchservice/Naming-rules"
+            },
+            "type": "string",
+            "description": "The name of the alias."
+          },
+          "indexes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The name of the index this alias maps to. Only one index name may be specified."
+        }
+    },
+    "required": [
+        "name",
+        "indexes"
+    ],
+    "description": "Represents an index alias, which describes a mapping from the alias name to an index. The alias name can be used in place of the index name for supported operations."
+}
