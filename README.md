@@ -22,7 +22,7 @@ You can create a new index or other component just by editing the JSON and savin
 
 ![Create index demo](resources/create-index.gif)
 
-### Take advantage of rich IntelliDense
+### Take advantage of rich IntelliSense
 
 The extension also includes IntelliSense to guide you as you’re building out your JSON. Instead of referencing external docs each time, you can see what parameters exist and what their allowed values are as you type.
 
