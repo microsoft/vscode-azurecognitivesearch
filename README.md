@@ -1,12 +1,16 @@
 # Azure Cognitive Search for Visual Studio Code (Preview)
 
-[![Build Status](https://delegenz.visualstudio.com/vs-code-pipelines/_apis/build/status/microsoft.vscode-azurecognitivesearch?branchName=master)](https://delegenz.visualstudio.com/vs-code-pipelines/_build/latest?definitionId=6&branchName=master)
+> **Note**: This extension is no longer being maintained and has been removed from the Visual Studio Code Marketplace. You can still install the extension directly from the [VSIX file](./vscode-azurecognitivesearch-0.3.1.vsix) if you'd like to use it.
+> To install the extension from the VSIX file, follow the instructions below or see this [link](https://code.visualstudio.com/docs/editor/extension-gallery#_install-from-a-vsix) for more information.
+> 1. Download the VSIX file and open Visual Studio Code
+> 2. Press `Ctrl+Shift+P` or `Cmd+Shift+P` to open the command palette
+> 3. Type `Install from VSIX` and press `Enter`
+> 4. Select the VSIX file you downloaded
+
 
 [Azure Cognitive Search](https://docs.microsoft.com/azure/search/search-what-is-azure-search) is a search-as-a-service cloud solution that gives developers APIs and tools for adding a rich search experience over private, heterogeneous content in web, mobile, and enterprise applications.
 
 This Visual Studio Code extension makes it easy to manage your search service with the full capabilities of the REST APIs while providing rich IntelliSense and snippets to make it easier to take advantage of the full range of capabilities. With the extension, you can create and update indexes and other components, add documents, search, and more. Check out the gifs and images below to see the extension in action.
-
-You can learn more about the extension in this [blog post](https://techcommunity.microsoft.com/t5/azure-ai/accelerate-search-index-development-with-visual-studio-code/ba-p/2120941). You can also learn how to get up and running with Azure Cognitive Search in this [quickstart](https://docs.microsoft.com/azure/search/search-get-started-vs-code). 
 
 ## Features
 
@@ -50,7 +54,11 @@ Once you’ve added documents to your search service, you can also query from wi
 
 ## Get started
 
-1. [Browse for Azure Cognitive Search](https://code.visualstudio.com/docs/editor/extension-gallery#_browse-for-extensions) in Extensions and install it.
+1. Install the extension from the [VSIX file](./vscode-azurecognitivesearch-0.3.1.vsix).
+    1. Download the VSIX file and open Visual Studio Code
+    2. Press `Ctrl+Shift+P` or `Cmd+Shift+P` to open the command palette
+    3. Type `Install from VSIX` and press `Enter`
+    4. Select the VSIX file you downloaded
 
 1. On **View** > **Command palette**, scroll or type **Azure: Sign in**.
 
